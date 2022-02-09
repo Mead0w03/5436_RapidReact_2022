@@ -6,9 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import frc.robot.commands.ShooterCommands.CommandCargoIn;
+import frc.robot.commands.ShooterCommands.CommandCargoOut;
+import frc.robot.commands.ShooterCommands.CommandCargoStop;
+import frc.robot.commands.ShooterCommands.CommandIntakeUp;
+import frc.robot.commands.ShooterCommands.CommandIntakeDown;
+import frc.robot.commands.ShooterCommands.CommandIntakeStop;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,10 +24,26 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Intake intake = new Intake();
+  private XboxController xboxController = new XboxController(0);
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  //intake subsystems and commands
+  private JoystickButton ltButton = new JoystickButton(xboxController, XboxController.Button.kLeftStick.value);
+  private JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
+  private CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
+  private CommandCargoOut commandCargoOut = new CommandCargoOut(intake);
+  private CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
+  //private CommandIntakeIn commandIntakeIn = new CommandIntakeIn();
+  //private CommandIntakeOut commandIntakeOut = new CommandIntakeOut();
+  //to do list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
+
+  private JoystickButton aButton = new JoystickButton(xboxController, XboxController.Button.kA.value);
+  private JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+  private CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
+  private CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
+  private CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
+
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -34,7 +57,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+
+    ltButton.whileHeld(commandCargoIn)
+          .whenReleased(commandCargoStop);
+    xButton.whileHeld(commandCargoOut)
+          .whenReleased(commandCargoStop);
+
+    aButton.whileHeld(commandIntakeUp)
+          .whenReleased(commandIntakeStop);
+    bButton.whileHeld(commandIntakeDown)
+          .whenReleased(commandIntakeStop);
+
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -43,6 +79,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
