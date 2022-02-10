@@ -10,10 +10,6 @@ public class DriveCommands extends CommandBase{
     private Joystick stick;
 
 
-    public DriveCommands() {
-
-    }
-
     public DriveCommands(DriveBase driveBase, Joystick joy) {
 
         this.addRequirements(driveBase);

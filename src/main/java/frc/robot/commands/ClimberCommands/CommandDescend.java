@@ -1,9 +1,10 @@
-package frc.robot.commands.ShooterCommands;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Climber;
 
-public class CommandCargoOut extends CommandBase{
+public class CommandDescend extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -12,20 +13,17 @@ public class CommandCargoOut extends CommandBase{
     // **********************************************
     // Instance Variables
     // **********************************************
-    private Intake intake;
+        private Climber climber;
     
     // **********************************************
     // Constructors
     // **********************************************
-        public CommandCargoOut(){
 
-        }
-
-        public CommandCargoOut(Intake intake){
+        public CommandDescend(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(intake);
-            this.intake = intake;
+            this.addRequirements(climber);
+            this.climber = climber;
         }
     
     // **********************************************
@@ -55,17 +53,19 @@ public class CommandCargoOut extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.cargoOut();
+        climber.descend();
     }
 
     @Override
     public void initialize() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
+        // Reset the start speed of climp
+        // climber.resetSpeed();
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
+    
 }

@@ -1,0 +1,286 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,1": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Climber",
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Climber/Climber Speed",
+                  "_title": "Climber/Climber Speed"
+                },
+                "1,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Climber/Articulate Speed",
+                  "_title": "Climber/Articulate Speed"
+                },
+                "2,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Climber/Advance Speed",
+                  "_title": "Climber/Advance Speed"
+                },
+                "0,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///Climber/VertMotorSpeed",
+                  "_title": "VertMotorPower",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "1,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///Climber/ArticulateMotorSpeed",
+                  "_title": "ArticulateMotorPower",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "2,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///Climber/AdvanceMotorSpeed",
+                  "_title": "AdvanceMotorPower",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "0,2": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Climber/VertMotorCurrent",
+                  "_title": "VertMotorCurrent",
+                  "Range/Min": 0.0,
+                  "Range/Max": 50.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 6,
+                  "Visuals/Show text": true
+                },
+                "1,2": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Climber/ArticulateMotorCurrent",
+                  "_title": "ArticulateMotorCurrent",
+                  "Range/Min": 0.0,
+                  "Range/Max": 50.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 6,
+                  "Visuals/Show text": true
+                },
+                "2,2": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Climber/AdvanceMotorCurrent",
+                  "_title": "AdvanceMotorCurrent",
+                  "Range/Min": 0.0,
+                  "Range/Max": 50.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 6,
+                  "Visuals/Show text": true
+                }
+              }
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Climber Command",
+              "_title": "Climber/Climber Command"
+            }
+          },
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Climber Speed",
+              "_title": "Vert Speed"
+            }
+          },
+          "5,1": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Intake",
+              "_title": "Intake"
+            }
+          },
+          "9,1": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Shooter",
+              "_title": "Shooter"
+            }
+          },
+          "9,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/P coeficient",
+              "_title": "Shooter/P coeficient"
+            }
+          },
+          "10,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/I coeficient",
+              "_title": "Shooter/I coeficient"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "3,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Ungrouped",
+              "_title": "Ungrouped",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Subsystem Layout",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "List Layout",
+                  "_title": "List Layout",
+                  "Layout/Label position": "BOTTOM",
+                  "_children": [
+                    {
+                      "_type": "Grid Layout",
+                      "_title": "Grid Layout",
+                      "Layout/Number of columns": 3,
+                      "Layout/Number of rows": 3,
+                      "Layout/Label position": "BOTTOM",
+                      "_children": {
+                        "0,0": {
+                          "_type": "Subsystem Layout",
+                          "_source0": "network_table:///LiveWindow/Climber",
+                          "_title": "Climber",
+                          "Layout/Label position": "BOTTOM",
+                          "_children": []
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Intake",
+              "_title": "Intake",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "7,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Shooter",
+              "_title": "Shooter",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "9,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/DriveBase",
+              "_title": "DriveBase",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 3",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {}
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1940.0,
+    "height": 1100.0
+  }
+}

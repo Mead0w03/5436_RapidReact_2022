@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanBusConfig;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -68,7 +69,7 @@ public NetworkTableEntry entryD = shooterTable.getEntry("D coeficient"); //shoot
 
 
 public Shooter(){
-    leftShooterMotor = new TalonFX(5);
+    leftShooterMotor = new TalonFX(CanBusConfig.LEFT_SHOOTER);
     leftShooterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
     leftShooterMotor.setSensorPhase(true);
     leftShooterMotor.configNominalOutputForward(0, 30);

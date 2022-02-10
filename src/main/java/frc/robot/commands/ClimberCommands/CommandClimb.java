@@ -1,9 +1,10 @@
-package frc.robot.commands.ShooterCommands;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Climber;
 
-public class CommandCargoIn extends CommandBase{
+public class CommandClimb extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -12,20 +13,17 @@ public class CommandCargoIn extends CommandBase{
     // **********************************************
     // Instance Variables
     // **********************************************
-    private Intake intake;
+        private Climber climber;
     
     // **********************************************
     // Constructors
     // **********************************************
-        public CommandCargoIn(){
 
-        }
-
-        public CommandCargoIn(Intake intake){
+        public CommandClimb(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(intake);
-            this.intake = intake;
+            this.addRequirements(climber);
+            this.climber = climber;
         }
     
     // **********************************************
@@ -55,17 +53,19 @@ public class CommandCargoIn extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.cargoIn();
+        climber.ascend();
     }
 
     @Override
     public void initialize() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
+        // Reset the start speed of climp
+        // climber.resetSpeed();
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
+    
 }

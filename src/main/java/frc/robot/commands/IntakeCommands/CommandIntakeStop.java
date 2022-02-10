@@ -1,9 +1,9 @@
-package frc.robot.commands.ShooterCommands;
+package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class CommandIntakeDown extends CommandBase{
+public class CommandIntakeStop extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -13,15 +13,13 @@ public class CommandIntakeDown extends CommandBase{
     // Instance Variables
     // **********************************************
     private Intake intake;
+
     
     // **********************************************
     // Constructors
     // **********************************************
-        public CommandIntakeDown(){
 
-        }
-
-        public CommandIntakeDown(Intake intake){
+        public CommandIntakeStop(Intake intake){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(intake);
@@ -55,7 +53,7 @@ public class CommandIntakeDown extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.intakeDown();
+        intake.intakeStop();
     }
 
     @Override

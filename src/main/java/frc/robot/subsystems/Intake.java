@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanBusConfig;
 
 public class Intake extends SubsystemBase {
     private CANSparkMax intakeCargo;
@@ -30,9 +31,9 @@ public class Intake extends SubsystemBase {
     NetworkTableEntry entrySpeedInput = intakeTable.getEntry("Enter Input Speed");
 
     public Intake(){
-        intakeCargo = new CANSparkMax(0, MotorType.kBrushless);
-        intakeRetractLeft = new CANSparkMax(1, MotorType.kBrushless);
-        intakeRetractRight = new CANSparkMax(2, MotorType.kBrushless);
+        intakeCargo = new CANSparkMax(CanBusConfig.CARGO, MotorType.kBrushless);
+        intakeRetractLeft = new CANSparkMax(CanBusConfig.RETRACT_LEFT, MotorType.kBrushless);
+        intakeRetractRight = new CANSparkMax(CanBusConfig.RETRACT_RIGHT, MotorType.kBrushless);
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
         intakeRetractLeftEncoder = intakeRetractRight.getEncoder();

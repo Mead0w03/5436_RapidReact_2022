@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanBusConfig;
 
 public class DriveBase extends SubsystemBase {
 
@@ -24,10 +25,10 @@ public class DriveBase extends SubsystemBase {
      * initializes brushless motor drive train on can ids 1-4
      */
     public DriveBase() {
-      motorFR = new CANSparkMax(1, MotorType.kBrushless); 
-      motorFL = new CANSparkMax(3, MotorType.kBrushless);
-      motorBR = new CANSparkMax(2, MotorType.kBrushless);
-      motorBL = new CANSparkMax(4, MotorType.kBrushless);
+      motorFR = new CANSparkMax(CanBusConfig.FRONT_RIGHT, MotorType.kBrushless); 
+      motorFL = new CANSparkMax(CanBusConfig.FRONT_LEFT, MotorType.kBrushless);
+      motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
+      motorBL = new CANSparkMax(CanBusConfig.BACK_LEFT, MotorType.kBrushless);
     } //end of DriveBase() constructor
 
     /**

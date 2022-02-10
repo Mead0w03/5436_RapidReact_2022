@@ -1,9 +1,10 @@
-package frc.robot.commands.ShooterCommands;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Climber;
 
-public class CommandCargoStop extends CommandBase{
+public class CommandStopClimb extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -12,20 +13,17 @@ public class CommandCargoStop extends CommandBase{
     // **********************************************
     // Instance Variables
     // **********************************************
-    private Intake intake;
+        private Climber climber;
     
     // **********************************************
     // Constructors
     // **********************************************
-        public CommandCargoStop(){
 
-        }
-
-        public CommandCargoStop(Intake intake){
+        public CommandStopClimb(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(intake);
-            this.intake = intake;
+            this.addRequirements(climber);
+            this.climber = climber;
         }
     
     // **********************************************
@@ -55,7 +53,7 @@ public class CommandCargoStop extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.cargoStop();
+        climber.stop();
     }
 
     @Override
@@ -68,4 +66,5 @@ public class CommandCargoStop extends CommandBase{
     public boolean isFinished() {
         return true;
     }
+    
 }
