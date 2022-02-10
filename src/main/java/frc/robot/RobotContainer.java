@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ShooterCommands.CommandCargoIn;
 import frc.robot.commands.ShooterCommands.CommandCargoOut;
 import frc.robot.commands.ShooterCommands.CommandCargoStop;
@@ -16,6 +16,7 @@ import frc.robot.commands.ShooterCommands.CommandIntakeUp;
 import frc.robot.commands.ShooterCommands.CommandIntakeDown;
 import frc.robot.commands.ShooterCommands.CommandIntakeStop;
 import frc.robot.subsystems.Intake;
+import frc.robot.triggers.LeftTrigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,11 +26,12 @@ import frc.robot.subsystems.Intake;
  */
 public class RobotContainer {
   private final Intake intake = new Intake();
-  private XboxController xboxController = new XboxController(0);
+  private XboxController xboxController = new XboxController(0); 
 
   //intake subsystems and commands
-  private JoystickButton ltButton = new JoystickButton(xboxController, XboxController.Button.kLeftStick.value);
-  private JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
+  private LeftTrigger leftTrigger = new LeftTrigger();
+  Trigger rightTrigger = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightTrigger.value)>0.3);
+
   private CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
   private CommandCargoOut commandCargoOut = new CommandCargoOut(intake);
   private CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
@@ -38,7 +40,7 @@ public class RobotContainer {
   //to do list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
 
   private JoystickButton aButton = new JoystickButton(xboxController, XboxController.Button.kA.value);
-  private JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+  private JoystickButton yButton = new JoystickButton(xboxController, XboxController.Button.kY.value);
   private CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
   private CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
   private CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
@@ -48,6 +50,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
+
     configureButtonBindings();
   }
 
@@ -59,14 +62,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    ltButton.whileHeld(commandCargoIn)
-          .whenReleased(commandCargoStop);
-    xButton.whileHeld(commandCargoOut)
-          .whenReleased(commandCargoStop);
+    leftTrigger.whileActiveContinuous(commandCargoIn)
+          .whenInactive(commandCargoStop);
+    rightTrigger.whileActiveContinuous(commandCargoOut)
+          .whenInactive(commandCargoStop);
 
     aButton.whileHeld(commandIntakeUp)
           .whenReleased(commandIntakeStop);
-    bButton.whileHeld(commandIntakeDown)
+    yButton.whileHeld(commandIntakeDown)
           .whenReleased(commandIntakeStop);
 
   }
