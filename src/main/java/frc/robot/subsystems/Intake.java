@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     private CANSparkMax intakeCargo;
-    private CANSparkMax intakeRetract;
+    private CANSparkMax intakeRetractLeft;
+    private CANSparkMax intakeRetractRight;
     private RelativeEncoder intakeCargoEncoder;
-    private RelativeEncoder intakeRetractEncoder;
+    private RelativeEncoder intakeRetractLeftEncoder;
+    private RelativeEncoder intakeRetractRightEncoder;
     private double intakeCargoSpeed = 0.5;
     private double intakeRetractSpeed = 0.1;
     private double intakeSpeed = 0;
@@ -23,14 +25,17 @@ public class Intake extends SubsystemBase {
     NetworkTableEntry entryCargoSpeed = intakeTable.getEntry("Cargo Intake Speed");
     NetworkTableEntry entryRetractSpeed = intakeTable.getEntry("Retract Intake Speed");
     NetworkTableEntry entryCargoMotorPower = intakeTable.getEntry("Cargo Motor Power");
-    NetworkTableEntry entryRetractMotorPower = intakeTable.getEntry("Retract Motor Power");
+    NetworkTableEntry entryRetractLeftPower = intakeTable.getEntry("Left Retract Motor Power");
+    NetworkTableEntry entryRetractRightPower = intakeTable.getEntry("Right Retract Motor Power");
     NetworkTableEntry entrySpeedInput = intakeTable.getEntry("Enter Input Speed");
 
     public Intake(){
-        intakeCargo = new CANSparkMax(2, MotorType.kBrushless);
-        intakeRetract = new CANSparkMax(1, MotorType.kBrushless);
+        intakeCargo = new CANSparkMax(0, MotorType.kBrushless);
+        intakeRetractLeft = new CANSparkMax(1, MotorType.kBrushless);
+        intakeRetractRight = new CANSparkMax(2, MotorType.kBrushless);
         intakeCargoEncoder = intakeCargo.getEncoder();
-        intakeRetractEncoder = intakeRetract.getEncoder();
+        intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
+        intakeRetractLeftEncoder = intakeRetractRight.getEncoder();
 
         SmartDashboard.putNumber("Intake Speed", intakeSpeed);
 
@@ -51,15 +56,18 @@ public class Intake extends SubsystemBase {
     }
 
     public void intakeUp(){
-        intakeRetract.set(intakeRetractSpeed);
+        intakeRetractLeft.set(intakeRetractSpeed);
+        intakeRetractRight.set(-intakeRetractSpeed);
     }
 
     public void intakeDown(){
-        intakeRetract.set(-intakeRetractSpeed);
+        intakeRetractLeft.set(-intakeRetractSpeed);
+        intakeRetractRight.set(intakeRetractSpeed);
     }
 
     public void intakeStop(){
-        intakeRetract.set(0);
+        intakeRetractLeft.set(0);
+        intakeRetractRight.set(0);
     }
 
 
@@ -72,7 +80,8 @@ public class Intake extends SubsystemBase {
         entryCargoSpeed.setDouble(intakeCargoSpeed);
         entryRetractSpeed.setDouble(intakeRetractSpeed);
         entryCargoMotorPower.setDouble(intakeCargo.get());
-        entryRetractMotorPower.setDouble(intakeRetract.get());
+        entryRetractLeftPower.setDouble(intakeRetractLeft.get());
+        entryRetractRightPower.setDouble(intakeRetractRight.get());
 
         double inputSpeedValue = entrySpeedInput.getDouble(0);
         //intakeSpeed = inputSpeedValue;
