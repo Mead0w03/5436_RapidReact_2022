@@ -21,6 +21,8 @@ import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandStopAdvance;
 import frc.robot.commands.ClimberCommands.CommandStopArticulate;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
+import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
+import frc.robot.commands.ClimberCommands.CommandSolenoid;
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
@@ -90,6 +92,8 @@ public class RobotContainer {
   private final CommandAdvance commandAdvance = new CommandAdvance(climber);
   private final CommandStopArticulate commandStopArticulate = new CommandStopArticulate(climber);
   private final CommandStopAdvance commandStopAdvance = new CommandStopAdvance(climber);
+  private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
+  private final CommandStopSolenoid commandStopSolenoid = new CommandStopSolenoid(climber);
 
   // Instantiate shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
@@ -136,15 +140,18 @@ public class RobotContainer {
           .whenInactive(commandStopClimb);
     dpadDown.whileActiveContinuous(commandDescend)
           .whenInactive(commandStopClimb);
-    dpadRight.whenActive(commandIncreaseClimberSpeed);
-    dpadLeft.whenActive(commandDecreaseClimberSpeed);
+    
 
     articulateTrigger.whileActiveContinuous(commandArticulate)
           .whenInactive(commandStopArticulate);
     advanceTrigger.whileActiveContinuous(commandAdvance)
           .whenInactive(commandStopAdvance);
+    
+    dpadLeft.whenActive(commandSolenoid);
+    dpadRight.whenActive(commandStopSolenoid);
+    
   }
-
+   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

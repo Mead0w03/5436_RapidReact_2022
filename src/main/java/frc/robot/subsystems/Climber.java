@@ -33,7 +33,7 @@ public class Climber extends SubsystemBase {
 private TalonFX vertMotor;
 private TalonFX advanceMotor;
 private VictorSPX articulateMotor;
-private VictorSPX SolenoidMotor;
+private VictorSPX solenoidMotor;
 
 private final XboxController xboxController;
 private final XboxController.Axis articulateAxis;
@@ -62,6 +62,7 @@ private NetworkTableEntry entryArticulateMotorSpeed= netTblClimber.getEntry("Art
 private NetworkTableEntry entryVertMotorCurrent= netTblClimber.getEntry("VertMotorCurrent");
 private NetworkTableEntry entryAdvanceMotorCurrent= netTblClimber.getEntry("AdvanceMotorCurrent");
 private NetworkTableEntry entryArticulateMotorCurrent= netTblClimber.getEntry("ArticulateMotorCurrent");
+private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
 
 
 // **********************************************
@@ -78,21 +79,21 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     vertMotor = new TalonFX(CanBusConfig.VERT_ARM);
     advanceMotor = new TalonFX(CanBusConfig.ADVANCE_ARM);
     articulateMotor = new VictorSPX(CanBusConfig.ARTICULATOR);
-    SolenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
+    solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
 
 
     // set factory default for all motors
     vertMotor.configFactoryDefault();
     advanceMotor.configFactoryDefault();
     articulateMotor.configFactoryDefault();
-    SolenoidMotor.configFactoryDefault();
+    solenoidMotor.configFactoryDefault();
 
 
     // set braking mode for all
     advanceMotor.setNeutralMode(NeutralMode.Brake);
     vertMotor.setNeutralMode(NeutralMode.Brake);
     articulateMotor.setNeutralMode(NeutralMode.Brake);
-    SolenoidMotor.setNeutralMode(NeutralMode.Brake);
+    solenoidMotor.setNeutralMode(NeutralMode.Brake);
 
     /*
     // set Current Limits
@@ -178,6 +179,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         // limits speed between 0.1 - 0.5
         articulateSpeed = xboxController.getRawAxis(articulateAxis.value) / 2.0;
         articulateMotor.set(ControlMode.PercentOutput, articulateSpeed);
+        
     }
 
     public void stopArticulate(){
@@ -194,6 +196,13 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     public void stopAdvance(){
         advanceSpeed = 0.0;
         advanceMotor.set(ControlMode.PercentOutput, 0.0);
+    }
+
+    public void startSolenoid(){
+        solenoidMotor.set(ControlMode.PercentOutput, 100);
+    }
+    public void stopSolenoid(){
+        solenoidMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
@@ -213,6 +222,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         // entryArticulateSpeed.setDouble(articulateSpeed);
         entryAdvanceSpeed.setDouble(advanceSpeed);
 
+        
 
     }
 
