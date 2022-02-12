@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -31,7 +32,8 @@ public class Climber extends SubsystemBase {
 // **********************************************
 private TalonFX vertMotor;
 private TalonFX advanceMotor;
-private TalonFX articulateMotor;
+private VictorSPX articulateMotor;
+private VictorSPX SolenoidMotor;
 
 private final XboxController xboxController;
 private final XboxController.Axis articulateAxis;
@@ -75,20 +77,24 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     vertMotor = new TalonFX(CanBusConfig.VERT_ARM);
     advanceMotor = new TalonFX(CanBusConfig.ADVANCE_ARM);
-    articulateMotor = new TalonFX(CanBusConfig.ARTICULATOR);
+    articulateMotor = new VictorSPX(CanBusConfig.ARTICULATOR);
+    SolenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
 
 
     // set factory default for all motors
     vertMotor.configFactoryDefault();
     advanceMotor.configFactoryDefault();
     articulateMotor.configFactoryDefault();
+    SolenoidMotor.configFactoryDefault();
 
 
     // set braking mode for all
     advanceMotor.setNeutralMode(NeutralMode.Brake);
     vertMotor.setNeutralMode(NeutralMode.Brake);
     articulateMotor.setNeutralMode(NeutralMode.Brake);
+    SolenoidMotor.setNeutralMode(NeutralMode.Brake);
 
+    /*
     // set Current Limits
     double supplyLimit = 10;
     double triggerThreshold = 40;
@@ -97,6 +103,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     SupplyCurrentLimitConfiguration supplyCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(true, supplyLimit, triggerThreshold, triggerThresholdTime);
     vertMotor.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
     advanceMotor.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
+*/
 
     // leftEncoder = leftMotor.getEncoder();
     // rightEncoder = rightMotor.getEncoder();
@@ -202,8 +209,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         
         entryVertMotorCurrent.setDouble(vertMotor.getSupplyCurrent());
         entryAdvanceMotorCurrent.setDouble(advanceMotor.getSupplyCurrent());
-        entryArticulateMotorCurrent.setDouble(articulateMotor.getSupplyCurrent());
-        entryArticulateSpeed.setDouble(articulateSpeed);
+        // entryArticulateMotorCurrent.setDouble(articulateMotor.getSupplyCurrent());
+        // entryArticulateSpeed.setDouble(articulateSpeed);
         entryAdvanceSpeed.setDouble(advanceSpeed);
 
 

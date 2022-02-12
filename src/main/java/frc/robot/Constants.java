@@ -33,6 +33,7 @@ public final class Constants {
         public static final int VERT_ARM = 10;
         public static final int ADVANCE_ARM = 11;
         public static final int ARTICULATOR = 12;
+        public static final int SOLENOID = 14;
 
         // Hardware
         public static final int PDP = 13;
