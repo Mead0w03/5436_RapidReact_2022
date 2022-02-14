@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber2;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
@@ -69,6 +70,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber(xboxController, articulateAxis, advanceAxis);
+  // private final Climber2 climber2 = new Climber2(xboxController, articulateAxis, advanceAxis);
   private final DriveBase driveBase = new DriveBase();
 
   // Instantiate Intake commands
@@ -105,6 +107,10 @@ public class RobotContainer {
     // Configure the button bindings
 
     configureButtonBindings();
+  }
+
+  public Climber getClimber(){
+    return this.climber;
   }
 
   private void configureButtonBindings() {
