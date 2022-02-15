@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -28,30 +30,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 import frc.robot.sim.PhysicsSim;
 
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+
+
 public class Climber extends SubsystemBase {
     // **********************************************
     // Class Variables
     // **********************************************
 
-
+    
     // **********************************************
     // Instance Variables
     // **********************************************
     private WPI_TalonFX vertMotor;
     private WPI_TalonFX advanceMotor;
-    private WPI_TalonFX articulateMotor;
-    private List<TalonFX> climberMotors = new ArrayList<>();
-
+    private WPI_VictorSPX articulateMotor;
+    private WPI_VictorSPX solenoidMotor;
+    private List<BaseMotorController> climberMotors = new ArrayList<>();
+    
     private final XboxController xboxController;
     private final XboxController.Axis articulateAxis;
     private final XboxController.Axis advanceAxis;
-
+    // **********************************************
+    // Instance Variables
+    // **********************************************
+    
     private double climbSpeed = 0.1;
     private double rateOfChange = .05;
     private double articulateSpeed = 0.0;
     private double advanceSpeed = 0.0;
     private final double startSpeed = 0.1;
-
+    
     private boolean currentLimitEnabled = false;
     private double vertForwardLimitValue = 50000;
     private double vertReverseLimitValue = 0;
@@ -59,17 +68,17 @@ public class Climber extends SubsystemBase {
     private double peakVertCurrent;
     private double peakAdvanceCurrent;
     private double peakArticulateCurrent;
-
+    
     private final String netTblName = this.getClass().getSimpleName();
     private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
-
+    
     private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber Command");
     private final String climbSpeedEntryName = "Climber Speed";
-
+    
     private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
     private NetworkTableEntry entryArticulateSpeed= netTblClimber.getEntry("Articulate Speed");
     private NetworkTableEntry entryAdvanceSpeed= netTblClimber.getEntry("Advance Speed");
-
+    
     private NetworkTableEntry entryVertMotorSpeed= netTblClimber.getEntry("VertMotorSpeed");
     private NetworkTableEntry entryAdvanceMotorSpeed= netTblClimber.getEntry("AdvanceMotorSpeed");
     private NetworkTableEntry entryArticulateMotorSpeed= netTblClimber.getEntry("ArticulateMotorSpeed");
@@ -77,6 +86,7 @@ public class Climber extends SubsystemBase {
     private NetworkTableEntry entryVertMotorCurrent= netTblClimber.getEntry("VertMotorCurrent");
     private NetworkTableEntry entryAdvanceMotorCurrent= netTblClimber.getEntry("AdvanceMotorCurrent");
     private NetworkTableEntry entryArticulateMotorCurrent= netTblClimber.getEntry("ArticulateMotorCurrent");
+    private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
 
     private NetworkTableEntry entryCurrentLimitEnabled= netTblClimber.getEntry("CurrentLimitEnabled");
     private NetworkTableEntry entryPeakVertCurrent = netTblClimber.getEntry("PeakVertCurrent");
@@ -104,17 +114,83 @@ public class Climber extends SubsystemBase {
 
         vertMotor = new WPI_TalonFX(CanBusConfig.VERT_ARM);
         advanceMotor = new WPI_TalonFX(CanBusConfig.ADVANCE_ARM);
-        articulateMotor = new WPI_TalonFX(CanBusConfig.ARTICULATOR);
+        articulateMotor = new WPI_VictorSPX(CanBusConfig.ARTICULATOR);
+        solenoidMotor = new WPI_VictorSPX(CanBusConfig.SOLENOID);
+
 
         climberMotors.add(vertMotor);
         climberMotors.add(advanceMotor);
         climberMotors.add(articulateMotor);
+        climberMotors.add(solenoidMotor);
 
         climberMotors.forEach(m->configMotor(m));
 
-        // leftEncoder = leftMotor.getEncoder();
-        // rightEncoder = rightMotor.getEncoder();
+        setSoftLimits(vertMotor, vertForwardLimitValue, vertReverseLimitValue);
 
+        configureNetworkTableListeners();
+    }
+
+
+    // **********************************************
+    // Getters & Setters
+    // **********************************************
+
+
+    // **********************************************
+    // Class Methods
+    // **********************************************
+
+    /*
+    // set Current Limits
+    double supplyLimit = 10;
+    double triggerThreshold = 40;
+    double triggerThresholdTime = 0.5;
+
+    SupplyCurrentLimitConfiguration supplyCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(true, supplyLimit, triggerThreshold, triggerThresholdTime);
+    vertMotor.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
+    advanceMotor.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
+*/
+
+
+    // **********************************************
+    // Instance Methods
+    // **********************************************
+
+    private void configMotor(BaseMotorController motor){
+        motor.configFactoryDefault();
+        // set braking mode
+        motor.setNeutralMode(NeutralMode.Brake);
+
+        if (motor instanceof TalonFX){
+            TalonFX myTalon = (TalonFX) motor;
+            myTalon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
+            /* Gains for Position Closed Loop servo */
+            myTalon.config_kP(0, 2.0, 30);
+            myTalon.config_kI(0, 0.0, 30);
+            myTalon.config_kD(0, 0.0, 30);
+            myTalon.config_kF(0, 0.0, 30);
+    
+            if (this.currentLimitEnabled){
+                // set Current Limits
+                double supplyLimit = 10;
+                double supplyTriggerThreshold = 15;
+                double supplyTriggerThresholdTime = 0.5;
+        
+                SupplyCurrentLimitConfiguration supplyCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(true, supplyLimit, supplyTriggerThreshold, supplyTriggerThresholdTime);
+                myTalon.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
+            }
+        }
+    }
+
+    private void setSoftLimits(TalonFX motor, double forwardLimit, double reverseLimit){
+        motor.configForwardSoftLimitEnable(true, 30);
+        motor.configReverseSoftLimitEnable(true, 30);
+        // motor.configForwardLimitSwitchSource(TalonFXFeedbackDevice.IntegratedSensor, LimitSwitchNormal.NormallyOpen, 30);
+        motor.configForwardSoftLimitThreshold(forwardLimit);
+        motor.configReverseSoftLimitThreshold(reverseLimit);
+    }
+
+    private void configureNetworkTableListeners() {
         // Create listener for climbSpeed
         System.out.println(String.format("entryClimberSpeed.getName(): %s", entryClimberSpeed.getName()));
         netTblClimber.addEntryListener(climbSpeedEntryName, (table, key, entry, value, flags)->{
@@ -162,52 +238,6 @@ public class Climber extends SubsystemBase {
         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
-    // **********************************************
-    // Getters & Setters
-    // **********************************************
-
-
-    // **********************************************
-    // Class Methods
-    // **********************************************
-
-
-    // **********************************************
-    // Instance Methods
-    // **********************************************
-
-    private void configMotor(TalonFX motor){
-        motor.configFactoryDefault();
-        motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
-        /* Gains for Position Closed Loop servo */
-        motor.config_kP(0, 2.0, 30);
-        motor.config_kI(0, 0.0, 30);
-        motor.config_kD(0, 0.0, 30);
-        motor.config_kF(0, 0.0, 30);
-
-            // set braking mode
-        motor.setNeutralMode(NeutralMode.Brake);
-        setSoftLimits(vertMotor, vertForwardLimitValue, vertReverseLimitValue);
-
-        if (this.currentLimitEnabled){
-            // set Current Limits
-            double supplyLimit = 10;
-            double supplyTriggerThreshold = 15;
-            double supplyTriggerThresholdTime = 0.5;
-
-            SupplyCurrentLimitConfiguration supplyCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(true, supplyLimit, supplyTriggerThreshold, supplyTriggerThresholdTime);
-            motor.configSupplyCurrentLimit(supplyCurrentLimitConfiguration);
-        }
-
-    }
-
-    private void setSoftLimits(TalonFX motor, double forwardLimit, double reverseLimit){
-        motor.configForwardSoftLimitEnable(true, 30);
-        motor.configReverseSoftLimitEnable(true, 30);
-        // motor.configForwardLimitSwitchSource(TalonFXFeedbackDevice.IntegratedSensor, LimitSwitchNormal.NormallyOpen, 30);
-        motor.configForwardSoftLimitThreshold(forwardLimit);
-        motor.configReverseSoftLimitThreshold(reverseLimit);
-    }
 
     public void resetSpeed(){
         climbSpeed = startSpeed;
@@ -253,6 +283,7 @@ public class Climber extends SubsystemBase {
         // limits speed between 0.1 - 0.5
         articulateSpeed = xboxController.getRawAxis(articulateAxis.value) / 2.0;
         articulateMotor.set(ControlMode.PercentOutput, articulateSpeed);
+        
     }
 
     public void stopArticulate(){
@@ -271,6 +302,13 @@ public class Climber extends SubsystemBase {
         advanceMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
+    public void startSolenoid(){
+        solenoidMotor.set(ControlMode.PercentOutput, 100);
+    }
+    public void stopSolenoid(){
+        solenoidMotor.set(ControlMode.PercentOutput, 0);
+    }
+
     @Override
     public void periodic() {
         // System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
@@ -284,8 +322,8 @@ public class Climber extends SubsystemBase {
         
         entryVertMotorCurrent.setDouble(vertMotor.getSupplyCurrent());
         entryAdvanceMotorCurrent.setDouble(advanceMotor.getSupplyCurrent());
-        entryArticulateMotorCurrent.setDouble(articulateMotor.getSupplyCurrent());
-        entryArticulateSpeed.setDouble(articulateSpeed);
+        // entryArticulateMotorCurrent.setDouble(articulateMotor.getSupplyCurrent());
+        // entryArticulateSpeed.setDouble(articulateSpeed);
         entryAdvanceSpeed.setDouble(advanceSpeed);
 
         entryCurrentLimitEnabled.setBoolean(currentLimitEnabled);
@@ -293,10 +331,10 @@ public class Climber extends SubsystemBase {
         // update the peak current
         double currentVertSupplyCurrent = Math.abs(vertMotor.getSupplyCurrent());
         double currentAdvanceSupplyCurrent = Math.abs(advanceMotor.getSupplyCurrent());
-        double currentArticulateSupplyCurrent = Math.abs(articulateMotor.getSupplyCurrent());
+        // double currentArticulateSupplyCurrent = Math.abs(articulateMotor.getSupplyCurrent());
         peakVertCurrent = (currentVertSupplyCurrent > peakVertCurrent) ? currentVertSupplyCurrent : peakVertCurrent;
         peakAdvanceCurrent = (currentAdvanceSupplyCurrent > peakAdvanceCurrent) ? currentAdvanceSupplyCurrent : peakAdvanceCurrent;
-        peakArticulateCurrent = (currentArticulateSupplyCurrent > peakArticulateCurrent) ? currentArticulateSupplyCurrent : peakArticulateCurrent;
+        // peakArticulateCurrent = (currentArticulateSupplyCurrent > peakArticulateCurrent) ? currentArticulateSupplyCurrent : peakArticulateCurrent;
         entryPeakVertCurrent.setString(String.format("%.2f", peakVertCurrent));
         entryPeakAdvanceCurrent.setString(String.format("%.2f", peakAdvanceCurrent));
         entryPeakArticulateCurrent.setString(String.format("%.2f", peakArticulateCurrent));
@@ -327,7 +365,8 @@ public class Climber extends SubsystemBase {
     public void initSimulation(){
         System.out.println("Adding motors to simulation");
         PhysicsSim.getInstance().addTalonFX(vertMotor, 0.5, 6800);
-        PhysicsSim.getInstance().addTalonFX(articulateMotor, 0.5, 6800);
+        PhysicsSim.getInstance().addVictorSPX(articulateMotor);
+        PhysicsSim.getInstance().addVictorSPX(solenoidMotor);
         PhysicsSim.getInstance().addTalonFX(advanceMotor, 0.5, 6800);
     }
     
