@@ -14,9 +14,11 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeCargo;
     private CANSparkMax intakeRetractLeft;
     private CANSparkMax intakeRetractRight;
+    private CANSparkMax intakeStorage;
     private RelativeEncoder intakeCargoEncoder;
     private RelativeEncoder intakeRetractLeftEncoder;
     private RelativeEncoder intakeRetractRightEncoder;
+    private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
     private double intakeRetractSpeed = 0.1;
     private double intakeSpeed = 0;
@@ -33,9 +35,11 @@ public class Intake extends SubsystemBase {
         intakeCargo = new CANSparkMax(0, MotorType.kBrushless);
         intakeRetractLeft = new CANSparkMax(1, MotorType.kBrushless);
         intakeRetractRight = new CANSparkMax(2, MotorType.kBrushless);
+        intakeStorage = new CANSparkMax(3, MotorType.kBrushless);
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
         intakeRetractLeftEncoder = intakeRetractRight.getEncoder();
+        intakeStorageEncoder = intakeStorage.getEncoder();
 
         SmartDashboard.putNumber("Intake Speed", intakeSpeed);
 
@@ -45,14 +49,17 @@ public class Intake extends SubsystemBase {
 
     public void cargoIn(){
         intakeCargo.set(intakeCargoSpeed);
+        intakeStorage.set(intakeCargoSpeed);
     }
 
     public void cargoOut(){
         intakeCargo.set(-intakeCargoSpeed);
+        intakeStorage.set(-intakeCargoSpeed);
     }
 
     public void cargoStop(){
         intakeCargo.set(0);
+        intakeStorage.set(0);
     }
 
     public void intakeUp(){
