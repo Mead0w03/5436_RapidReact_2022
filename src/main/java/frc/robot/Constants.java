@@ -22,7 +22,8 @@ public final class Constants {
         public static final int BACK_LEFT = 4; 
 
         // Shooter
-        public static final int LEFT_SHOOTER = 5;
+        public static final int LAUNCHER = 5;
+        public static final int FEEDER = 6;
 
         // Intake
         public static final int CARGO = 7;
@@ -30,9 +31,9 @@ public final class Constants {
         public static final int RETRACT_RIGHT = 9;
 
         // Climber
-        public static final int VERT_ARM = 10;
-        public static final int ADVANCE_ARM = 11;
-        public static final int ARTICULATOR = 12;
+        public static final int INNER_ARM = 10;
+        public static final int OUTER_ARM = 11;
+        public static final int TILT = 12;
         public static final int SOLENOID = 14;
 
         // Hardware

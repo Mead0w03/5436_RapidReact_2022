@@ -32,6 +32,8 @@ import frc.robot.commands.IntakeCommands.CommandIntakeUp;
 // imports for shooter commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
+import frc.robot.commands.ShooterCommands.CommandStartFeeder;
+import frc.robot.commands.ShooterCommands.CommandStopFeeder;
 import frc.robot.commands.ShooterCommands.CommandStopShooter;
 import frc.robot.commands.ShooterCommands.CommandFarHigh;
 import frc.robot.commands.ShooterCommands.CommandCloseLow;
@@ -61,16 +63,21 @@ public class RobotContainer {
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
-  private final XboxController.Axis articulateAxis = XboxController.Axis.kLeftY;
-  private final XboxController.Axis advanceAxis = XboxController.Axis.kRightY;
-  private final Trigger articulateTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(articulateAxis.value)) > 0.2);
-  private final Trigger advanceTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(advanceAxis.value)) > 0.2);
+
+  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
+
+  // TODO: These need to be re-assigned to Primary Joystick
+  // private final XboxController.Axis tiltAxis = XboxController.Axis.kLeftY;
+  // private final XboxController.Axis outerArmAxis = XboxController.Axis.kRightY;
+  // private final Trigger articulateTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(tiltAxis.value)) > 0.2);
+  // private final Trigger advanceTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(outerArmAxis.value)) > 0.2);
 
   
   // Instantiate subsystems
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber(xboxController, articulateAxis, advanceAxis);
+  // TODO: Update the axis when instantiating Climber
+  private final Climber climber = new Climber(xboxController, null, null);
   private final DriveBase driveBase = new DriveBase();
 
   // Instantiate Intake commands
@@ -101,6 +108,9 @@ public class RobotContainer {
   private final CommandReverseShooter commandReverseShooter = new CommandReverseShooter(shooter);
   private final CommandFarHigh commandFarHigh = new CommandFarHigh(shooter);
   private final CommandCloseLow commandCloseLow = new CommandCloseLow(shooter);
+  private final CommandStartFeeder commandStartFeeder = new CommandStartFeeder(shooter);
+  private final CommandStopFeeder commandStopFeeder = new CommandStopFeeder(shooter);
+
   //close high has not been created but drivers say it is a position
   //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
 
@@ -141,11 +151,14 @@ public class RobotContainer {
     dpadDown.whileActiveContinuous(commandDescend)
           .whenInactive(commandStopClimb);
     
+    leftStickUp.whenActive(commandStartFeeder);
+    leftStickUp.whenInactive(commandStopFeeder);
 
-    articulateTrigger.whileActiveContinuous(commandArticulate)
-          .whenInactive(commandStopArticulate);
-    advanceTrigger.whileActiveContinuous(commandAdvance)
-          .whenInactive(commandStopAdvance);
+    //TODO: reassign to new Joystick
+    // articulateTrigger.whileActiveContinuous(commandArticulate)
+    //       .whenInactive(commandStopArticulate);
+    // advanceTrigger.whileActiveContinuous(commandAdvance)
+    //       .whenInactive(commandStopAdvance);
     
     dpadLeft.whenActive(commandSolenoid);
     dpadRight.whenActive(commandStopSolenoid);

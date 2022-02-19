@@ -30,19 +30,19 @@ public class Climber extends SubsystemBase {
 // **********************************************
 // Instance Variables
 // **********************************************
-private TalonFX vertMotor;
-private TalonFX advanceMotor;
-private VictorSPX articulateMotor;
+private TalonFX innerArmMotor;
+private TalonFX outerArmMotor;
+private VictorSPX tiltMotor;
 private VictorSPX solenoidMotor;
 
 private final XboxController xboxController;
-private final XboxController.Axis articulateAxis;
-private final XboxController.Axis advanceAxis;
+private final XboxController.Axis tiltAxis;
+private final XboxController.Axis outerArmAxis;
 
 private double climbSpeed = 0.1;
 private double rateOfChange = .05;
-private double articulateSpeed = 0.0;
-private double advanceSpeed = 0.0;
+private double tiltSpeed = 0.0;
+private double outerArmSpeed = 0.0;
 private final double startSpeed = 0.1;
 
 private final String netTblName = "Climber";
@@ -52,16 +52,16 @@ private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber C
 private final String climbSpeedEntryName = "Climber Speed";
 
 private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
-private NetworkTableEntry entryArticulateSpeed= netTblClimber.getEntry("Articulate Speed");
-private NetworkTableEntry entryAdvanceSpeed= netTblClimber.getEntry("Advance Speed");
+private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Articulate Speed");
+private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Advance Speed");
 
 
-private NetworkTableEntry entryVertMotorSpeed= netTblClimber.getEntry("VertMotorSpeed");
-private NetworkTableEntry entryAdvanceMotorSpeed= netTblClimber.getEntry("AdvanceMotorSpeed");
-private NetworkTableEntry entryArticulateMotorSpeed= netTblClimber.getEntry("ArticulateMotorSpeed");
-private NetworkTableEntry entryVertMotorCurrent= netTblClimber.getEntry("VertMotorCurrent");
-private NetworkTableEntry entryAdvanceMotorCurrent= netTblClimber.getEntry("AdvanceMotorCurrent");
-private NetworkTableEntry entryArticulateMotorCurrent= netTblClimber.getEntry("ArticulateMotorCurrent");
+private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
+private NetworkTableEntry entryOuterArmMotorSpeed= netTblClimber.getEntry("OuterArmMotorSpeed");
+private NetworkTableEntry entryTiltMotorSpeed= netTblClimber.getEntry("TiltMotorSpeed");
+private NetworkTableEntry entryInnerArmMotorCurrent= netTblClimber.getEntry("InnerArmMotorCurrent");
+private NetworkTableEntry entryOuterArmMotorCurrent= netTblClimber.getEntry("OuterArmMotorCurrent");
+private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMotorCurrent");
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
 
 
@@ -73,26 +73,26 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
     this.xboxController = xboxController;
-    this.articulateAxis = articulateAxis;
-    this.advanceAxis = advanceAxis;
+    this.tiltAxis = articulateAxis;
+    this.outerArmAxis = advanceAxis;
 
-    vertMotor = new TalonFX(CanBusConfig.VERT_ARM);
-    advanceMotor = new TalonFX(CanBusConfig.ADVANCE_ARM);
-    articulateMotor = new VictorSPX(CanBusConfig.ARTICULATOR);
+    innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
+    outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
+    tiltMotor = new VictorSPX(CanBusConfig.TILT);
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
 
 
     // set factory default for all motors
-    vertMotor.configFactoryDefault();
-    advanceMotor.configFactoryDefault();
-    articulateMotor.configFactoryDefault();
+    innerArmMotor.configFactoryDefault();
+    outerArmMotor.configFactoryDefault();
+    tiltMotor.configFactoryDefault();
     solenoidMotor.configFactoryDefault();
 
 
     // set braking mode for all
-    advanceMotor.setNeutralMode(NeutralMode.Brake);
-    vertMotor.setNeutralMode(NeutralMode.Brake);
-    articulateMotor.setNeutralMode(NeutralMode.Brake);
+    outerArmMotor.setNeutralMode(NeutralMode.Brake);
+    innerArmMotor.setNeutralMode(NeutralMode.Brake);
+    tiltMotor.setNeutralMode(NeutralMode.Brake);
     solenoidMotor.setNeutralMode(NeutralMode.Brake);
 
     /*
@@ -141,17 +141,17 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     public void ascend(){
         // todo:make speed variable
-        vertMotor.set(ControlMode.PercentOutput, climbSpeed);
+        innerArmMotor.set(ControlMode.PercentOutput, climbSpeed);
         // rightMotor.set(climbSpeed);
     }
 
     public void descend(){
-        vertMotor.set(ControlMode.PercentOutput, -climbSpeed);
+        innerArmMotor.set(ControlMode.PercentOutput, -climbSpeed);
         // rightMotor.set(-climbSpeed);
     }
 
     public void stop(){
-        vertMotor.set(ControlMode.PercentOutput, 0.0);
+        innerArmMotor.set(ControlMode.PercentOutput, 0.0);
         // rightMotor.set(0);
     }
     
@@ -175,27 +175,27 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         climbSpeed = newSpeed;
     }
 
-    public void articulate(){
+    public void startTilt(){
         // limits speed between 0.1 - 0.5
-        articulateSpeed = xboxController.getRawAxis(articulateAxis.value) / 2.0;
-        articulateMotor.set(ControlMode.PercentOutput, articulateSpeed);
+        tiltSpeed = xboxController.getRawAxis(tiltAxis.value) / 2.0;
+        tiltMotor.set(ControlMode.PercentOutput, tiltSpeed);
         
     }
 
-    public void stopArticulate(){
-        articulateSpeed = 0.0;
-        articulateMotor.set(ControlMode.PercentOutput, 0.0);
+    public void stopTilt(){
+        tiltSpeed = 0.0;
+        tiltMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
     public void advance(){
         // limits speed between 0.1 - 0.5
-        advanceSpeed = xboxController.getRawAxis(advanceAxis.value) / 2.0;
-        advanceMotor.set(ControlMode.PercentOutput, advanceSpeed);
+        outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
+        outerArmMotor.set(ControlMode.PercentOutput, outerArmSpeed);
     }
 
     public void stopAdvance(){
-        advanceSpeed = 0.0;
-        advanceMotor.set(ControlMode.PercentOutput, 0.0);
+        outerArmSpeed = 0.0;
+        outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
     public void startSolenoid(){
@@ -212,15 +212,15 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
         entryClimberSpeed.setDouble(climbSpeed);
         // entryRightMotorSpeed.setDouble(rightMotor.get());
-        entryVertMotorSpeed.setDouble(vertMotor.getMotorOutputPercent());
-        entryAdvanceMotorSpeed.setDouble(advanceMotor.getMotorOutputPercent());
-        entryArticulateMotorSpeed.setDouble(articulateMotor.getMotorOutputPercent());
+        entryInnerArmMotorSpeed.setDouble(innerArmMotor.getMotorOutputPercent());
+        entryOuterArmMotorSpeed.setDouble(outerArmMotor.getMotorOutputPercent());
+        entryTiltMotorSpeed.setDouble(tiltMotor.getMotorOutputPercent());
         
-        entryVertMotorCurrent.setDouble(vertMotor.getSupplyCurrent());
-        entryAdvanceMotorCurrent.setDouble(advanceMotor.getSupplyCurrent());
-        // entryArticulateMotorCurrent.setDouble(articulateMotor.getSupplyCurrent());
-        // entryArticulateSpeed.setDouble(articulateSpeed);
-        entryAdvanceSpeed.setDouble(advanceSpeed);
+        entryInnerArmMotorCurrent.setDouble(innerArmMotor.getSupplyCurrent());
+        entryOuterArmMotorCurrent.setDouble(outerArmMotor.getSupplyCurrent());
+        // entryTiltMotorCurrent.setDouble(tiltMotor.getSupplyCurrent());
+        // entryTiltSpeed.setDouble(tiltSpeed);
+        entryOuterArmSpeed.setDouble(outerArmSpeed);
 
         
 
