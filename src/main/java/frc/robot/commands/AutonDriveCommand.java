@@ -15,12 +15,14 @@ public AutonDriveCommand(DriveBase driveBase){
     this.autonDriveBase = driveBase;
     timer = new Timer();
     this.addRequirements(autonDriveBase);
+    System.out.println("In AutonDriveCommand");
 }
  // Called when the command is initially scheduled.
  @Override
  public void initialize() {
      timer.start();
      autonDriveBase.init();
+     System.out.println("Initialize, AutonDriveCommand");
      SmartDashboard.putString("Initialise", "AutonDriveCommand");
  }
 
@@ -28,6 +30,7 @@ public AutonDriveCommand(DriveBase driveBase){
  @Override
  public void execute() {
      autonDriveBase.drive(speed, speed);
+     System.out.println("Execute,AutonDriveCommand");
      SmartDashboard.putString("Execute", "AutonDriveCommand");
  }
 
@@ -35,6 +38,7 @@ public AutonDriveCommand(DriveBase driveBase){
  @Override
  public void end(boolean interrupted) {
      SmartDashboard.putString("End" ,"AutonDriveCommand");
+     System.out.println("End,AutonDriveCommand");
      autonDriveBase.stopAllDrivetrainMotors();
  }
 
@@ -43,6 +47,7 @@ public AutonDriveCommand(DriveBase driveBase){
  public boolean isFinished() {
      boolean shouldExit = false;
      SmartDashboard.putNumber("Timer", timer.get());
+     System.out.println(String.format("Timer %.2f", timer.get()));
     if(timer.get() > 3.0){
         shouldExit = true;
     }
