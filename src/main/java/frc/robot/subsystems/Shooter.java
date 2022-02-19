@@ -203,7 +203,7 @@ public void SpeedEnum(){
 
         if(++loops >= 10){
             loops = 0;
-            System.out.println(sb.toString());
+          //  System.out.println(sb.toString());
         }
         sb.setLength(0);
     }

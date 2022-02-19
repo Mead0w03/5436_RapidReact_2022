@@ -39,11 +39,11 @@ private final XboxController xboxController;
 private final XboxController.Axis tiltAxis;
 private final XboxController.Axis outerArmAxis;
 
-private double climbSpeed = 0.1;
+private double climbSpeed = 0.5;
 private double rateOfChange = .05;
-private double tiltSpeed = 0.0;
-private double outerArmSpeed = 0.0;
-private final double startSpeed = 0.1;
+private double tiltSpeed = 0.5;
+private double outerArmSpeed = 0.5;
+private final double startSpeed = 0.5;
 
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
@@ -214,7 +214,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     }
 
     public void stopTilt(){
-        tiltSpeed = 0.0;
+        //tiltSpeed = 0.0;
         tiltMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
@@ -232,7 +232,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     }
 
     public void stopAdvance(){
-        outerArmSpeed = 0.0;
+//outerArmSpeed = 0.0;
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
@@ -257,7 +257,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryInnerArmMotorCurrent.setDouble(innerArmMotor.getSupplyCurrent());
         entryOuterArmMotorCurrent.setDouble(outerArmMotor.getSupplyCurrent());
         // entryTiltMotorCurrent.setDouble(tiltMotor.getSupplyCurrent());
-        // entryTiltSpeed.setDouble(tiltSpeed);
+        entryTiltSpeed.setDouble(tiltSpeed);
         entryOuterArmSpeed.setDouble(outerArmSpeed);
 
         

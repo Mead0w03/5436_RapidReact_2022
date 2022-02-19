@@ -137,6 +137,8 @@ public class RobotContainer {
     // Configure the button bindings
 
     configureButtonBindings();
+    driveBase.setDefaultCommand(commandDrive);
+
   }
 
   private void configureButtonBindings() {

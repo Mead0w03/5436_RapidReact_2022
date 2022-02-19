@@ -23,7 +23,7 @@ public final class Constants {
 
         // Shooter
         public static final int LAUNCHER = 5;
-        public static final int FEEDER = 6;
+        public static final int FEEDER = 4;
 
         // Intake
         public static final int CARGO = 7;
@@ -37,7 +37,7 @@ public final class Constants {
         public static final int SOLENOID = 14;
 
         // Hardware
-        public static final int PDP = 13;
+        public static final int PDP = 50;
 
         // Sensors
         
