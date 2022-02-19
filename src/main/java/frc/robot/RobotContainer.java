@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -12,14 +13,17 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
-import frc.robot.commands.ClimberCommands.CommandAdvance;
-import frc.robot.commands.ClimberCommands.CommandArticulate;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ClimberCommands.CommandStartOuterArms;
+import frc.robot.commands.ClimberCommands.CommandStartTilt;
 import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
-import frc.robot.commands.ClimberCommands.CommandStopAdvance;
-import frc.robot.commands.ClimberCommands.CommandStopArticulate;
+import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
+import frc.robot.commands.ClimberCommands.CommandRetractTilt;
+import frc.robot.commands.ClimberCommands.CommandStopOuterArms;
+import frc.robot.commands.ClimberCommands.CommandStopTilt;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
 import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
@@ -49,6 +53,7 @@ import frc.robot.subsystems.Shooter;
  */
 public class RobotContainer {
   private XboxController xboxController = new XboxController(0); 
+  private Joystick stick = new Joystick(1);
   
   //initialize buttons
   private final LeftTrigger leftTrigger = new LeftTrigger();
@@ -59,6 +64,14 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+
+  private final JoystickButton stick7 = new JoystickButton(stick, 7);
+  private final JoystickButton stick8 = new JoystickButton(stick, 8);
+  private final JoystickButton stick9 = new JoystickButton(stick, 9);
+  private final JoystickButton stick10 = new JoystickButton(stick, 10);
+  private final JoystickButton stick11 = new JoystickButton(stick, 11);
+  private final JoystickButton stick12 = new JoystickButton(stick, 12);
+
   private final Trigger dpadUp = new Trigger(() -> xboxController.getPOV() == 0);
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
@@ -95,12 +108,15 @@ public class RobotContainer {
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
   private final CommandDecreaseClimberSpeed commandDecreaseClimberSpeed = new CommandDecreaseClimberSpeed(climber);
-  private final CommandArticulate commandArticulate = new CommandArticulate(climber);
-  private final CommandAdvance commandAdvance = new CommandAdvance(climber);
-  private final CommandStopArticulate commandStopArticulate = new CommandStopArticulate(climber);
-  private final CommandStopAdvance commandStopAdvance = new CommandStopAdvance(climber);
+  private final CommandStartTilt commandStartTilt = new CommandStartTilt(climber);
+  private final CommandStartOuterArms commandStartOuterArms = new CommandStartOuterArms(climber);
+  private final CommandStopTilt commandStopTilt = new CommandStopTilt(climber);
+  private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climber);
   private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
   private final CommandStopSolenoid commandStopSolenoid = new CommandStopSolenoid(climber);
+
+  private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
+  private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
 
   // Instantiate shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
@@ -110,6 +126,8 @@ public class RobotContainer {
   private final CommandCloseLow commandCloseLow = new CommandCloseLow(shooter);
   private final CommandStartFeeder commandStartFeeder = new CommandStartFeeder(shooter);
   private final CommandStopFeeder commandStopFeeder = new CommandStopFeeder(shooter);
+
+  private final DriveCommands commandDrive = new DriveCommands(driveBase, stick);
 
   //close high has not been created but drivers say it is a position
   //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
@@ -123,11 +141,17 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
 
+
+
     // Shooter:
     rightBumper.whileHeld(commandReverseShooter)
                 .whenReleased(commandStopShooter);
     leftBumper.whileHeld(commandActivateShooter)
                 .whenReleased(commandStopShooter);
+
+    leftStickUp.whenActive(commandStartFeeder);
+    leftStickUp.whenInactive(commandStopFeeder);
+    
     // Speed for shooter
     xButton.whenPressed(commandFarHigh);
     bButton.whenPressed(commandCloseLow);  
@@ -145,15 +169,33 @@ public class RobotContainer {
     yButton.whileHeld(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 
-    // Climber commands
+    // Climber commands - Secondary Commands
     dpadUp.whileActiveContinuous(commandClimb)
-          .whenInactive(commandStopClimb);
+          .whenInactive(commandStopClimb);//
     dpadDown.whileActiveContinuous(commandDescend)
-          .whenInactive(commandStopClimb);
+          .whenInactive(commandStopClimb);//
     
-    leftStickUp.whenActive(commandStartFeeder);
-    leftStickUp.whenInactive(commandStopFeeder);
+    // Climber commands - Primary Commands
+    stick7.whenPressed(commandClimb)
+        .whenReleased(commandStopClimb);
 
+    stick8.whenPressed(commandDescend)
+        .whenReleased(commandStopClimb);
+
+    stick9.whenPressed(commandStartTilt)
+        .whenReleased(commandStopTilt);
+
+    stick10.whenPressed(commandRetractTilt)
+        .whenReleased(commandStopTilt);
+
+    stick11.whenPressed(commandStartOuterArms)
+        .whenReleased(commandStopOuterArms);
+
+    stick12.whenPressed(commandRetractOuterArms)
+        .whenReleased(commandStopOuterArms);
+    
+
+    
     //TODO: reassign to new Joystick
     // articulateTrigger.whileActiveContinuous(commandArticulate)
     //       .whenInactive(commandStopArticulate);

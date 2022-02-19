@@ -3,7 +3,7 @@ package frc.robot.commands.ClimberCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
-public class CommandStopArticulate extends CommandBase{
+public class CommandStopTilt extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -18,7 +18,7 @@ public class CommandStopArticulate extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandStopArticulate(Climber climber){
+        public CommandStopTilt(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);

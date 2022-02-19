@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Climber;
 
-public class CommandArticulate extends CommandBase{
+public class CommandStartOuterArms extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -19,7 +19,7 @@ public class CommandArticulate extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandArticulate(Climber climber){
+        public CommandStartOuterArms(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);
@@ -53,7 +53,7 @@ public class CommandArticulate extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.startTilt();
+        climber.startOuterArms("forward");
     }
 
     @Override

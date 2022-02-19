@@ -3,22 +3,14 @@ package frc.robot.commands.ClimberCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
-public class CommandStopAdvance extends CommandBase{
-    // **********************************************
-    // Class Variables
-    // **********************************************
-    
-    
-    // **********************************************
-    // Instance Variables
-    // **********************************************
-        private Climber climber;
+public class CommandRetractOuterArms extends CommandBase {
+    private Climber climber;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandStopAdvance(Climber climber){
+        public CommandRetractOuterArms(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);
@@ -52,7 +44,7 @@ public class CommandStopAdvance extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.stopAdvance();
+        climber.startOuterArms("retract");
     }
 
     @Override
@@ -64,7 +56,7 @@ public class CommandStopAdvance extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
     
 }

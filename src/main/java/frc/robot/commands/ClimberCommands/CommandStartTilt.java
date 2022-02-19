@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Climber;
 
-public class CommandAdvance extends CommandBase{
+public class CommandStartTilt extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -19,7 +19,7 @@ public class CommandAdvance extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandAdvance(Climber climber){
+        public CommandStartTilt(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);
@@ -53,7 +53,7 @@ public class CommandAdvance extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.advance();
+        climber.startTilt("forward");
     }
 
     @Override

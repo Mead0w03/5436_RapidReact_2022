@@ -52,8 +52,8 @@ private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber C
 private final String climbSpeedEntryName = "Climber Speed";
 
 private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
-private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Articulate Speed");
-private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Advance Speed");
+private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Tilt Speed");
+private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Outer Arm Speed");
 
 
 private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
@@ -63,6 +63,8 @@ private NetworkTableEntry entryInnerArmMotorCurrent= netTblClimber.getEntry("Inn
 private NetworkTableEntry entryOuterArmMotorCurrent= netTblClimber.getEntry("OuterArmMotorCurrent");
 private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMotorCurrent");
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
+
+
 
 
 // **********************************************
@@ -116,6 +118,27 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         if (climbSpeed != value.getDouble()){
             System.out.println("Updating the instance att based on table data");
             climbSpeed = value.getDouble();
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    System.out.println(String.format("entryOuterArmSpeed.getName(): %s", entryOuterArmSpeed.getName()));
+    String outerArmEntryName = NetworkTable.basenameKey(entryOuterArmSpeed.getName());
+    netTblClimber.addEntryListener(outerArmEntryName, (table, key, entry, value, flags)-> {
+        System.out.println("The value for climber speed changed");
+        if (outerArmSpeed != value.getDouble()){
+            System.out.println("Updating the instance att based on table data");
+            outerArmSpeed = value.getDouble();
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    
+    System.out.println(String.format("entryTiltSpeed.getName(): %s", entryTiltSpeed.getName()));
+    String tiltEntryName = NetworkTable.basenameKey(entryTiltSpeed.getName());
+    netTblClimber.addEntryListener(tiltEntryName, (table, key, entry, value, flags)-> {
+        System.out.println("The value for climber speed changed");
+        if (tiltSpeed != value.getDouble()){
+            System.out.println("Updating the instance att based on table data");
+            tiltSpeed = value.getDouble();
         }
     },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
@@ -175,11 +198,19 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         climbSpeed = newSpeed;
     }
 
-    public void startTilt(){
+    public void startTilt(String direction){
         // limits speed between 0.1 - 0.5
-        tiltSpeed = xboxController.getRawAxis(tiltAxis.value) / 2.0;
-        tiltMotor.set(ControlMode.PercentOutput, tiltSpeed);
-        
+        //tiltSpeed = xboxController.getRawAxis(tiltAxis.value) / 2.0;
+        double speed = 0.0;
+
+        if(direction.equals("forward")) {
+
+            speed = tiltSpeed;            
+        } else if(direction.equals("retract")) {
+            speed = -tiltSpeed;
+        }
+
+        tiltMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopTilt(){
@@ -187,10 +218,17 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         tiltMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void advance(){
+    public void startOuterArms(String direction){
         // limits speed between 0.1 - 0.5
-        outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
-        outerArmMotor.set(ControlMode.PercentOutput, outerArmSpeed);
+        //outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
+        double speed = 0.0;
+
+        if(direction.equalsIgnoreCase("forward")){
+            speed = outerArmSpeed;
+        } else if(direction.equalsIgnoreCase("retract")) {
+           speed = -outerArmSpeed;
+        }
+        outerArmMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopAdvance(){
