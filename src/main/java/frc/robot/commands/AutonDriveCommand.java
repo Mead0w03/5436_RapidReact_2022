@@ -20,6 +20,7 @@ public AutonDriveCommand(DriveBase driveBase){
  // Called when the command is initially scheduled.
  @Override
  public void initialize() {
+     timer.reset();
      timer.start();
      autonDriveBase.init();
      System.out.println("Initialize, AutonDriveCommand");
