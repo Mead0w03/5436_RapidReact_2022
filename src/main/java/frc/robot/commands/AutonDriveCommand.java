@@ -9,7 +9,7 @@ public class AutonDriveCommand extends CommandBase {
 
 private DriveBase autonDriveBase;
 private Timer timer;
-private double speed = 0.3;
+private double speed = 0.2;
 
 public AutonDriveCommand(DriveBase driveBase){
     this.autonDriveBase = driveBase;
@@ -23,21 +23,22 @@ public AutonDriveCommand(DriveBase driveBase){
      timer.start();
      autonDriveBase.init();
      System.out.println("Initialize, AutonDriveCommand");
-     SmartDashboard.putString("Initialise", "AutonDriveCommand");
+     //SmartDashboard.putString("Initialise", "AutonDriveCommand");
  }
 
  // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
-     autonDriveBase.drive(speed, speed);
+     autonDriveBase.drive(-speed, -speed);
+     
      System.out.println("Execute,AutonDriveCommand");
-     SmartDashboard.putString("Execute", "AutonDriveCommand");
+     //SmartDashboard.putString("Execute", "AutonDriveCommand");
  }
 
  // Called once the command ends or is interrupted.
  @Override
  public void end(boolean interrupted) {
-     SmartDashboard.putString("End" ,"AutonDriveCommand");
+    // SmartDashboard.putString("End" ,"AutonDriveCommand");
      System.out.println("End,AutonDriveCommand");
      autonDriveBase.stopAllDrivetrainMotors();
  }
@@ -46,9 +47,9 @@ public AutonDriveCommand(DriveBase driveBase){
  @Override
  public boolean isFinished() {
      boolean shouldExit = false;
-     SmartDashboard.putNumber("Timer", timer.get());
+     //SmartDashboard.putNumber("Timer", timer.get());
      System.out.println(String.format("Timer %.2f", timer.get()));
-    if(timer.get() > 3.0){
+    if(timer.get() > 1.0){
         shouldExit = true;
     }
    return shouldExit;

@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveBase extends SubsystemBase {
@@ -17,11 +18,18 @@ public class DriveBase extends SubsystemBase {
 
     public DriveBase() {
       motorFR = new CANSparkMax(1, MotorType.kBrushless);
-      motorFL = new CANSparkMax(3, MotorType.kBrushless);
+      motorFL = new CANSparkMax(4, MotorType.kBrushless);
       motorBR = new CANSparkMax(2, MotorType.kBrushless);
-      motorBL = new CANSparkMax(4, MotorType.kBrushless);
+      motorBL = new CANSparkMax(3, MotorType.kBrushless);
+      motorBR.setInverted(true);
+      motorFR.setInverted(true);
+      SmartDashboard.putNumber("FrontRight",getFrontRightEncoderValue());
+    SmartDashboard.putNumber("BackRight", getBackRightEncoderValue());
+    SmartDashboard.putNumber("FrontLeft",getFrontLeftEncoderValue());
+    SmartDashboard.putNumber("BackLeft", getBackLeftEncoderValue());
     }
 
+    
     public double deaden(double input, double deadband) {
         deadband = Math.min(1, deadband);
         deadband = Math.max(0, deadband);
@@ -87,6 +95,37 @@ public class DriveBase extends SubsystemBase {
       motorBL.set(0);
       motorBR.set(0);
     }//End of stopAllDrivetrainMotors()
+
+    public double getFrontRightEncoderValue(){
+      motorFR.getEncoder().setPosition(0.0);
+      
+      return motorFR.getEncoder().getPosition();
+    }
+
+    public double getBackRightEncoderValue(){
+      motorBR.getEncoder().setPosition(0.0);
+      
+      return motorBR.getEncoder().getPosition();
+    }
+
+    public double getFrontLeftEncoderValue(){
+      motorFR.getEncoder().setPosition(0.0);
+      return motorFL.getEncoder().getPosition();
+    }
+
+    public double getBackLeftEncoderValue(){
+      motorBL.getEncoder().setPosition(0.0);
+      return motorBL.getEncoder().getPosition();
+    }
+
+    @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("FrontRight",getFrontRightEncoderValue());
+    SmartDashboard.putNumber("BackRight", getBackRightEncoderValue());
+    SmartDashboard.putNumber("FrontLeft",getFrontLeftEncoderValue());
+    SmartDashboard.putNumber("BackLeft", getBackLeftEncoderValue());
+  }
     
 }
 
