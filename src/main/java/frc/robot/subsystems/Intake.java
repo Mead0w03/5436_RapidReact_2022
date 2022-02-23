@@ -63,6 +63,12 @@ public class Intake extends SubsystemBase {
             intakeCargoSpeed = value.getDouble();
          }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+         String intakeRetractSpeedName = NetworkTable.basenameKey(entryRetractSpeed.getName());
+         intakeTable.addEntryListener(intakeRetractSpeedName, (table, key, entry, value, flags) -> {
+             System.out.println("Retract speed changed value: " + value.getValue());
+             intakeRetractSpeed = value.getDouble();
+          }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
          REVPhysicsSim.getInstance().addSparkMax(intakeRetractRight, DCMotor.getNEO(1));
     }
 
@@ -97,7 +103,6 @@ public class Intake extends SubsystemBase {
     }
 
 
-
     @Override
     public void periodic() {
         // TODO Auto-generated method stub
@@ -111,7 +116,7 @@ public class Intake extends SubsystemBase {
         entryRetractLeftEncoder.setDouble(intakeRetractLeftEncoder.getPosition());
         entryRetractRightEncoder.setDouble(intakeRetractRightEncoder.getPosition());
 
-        double inputSpeedValue = entrySpeedInput.getDouble(0);
+        // double inputSpeedValue = entrySpeedInput.getDouble(0);
         //intakeSpeed = inputSpeedValue;
     }
 
