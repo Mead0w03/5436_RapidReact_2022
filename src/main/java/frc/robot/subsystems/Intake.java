@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
-    private double intakeRetractSpeed = 0.1;
+    private double intakeRetractSpeed = 0.5;
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
