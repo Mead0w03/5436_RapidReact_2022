@@ -14,6 +14,7 @@ import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.commands.DriveCommands;
+//Climber Commands
 import frc.robot.commands.ClimberCommands.CommandStartOuterArms;
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
 import frc.robot.commands.ClimberCommands.CommandClimb;
@@ -27,13 +28,14 @@ import frc.robot.commands.ClimberCommands.CommandStopTilt;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
 import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
+//Intake Commands
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeDown;
 import frc.robot.commands.IntakeCommands.CommandIntakeStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeUp;
-// imports for shooter commands
+//Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
 import frc.robot.commands.ShooterCommands.CommandStartFeeder;
@@ -41,8 +43,6 @@ import frc.robot.commands.ShooterCommands.CommandStopFeeder;
 import frc.robot.commands.ShooterCommands.CommandStopShooter;
 import frc.robot.commands.ShooterCommands.CommandFarHigh;
 import frc.robot.commands.ShooterCommands.CommandCloseLow;
-//close high has not been created but drivers say it is a position
-//import frc.robot.commands.ShooterCommands.CommandCloseHigh;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -86,10 +86,11 @@ public class RobotContainer {
   // private final Trigger advanceTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(outerArmAxis.value)) > 0.2);
 
   
+  // TODO: Update the axis when instantiating Climber
+  //TODO list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
   // Instantiate subsystems
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  // TODO: Update the axis when instantiating Climber
   private final Climber climber = new Climber(xboxController, null, null);
   private final DriveBase driveBase = new DriveBase();
 
@@ -100,7 +101,6 @@ public class RobotContainer {
   private final CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
   private final CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
   private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
-  //to do list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
   
   // Instantiate Climber Commands
   private final CommandClimb commandClimb = new CommandClimb(climber);
@@ -118,7 +118,7 @@ public class RobotContainer {
   private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
 
-  // Instantiate shooter commands
+  // Instantiate Shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
   private final CommandStopShooter commandStopShooter = new CommandStopShooter(shooter);
   private final CommandReverseShooter commandReverseShooter = new CommandReverseShooter(shooter);
@@ -128,9 +128,6 @@ public class RobotContainer {
   private final CommandStopFeeder commandStopFeeder = new CommandStopFeeder(shooter);
 
   private final DriveCommands commandDrive = new DriveCommands(driveBase, stick);
-
-  //close high has not been created but drivers say it is a position
-  //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -157,8 +154,7 @@ public class RobotContainer {
     // Speed for shooter
     xButton.whenPressed(commandFarHigh);
     bButton.whenPressed(commandCloseLow);  
-    //close high has not been created but drivers say it is a position
-    //aButton.whenPressed(commandCloseHigh);  
+  
 
     // Intake Commands
     leftTrigger.whileActiveContinuous(commandCargoIn)
