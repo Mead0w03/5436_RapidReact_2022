@@ -29,6 +29,7 @@ public final class Constants {
         public static final int CARGO = 7;
         public static final int RETRACT_LEFT = 8;
         public static final int RETRACT_RIGHT = 9;
+        public static final int STORAGE = 15;
 
         // Climber
         public static final int INNER_ARM = 10;

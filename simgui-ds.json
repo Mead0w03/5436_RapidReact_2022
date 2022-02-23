@@ -88,10 +88,13 @@
       "buttonCount": 0,
       "povCount": 0
     }
+<<<<<<< HEAD
   ],
   "robotJoysticks": [
     {
       "guid": "78696e70757401000000000000000000"
     }
+=======
+>>>>>>> MNL_Storage
   ]
 }
