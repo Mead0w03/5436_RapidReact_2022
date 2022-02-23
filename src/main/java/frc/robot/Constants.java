@@ -40,6 +40,9 @@ public final class Constants {
         public static final int PDP = 50;
 
         // Sensors
+
+        //Gyro
+        public static final int GYRO = 40;
         
 
     }

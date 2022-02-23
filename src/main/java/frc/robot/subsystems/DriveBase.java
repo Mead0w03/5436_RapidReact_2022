@@ -4,6 +4,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
@@ -20,16 +23,27 @@ public class DriveBase extends SubsystemBase {
     private double xAxisDeadband;
     private double yAxisDeadband;
 
+    //Network Table instances
+    NetworkTable driveBaseTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
+    NetworkTableEntry entryFREncoder = driveBaseTable.getEntry("FR Encoder");
+    NetworkTableEntry entryFLEncoder = driveBaseTable.getEntry("FL Encoder");
+    NetworkTableEntry entryBREncoder = driveBaseTable.getEntry("BR Encoder");
+    NetworkTableEntry entryBLEncoder = driveBaseTable.getEntry("BL Encoder");
+
     //TODO: need to create deaden parameter to change during testing
 
     /** DriveBase Constructor
      * initializes brushless motor drive train on can ids 1-4
+     * @param NetworkTableInstance 
      */
     public DriveBase() {
       motorFR = new CANSparkMax(CanBusConfig.FRONT_RIGHT, MotorType.kBrushless); 
       motorFL = new CANSparkMax(CanBusConfig.FRONT_LEFT, MotorType.kBrushless);
       motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
       motorBL = new CANSparkMax(CanBusConfig.BACK_LEFT, MotorType.kBrushless);
+      motorBR.setInverted(true);
+      motorFR.setInverted(true);
+      
     } //end of DriveBase() constructor
 
     /**
@@ -137,10 +151,10 @@ public class DriveBase extends SubsystemBase {
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("FrontRight",getFrontRightEncoderValue());
-    SmartDashboard.putNumber("BackRight", getBackRightEncoderValue());
-    SmartDashboard.putNumber("FrontLeft",getFrontLeftEncoderValue());
-    SmartDashboard.putNumber("BackLeft", getBackLeftEncoderValue());
+    entryFREncoder.setDouble(getFrontRightEncoderValue());
+    entryBREncoder.setDouble(getBackRightEncoderValue());
+    entryFLEncoder.setDouble(getFrontLeftEncoderValue());
+    entryBLEncoder.setDouble(getBackLeftEncoderValue());
   }
     
 }
