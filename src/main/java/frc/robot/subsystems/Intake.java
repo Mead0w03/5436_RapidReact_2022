@@ -4,12 +4,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
@@ -25,6 +28,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
     private double intakeRetractSpeed = 0.5;
+    private Encoder encoder;
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
@@ -45,7 +49,7 @@ public class Intake extends SubsystemBase {
 
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
-        intakeRetractRightEncoder = intakeRetractRight.getEncoder();
+        intakeRetractRightEncoder = intakeRetractRight.getEncoder(Type.kQuadrature, 42);
         intakeStorageEncoder = intakeStorage.getEncoder();
 
         intakeCargoEncoder.setPosition(0);

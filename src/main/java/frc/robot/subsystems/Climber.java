@@ -44,6 +44,7 @@ private double rateOfChange = .05;
 private double tiltSpeed = 0.5;
 private double outerArmSpeed = 0.5;
 private final double startSpeed = 0.5;
+private boolean solenoidEngaged = false;
 
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
@@ -63,8 +64,7 @@ private NetworkTableEntry entryInnerArmMotorCurrent= netTblClimber.getEntry("Inn
 private NetworkTableEntry entryOuterArmMotorCurrent= netTblClimber.getEntry("OuterArmMotorCurrent");
 private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMotorCurrent");
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
-
-
+private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
 
 
 // **********************************************
@@ -96,6 +96,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     innerArmMotor.setNeutralMode(NeutralMode.Brake);
     tiltMotor.setNeutralMode(NeutralMode.Brake);
     solenoidMotor.setNeutralMode(NeutralMode.Brake);
+
+    startSolenoid();
 
     /*
     // set Current Limits
@@ -175,6 +177,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     public void stop(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
+        startSolenoid();
         // rightMotor.set(0);
     }
     
@@ -238,9 +241,12 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     public void startSolenoid(){
         solenoidMotor.set(ControlMode.PercentOutput, 100);
+        solenoidEngaged = true;
     }
+
     public void stopSolenoid(){
         solenoidMotor.set(ControlMode.PercentOutput, 0);
+        solenoidEngaged = false;
     }
 
     @Override
@@ -259,6 +265,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         // entryTiltMotorCurrent.setDouble(tiltMotor.getSupplyCurrent());
         entryTiltSpeed.setDouble(tiltSpeed);
         entryOuterArmSpeed.setDouble(outerArmSpeed);
+
+        entrySolenoidEngaged.setBoolean(solenoidEngaged);
 
         
 

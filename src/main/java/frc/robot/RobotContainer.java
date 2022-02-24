@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Climber;
@@ -28,6 +29,7 @@ import frc.robot.commands.ClimberCommands.CommandStopTilt;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
 import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
+import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
 //Intake Commands
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
@@ -118,6 +120,10 @@ public class RobotContainer {
   private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
 
+  private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
+
+  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
+
   // Instantiate Shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
   private final CommandStopShooter commandStopShooter = new CommandStopShooter(shooter);
@@ -170,14 +176,14 @@ public class RobotContainer {
     // Climber commands - Secondary Commands
     dpadUp.whileActiveContinuous(commandClimb)
           .whenInactive(commandStopClimb);//
-    dpadDown.whileActiveContinuous(commandDescend)
+    dpadDown.whileActiveContinuous(commandGroupSolenoidDescend)
           .whenInactive(commandStopClimb);//
     
     // Climber commands - Primary Commands
     stick7.whenPressed(commandClimb)
         .whenReleased(commandStopClimb);
 
-    stick8.whenPressed(commandDescend)
+    stick8.whenPressed(commandGroupSolenoidDescend)
         .whenReleased(commandStopClimb);
 
     stick9.whenPressed(commandStartTilt)
