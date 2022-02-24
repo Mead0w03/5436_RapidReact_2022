@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -142,18 +144,21 @@ public class RobotContainer {
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
   private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
 
+  //Auton routine chooser
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
 
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
+    autonChooser.setDefaultOption("Drive Forward", autonDriveCommand);
+    autonChooser.addOption("Shooter", autonShootCommandGroup);
+    SmartDashboard.putData(autonChooser);
 
   }
 
   private void configureButtonBindings() {
-
-
 
     // Shooter:
     rightBumper.whileHeld(commandReverseShooter)
@@ -226,6 +231,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return autonShootCommandGroup;
+    //return autonShootCommandGroup;
+    return autonChooser.getSelected();
   }
 }

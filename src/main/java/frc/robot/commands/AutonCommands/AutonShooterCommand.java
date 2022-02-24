@@ -14,12 +14,16 @@ private Timer timer;
 public AutonShooterCommand(Shooter shooter){
     this.autonShooter = shooter;
     this.addRequirements(autonShooter);
+    timer = new Timer();
+    
     System.out.println("In AutonShooterCommand");
 }
 
 // Called when the command is initially scheduled.
 @Override
 public void initialize() {
+    timer.reset();
+    timer.start();
 }
 // Called every time the scheduler runs while the command is scheduled.
  @Override

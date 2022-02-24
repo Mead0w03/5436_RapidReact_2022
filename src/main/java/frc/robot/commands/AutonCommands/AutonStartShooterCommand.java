@@ -12,6 +12,7 @@ private Timer timer;
 
 public AutonStartShooterCommand(Shooter shooter){
     this.autonShooter = shooter;
+    timer = new Timer();
     this.addRequirements(autonShooter);
 }
 
@@ -25,6 +26,7 @@ public void initialize() {
  @Override
  public void execute() {
      autonShooter.activateShooter();
+     System.out.println("Execute, AutonStartCommand");
  }
 
  // Called once the command ends or is interrupted.

@@ -53,6 +53,7 @@ private int loops;
 
 
 public NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName()); // shooter speed
+public NetworkTableEntry entryShooterCurrentcommand = shooterTable.getEntry("Shooter current command");
 public NetworkTableEntry entryShooterPercentage = shooterTable.getEntry("Shooter percentage"); //shooter speed in % form
 public NetworkTableEntry entryShooterSpeed = shooterTable.getEntry("Shooter speed"); //shooter speed
 public NetworkTableEntry entryLeftShooterVelocity = shooterTable.getEntry("Left Shooter Velocity"); //shooter speed
@@ -174,6 +175,8 @@ public void SpeedEnum(){
 
 
     public void periodic() {
+        //Get the current command running on the subsystem
+        entryShooterCurrentcommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
         // should print out:
         entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent()); //motor in percent power
         entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity()); //left shooter RPM

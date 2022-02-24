@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,12 +20,16 @@ public class DriveBase extends SubsystemBase {
     private CANSparkMax motorBL;
     private CANSparkMax motorBR;
 
+    //Gyro
+    private PigeonIMU gyro = new PigeonIMU(CanBusConfig.GYRO);
+
     //deadband instance variables
     private double xAxisDeadband;
     private double yAxisDeadband;
 
     //Network Table instances
     NetworkTable driveBaseTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
+    NetworkTableEntry entryDriveBaseCurrentCommand = driveBaseTable.getEntry("Drive Base Current Command");
     NetworkTableEntry entryFREncoder = driveBaseTable.getEntry("FR Encoder");
     NetworkTableEntry entryFLEncoder = driveBaseTable.getEntry("FL Encoder");
     NetworkTableEntry entryBREncoder = driveBaseTable.getEntry("BR Encoder");
@@ -150,6 +155,8 @@ public class DriveBase extends SubsystemBase {
 
     @Override
   public void periodic() {
+    //Get the current command running on the subsystem
+    entryDriveBaseCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
     // This method will be called once per scheduler run
     entryFREncoder.setDouble(getFrontRightEncoderValue());
     entryBREncoder.setDouble(getBackRightEncoderValue());
