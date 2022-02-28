@@ -26,7 +26,7 @@ public class CommandSolenoid extends CommandBase {
   @Override
   public void execute() {
 
-    climber.startSolenoid();
+    climber.engageRatchet();
     System.out.println("Solenoid Start");
   }
 

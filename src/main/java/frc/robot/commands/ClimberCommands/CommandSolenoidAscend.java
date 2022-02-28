@@ -27,6 +27,7 @@ public class CommandSolenoidAscend extends CommandBase {
   public void initialize() {
       timer.reset();
       timer.start();
+      climber.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,15 +41,13 @@ public class CommandSolenoidAscend extends CommandBase {
   public void end(boolean interrupted) {
     timer.stop();
     climber.stop();
+    double currentClimberPosition = climber.getClimberPosition();
+    System.out.println(String.format("The current climber position is %.2f", currentClimberPosition));    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean completed = false;
-    if (timer.get()>0.25) {
-        completed = true;
-    }
-    return completed;
+    return climber.getClimberPosition() > 18500 ? true : false;
   }
 }

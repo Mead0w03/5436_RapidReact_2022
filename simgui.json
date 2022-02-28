@@ -2,30 +2,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-<<<<<<< HEAD
       "/LiveWindow/Climber": "Subsystem",
       "/LiveWindow/DriveBase": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
-=======
-      "/LiveWindow/Intake": "Subsystem",
->>>>>>> MNL_Storage
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
-    }
-  },
-  "NetworkTables": {
-<<<<<<< HEAD
-    "LiveWindow": {
-      "Climber": {
-        "open": true
-      },
-      "Intake": {
-        "open": true
-      },
-=======
-    "Intake": {
->>>>>>> MNL_Storage
-      "open": true
     }
   }
 }

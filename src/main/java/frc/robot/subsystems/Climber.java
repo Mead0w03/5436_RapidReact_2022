@@ -39,9 +39,9 @@ private final XboxController xboxController;
 private final XboxController.Axis tiltAxis;
 private final XboxController.Axis outerArmAxis;
 
-private double climbSpeed = 0.5;
+private double climbSpeed = 0.3;
 private double rateOfChange = .05;
-private double tiltSpeed = 0.5;
+private double tiltSpeed = 1.0;
 private double outerArmSpeed = 0.5;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
@@ -65,6 +65,7 @@ private NetworkTableEntry entryOuterArmMotorCurrent= netTblClimber.getEntry("Out
 private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMotorCurrent");
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
 private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
+private NetworkTableEntry entryClimberPosition = netTblClimber.getEntry("ClimberPosition");
 
 
 // **********************************************
@@ -96,8 +97,10 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     innerArmMotor.setNeutralMode(NeutralMode.Brake);
     tiltMotor.setNeutralMode(NeutralMode.Brake);
     solenoidMotor.setNeutralMode(NeutralMode.Brake);
+    innerArmMotor.setInverted(true);
+    tiltMotor.setInverted(true);
 
-    startSolenoid();
+    engageRatchet();
 
     /*
     // set Current Limits
@@ -175,10 +178,14 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         // rightMotor.set(-climbSpeed);
     }
 
+    public void stopAndEngageRatchet(){
+        innerArmMotor.set(ControlMode.PercentOutput, 0.0);
+        engageRatchet();
+        // rightMotor.set(0);
+    }
+
     public void stop(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
-        startSolenoid();
-        // rightMotor.set(0);
     }
     
     public void increaseSpeed(){
@@ -239,14 +246,22 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void startSolenoid(){
-        solenoidMotor.set(ControlMode.PercentOutput, 100);
+    public void engageRatchet(){
+        solenoidMotor.set(ControlMode.PercentOutput, 0);
         solenoidEngaged = true;
     }
 
-    public void stopSolenoid(){
-        solenoidMotor.set(ControlMode.PercentOutput, 0);
+    public void releaseRatchet(){
+        solenoidMotor.set(ControlMode.PercentOutput, 100);
         solenoidEngaged = false;
+    }
+
+    public void resetEncoder(){
+        innerArmMotor.setSelectedSensorPosition(0.0);
+    }
+
+    public double getClimberPosition(){
+        return innerArmMotor.getSelectedSensorPosition();
     }
 
     @Override
@@ -267,7 +282,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryOuterArmSpeed.setDouble(outerArmSpeed);
 
         entrySolenoidEngaged.setBoolean(solenoidEngaged);
-
+        entryClimberPosition.setDouble(getClimberPosition());
         
 
     }

@@ -259,6 +259,17 @@
               "_source0": "network_table:///SmartDashboard/X axis: ",
               "_title": "X axis: "
             }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Angle",
+              "_title": "Angle"
+            }
           }
         }
       }
@@ -383,7 +394,52 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "titleType": 0,
-        "tiles": {}
+        "tiles": {
+          "3,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Climber",
+              "_title": "/Climber"
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Climber Speed",
+              "_title": "/Climber/Climber Speed"
+            }
+          },
+          "6,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt Speed",
+              "_title": "/Climber/Tilt Speed"
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Outer Arm Speed",
+              "_title": "/Climber/Outer Arm Speed"
+            }
+          }
+        }
       }
     },
     {
@@ -427,6 +483,6 @@
     "x": 0.0,
     "y": 0.0,
     "width": 1940.0,
-    "height": 1100.0
+    "height": 1047.0
   }
 }

@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
 
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
-        intakeRetractRightEncoder = intakeRetractRight.getEncoder(Type.kQuadrature, 42);
+        intakeRetractRightEncoder = intakeRetractRight.getEncoder();
         intakeStorageEncoder = intakeStorage.getEncoder();
 
         intakeCargoEncoder.setPosition(0);

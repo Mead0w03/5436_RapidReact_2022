@@ -80,6 +80,8 @@ public class RobotContainer {
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
 
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
+  private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
+  private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
 
   // TODO: These need to be re-assigned to Primary Joystick
   // private final XboxController.Axis tiltAxis = XboxController.Axis.kLeftY;
@@ -122,6 +124,7 @@ public class RobotContainer {
 
   private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
 
+  //private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
   private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
 
   // Instantiate Shooter commands
@@ -163,35 +166,37 @@ public class RobotContainer {
   
 
     // Intake Commands
-    leftTrigger.whileActiveContinuous(commandCargoIn)
+    leftTrigger.whenActive(commandCargoIn)
       .whenInactive(commandCargoStop);
-    rightTrigger.whileActiveContinuous(commandCargoOut)
+    rightTrigger.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    aButton.whileHeld(commandIntakeUp)
+    aButton.whenPressed(commandIntakeUp)
         .whenReleased(commandIntakeStop);
-    yButton.whileHeld(commandIntakeDown)
+    yButton.whenPressed(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
-    dpadUp.whileActiveContinuous(commandClimb)
+    dpadUp.whenActive(commandClimb)
           .whenInactive(commandStopClimb);//
-    dpadDown.whileActiveContinuous(commandGroupSolenoidDescend)
+    dpadDown.whenActive(commandGroupSolenoidDescend)
           .whenInactive(commandStopClimb);//
-    
+    dpadRight.whenActive(commandStartTilt)
+          .whenInactive(commandStopTilt);
+    dpadLeft.whenActive(commandRetractTilt)
+          .whenInactive(commandStopTilt);
+    rightStickUp.whenActive(commandRetractOuterArms)
+          .whenInactive(commandStopOuterArms);
+    rightStickDown.whenActive(commandStartOuterArms)
+          .whenInactive(commandStopOuterArms);
+
     // Climber commands - Primary Commands
     stick7.whenPressed(commandClimb)
         .whenReleased(commandStopClimb);
 
     stick8.whenPressed(commandGroupSolenoidDescend)
         .whenReleased(commandStopClimb);
-
-    stick9.whenPressed(commandStartTilt)
-        .whenReleased(commandStopTilt);
-
-    stick10.whenPressed(commandRetractTilt)
-        .whenReleased(commandStopTilt);
-
+    
     stick11.whenPressed(commandStartOuterArms)
         .whenReleased(commandStopOuterArms);
 
@@ -206,8 +211,6 @@ public class RobotContainer {
     // advanceTrigger.whileActiveContinuous(commandAdvance)
     //       .whenInactive(commandStopAdvance);
     
-    dpadLeft.whenActive(commandSolenoid);
-    dpadRight.whenActive(commandStopSolenoid);
     
   }
    
