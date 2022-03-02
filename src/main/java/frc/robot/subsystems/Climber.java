@@ -34,6 +34,8 @@ private TalonFX innerArmMotor;
 private TalonFX outerArmMotor;
 private VictorSPX tiltMotor;
 private VictorSPX solenoidMotor;
+private double currentOuterArmPos;
+private double currentInnerArmPos;
 
 private final XboxController xboxController;
 private final XboxController.Axis tiltAxis;
@@ -66,6 +68,8 @@ private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMot
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
 private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
 private NetworkTableEntry entryClimberPosition = netTblClimber.getEntry("ClimberPosition");
+private NetworkTableEntry entryOuterArmPos = netTblClimber.getEntry("outer arm current encoder value");
+private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("inner arm current encoder value");
 
 
 // **********************************************
@@ -283,7 +287,12 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
         entrySolenoidEngaged.setBoolean(solenoidEngaged);
         entryClimberPosition.setDouble(getClimberPosition());
-        
+
+        currentOuterArmPos = outerArmMotor.getSelectedSensorPosition();
+        currentInnerArmPos = innerArmMotor.getSelectedSensorPosition();
+        entryOuterArmPos.setDouble(currentOuterArmPos);
+        entryInnerArmPos.setDouble(currentInnerArmPos);
+    
 
     }
 

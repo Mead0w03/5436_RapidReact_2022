@@ -177,17 +177,17 @@ public class RobotContainer {
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
-    dpadUp.whenActive(commandClimb)
+    dpadDown.whenActive(commandClimb)
           .whenInactive(commandStopClimb);//
-    dpadDown.whenActive(commandGroupSolenoidDescend)
+    dpadUp.whenActive(commandGroupSolenoidDescend)
           .whenInactive(commandStopClimb);//
     dpadRight.whenActive(commandStartTilt)
           .whenInactive(commandStopTilt);
     dpadLeft.whenActive(commandRetractTilt)
           .whenInactive(commandStopTilt);
-    rightStickUp.whenActive(commandRetractOuterArms)
+    rightStickDown.whenActive(commandRetractOuterArms)
           .whenInactive(commandStopOuterArms);
-    rightStickDown.whenActive(commandStartOuterArms)
+    rightStickUp.whenActive(commandStartOuterArms)
           .whenInactive(commandStopOuterArms);
 
     // Climber commands - Primary Commands
