@@ -23,7 +23,7 @@ public final class Constants {
 
         // Shooter
         public static final int LAUNCHER = 5;
-        public static final int FEEDER = 4;
+        public static final int FEEDER = 6;
 
         // Intake
         public static final int CARGO = 7;
