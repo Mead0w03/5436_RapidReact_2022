@@ -47,6 +47,9 @@ private double tiltSpeed = 1.0;
 private double outerArmSpeed = 0.5;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
+private boolean resetEncoder = false;
+private double innerArmEncoderSetPoint = 0.0;
+private boolean ignoreEncoder = false;
 
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
@@ -57,7 +60,9 @@ private final String climbSpeedEntryName = "Climber Speed";
 private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
 private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Tilt Speed");
 private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Outer Arm Speed");
-
+private NetworkTableEntry entryResetEncoder = netTblClimber.getEntry("Reset Encoder");
+private NetworkTableEntry entryInnerArmSetPoint = netTblClimber.getEntry("Enter value for inner arm encoder");
+private NetworkTableEntry entryIgnoreEncoder = netTblClimber.getEntry("Ignore Encoder");
 
 private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
 private NetworkTableEntry entryOuterArmMotorSpeed= netTblClimber.getEntry("OuterArmMotorSpeed");
@@ -106,6 +111,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     engageRatchet();
 
+    innerArmMotor.setSelectedSensorPosition(0);
+    outerArmMotor.setSelectedSensorPosition(0);
     /*
     // set Current Limits
     double supplyLimit = 10;
@@ -121,6 +128,35 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     // rightEncoder = rightMotor.getEncoder();
 
     // Configure the network table entries
+
+    // String innerArmSetPointEntryName = NetworkTable.basenameKey(entryInnerArmSetPoint.getName());
+    // netTblClimber.addEntryListener(innerArmSetPointEntryName, (table, key, entry, value, flags)->{
+    //     System.out.println("Encoder being reset");
+    //     if (value.getDouble() != innerArmEncoderSetPoint){
+    //         innerArmEncoderSetPoint = value.getDouble();
+    //         innerArmMotor.setSelectedSensorPosition(innerArmEncoderSetPoint);
+    //     }
+    // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
+    netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
+        System.out.println("Encoder being ignored");
+        if (value.getBoolean()!=ignoreEncoder){
+            System.out.println("Updating the instance att based on table data");
+            ignoreEncoder = value.getBoolean();
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    System.out.println(String.format("entryResetEncoder.getName(): %s", entryResetEncoder.getName()));
+    String resetEncoderEntryName = NetworkTable.basenameKey(entryResetEncoder.getName());
+    netTblClimber.addEntryListener(resetEncoderEntryName, (table, key, entry, value, flags)->{
+        System.out.println("Encoder being reset");
+        if (value.getBoolean()){
+            System.out.println("Updating the instance att based on table data");
+            innerArmMotor.setSelectedSensorPosition(0);
+            resetEncoder = false;
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
     System.out.println(String.format("entryClimberSpeed.getName(): %s", entryClimberSpeed.getName()));
     netTblClimber.addEntryListener(climbSpeedEntryName, (table, key, entry, value, flags)->{
         System.out.println("The value for climber speed changed");
@@ -157,6 +193,9 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 // Getters & Setters
 // **********************************************
 
+    public boolean getIgnoreEncoder(){
+        return this.ignoreEncoder;
+    }
 
 // **********************************************
 // Class Methods
@@ -292,6 +331,10 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         currentInnerArmPos = innerArmMotor.getSelectedSensorPosition();
         entryOuterArmPos.setDouble(currentOuterArmPos);
         entryInnerArmPos.setDouble(currentInnerArmPos);
+
+        entryResetEncoder.setBoolean(resetEncoder);
+        entryInnerArmSetPoint.setDouble(innerArmEncoderSetPoint);
+        entryIgnoreEncoder.setBoolean(ignoreEncoder);
     
 
     }

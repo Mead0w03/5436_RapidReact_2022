@@ -44,4 +44,8 @@ public final class Constants {
         
 
     }
+
+    public class ClimberConfig{
+        public static final double TARGET_MOVEMENT = 18500;
+    }
 }

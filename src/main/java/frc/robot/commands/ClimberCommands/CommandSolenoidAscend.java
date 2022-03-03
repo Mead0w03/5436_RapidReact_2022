@@ -6,6 +6,7 @@
 package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -13,6 +14,8 @@ public class CommandSolenoidAscend extends CommandBase {
 
   private Climber climber;
   private Timer timer;
+  private double targetEncoderPosition;
+  private double targetMovement = Constants.ClimberConfig.TARGET_MOVEMENT;
 
   /** Creates a new CommandStopSolenoid. */
   public CommandSolenoidAscend(Climber climber) {
@@ -25,9 +28,11 @@ public class CommandSolenoidAscend extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+      System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
       timer.reset();
       timer.start();
-      climber.resetEncoder();
+      targetEncoderPosition = climber.getClimberPosition() + targetMovement;
+      System.out.println(String.format("The current climber position is %.2f", climber.getClimberPosition()));   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,15 +44,15 @@ public class CommandSolenoidAscend extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     timer.stop();
     climber.stop();
-    double currentClimberPosition = climber.getClimberPosition();
-    System.out.println(String.format("The current climber position is %.2f", currentClimberPosition));    
+    System.out.println(String.format("The current climber position is %.2f", climber.getClimberPosition()));    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getClimberPosition() > 18500 ? true : false;
+    return (climber.getClimberPosition() > targetEncoderPosition) || timer.get() > 1.0 ? true : false;
   }
 }

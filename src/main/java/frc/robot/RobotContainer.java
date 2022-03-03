@@ -20,7 +20,7 @@ import frc.robot.commands.ClimberCommands.CommandStartOuterArms;
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
 import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
-import frc.robot.commands.ClimberCommands.CommandDescend;
+import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
 import frc.robot.commands.ClimberCommands.CommandRetractTilt;
@@ -30,6 +30,7 @@ import frc.robot.commands.ClimberCommands.CommandStopClimb;
 import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
+import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
 //Intake Commands
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
@@ -56,7 +57,8 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
   private XboxController xboxController = new XboxController(0); 
   private Joystick stick = new Joystick(1);
-  
+  private boolean okToContinueDescend = false;
+  private boolean isFullyDescended = false;
   //initialize buttons
   private final LeftTrigger leftTrigger = new LeftTrigger();
   private final Trigger rightTrigger = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightTrigger.value)>0.3);
@@ -78,6 +80,8 @@ public class RobotContainer {
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
+  private final Trigger triggerClearSolenoid = new Trigger(() -> dpadUp.get() && !okToContinueDescend && !isFullyDescended);
+  private final Trigger triggerContinueDescend = new Trigger(() -> dpadUp.get() && okToContinueDescend);
 
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
   private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
@@ -107,8 +111,8 @@ public class RobotContainer {
   private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
   
   // Instantiate Climber Commands
-  private final CommandClimb commandClimb = new CommandClimb(climber);
-  private final CommandDescend commandDescend = new CommandDescend(climber);
+  private final CommandClimb commandClimb = new CommandClimb(climber, this);
+  private final CommandContinueDescend commandContinueDescend = new CommandContinueDescend(climber, this);
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
   private final CommandDecreaseClimberSpeed commandDecreaseClimberSpeed = new CommandDecreaseClimberSpeed(climber);
@@ -123,9 +127,10 @@ public class RobotContainer {
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
 
   private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
+  private final CommandSolenoidDescend commandSolenoidDescend = new CommandSolenoidDescend(climber, this);
 
   //private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
-  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
+  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandSolenoidDescend);
 
   // Instantiate Shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
@@ -145,6 +150,16 @@ public class RobotContainer {
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
 
+  }
+
+  public void setOkToDescend(boolean inputValue){
+    this.okToContinueDescend = inputValue;
+  }
+  public boolean getDpadUp(){
+    return dpadUp.get();
+  }
+  public void setIsFullyDescended(boolean input){
+    this.isFullyDescended = input;
   }
 
   private void configureButtonBindings() {
@@ -179,8 +194,11 @@ public class RobotContainer {
     // Climber commands - Secondary Commands
     dpadDown.whenActive(commandClimb)
           .whenInactive(commandStopClimb);//
-    dpadUp.whenActive(commandGroupSolenoidDescend)
-          .whenInactive(commandStopClimb);//
+    // dpadUp.whenActive(commandGroupSolenoidDescend)
+    //       .whenInactive(commandStopClimb);//
+    triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
+    triggerContinueDescend.whenActive(commandContinueDescend)
+          .whenInactive(commandStopClimb);
     dpadRight.whenActive(commandStartTilt)
           .whenInactive(commandStopTilt);
     dpadLeft.whenActive(commandRetractTilt)
