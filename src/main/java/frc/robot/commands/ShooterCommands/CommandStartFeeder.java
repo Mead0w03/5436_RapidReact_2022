@@ -9,7 +9,7 @@ public class CommandStartFeeder extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Shooter shooter;
   private Timer timer = new Timer();
-  private final double timeLimit = 1.5;
+  private final double timeLimit = 10;
   
 
   /**

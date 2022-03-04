@@ -27,7 +27,7 @@ public class DriveCommands extends CommandBase{
 
         double xOutput = stick.getRawAxis(0);
         double yOutput = stick.getRawAxis(1);
-
+/*
         if(xOutput > .3) {
             xOutput *= .5;
          
@@ -36,9 +36,9 @@ public class DriveCommands extends CommandBase{
          if(yOutput > .3) {
              yOutput *= .5;
          }
-
-        double L = driveBase.driveProcessing(driveBase.deaden(xOutput, .1), driveBase.deaden(yOutput, .1), "Left")[0];
-        double R = driveBase.driveProcessing(driveBase.deaden(xOutput, .1), driveBase.deaden(yOutput, .1), "Right")[1];
+*/
+        double L = driveBase.driveProcessing(driveBase.deaden(xOutput, .15), driveBase.deaden(yOutput, .15), "Left")[0];
+        double R = driveBase.driveProcessing(driveBase.deaden(xOutput, .15), driveBase.deaden(yOutput, .15), "Right")[1];
 
        
 
