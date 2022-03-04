@@ -9,6 +9,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "0,1": {
             "size": [
@@ -282,6 +283,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "3,0": {
             "size": [
@@ -391,6 +393,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "3,0": {
             "size": [
@@ -446,6 +449,50 @@
               "_source0": "network_table:///Climber/Reset Encoder",
               "_title": "Climber/Reset Encoder"
             }
+          },
+          "6,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Climber/Reset Outer Arm Encoder",
+              "_title": "Climber/Reset Outer Arm Encoder"
+            }
+          },
+          "8,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Outer Arm Speed",
+              "_title": "/Climber/Outer Arm Speed"
+            }
+          },
+          "8,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///Climber/Ignore Encoder",
+              "_title": "Climber/Ignore Encoder"
+            }
+          },
+          "8,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt Time Limit",
+              "_title": "/Climber/Tilt Time Limit"
+            }
           }
         }
       }
@@ -459,6 +506,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "3,1": {
             "size": [
@@ -489,7 +537,7 @@
   "windowGeometry": {
     "x": 0.0,
     "y": 0.0,
-    "width": 1940.0,
-    "height": 1047.199951171875
+    "width": 1553.5999755859375,
+    "height": 881.5999755859375
   }
 }

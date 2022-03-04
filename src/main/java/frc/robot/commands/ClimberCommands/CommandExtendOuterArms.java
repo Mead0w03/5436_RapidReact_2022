@@ -2,9 +2,10 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class CommandStartOuterArms extends CommandBase{
+public class CommandExtendOuterArms extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -19,7 +20,7 @@ public class CommandStartOuterArms extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandStartOuterArms(Climber climber){
+        public CommandExtendOuterArms(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);
@@ -43,8 +44,8 @@ public class CommandStartOuterArms extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
+        climber.stopOuterArms();
+
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
     }
@@ -65,7 +66,7 @@ public class CommandStartOuterArms extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return climber.getOuterClimberPosition() > Constants.ClimberConfig.OUTER_FULLY_EXTENDED;
     }
     
 }

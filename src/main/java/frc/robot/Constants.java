@@ -47,5 +47,8 @@ public final class Constants {
 
     public class ClimberConfig{
         public static final double TARGET_MOVEMENT = 18500;
+        public static final double FULLY_DESCENDED = -200000;
+        public static final double OUTER_FULLY_EXTENDED = 355000; //355000
+        public static final double OUTER_FULLY_RETRACTED = 7500;
     }
 }

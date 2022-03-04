@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.print.attribute.standard.PrintQuality;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -14,6 +16,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -36,6 +39,7 @@ private VictorSPX tiltMotor;
 private VictorSPX solenoidMotor;
 private double currentOuterArmPos;
 private double currentInnerArmPos;
+private DigitalInput tiltRetractLimit;
 
 private final XboxController xboxController;
 private final XboxController.Axis tiltAxis;
@@ -50,6 +54,8 @@ private boolean solenoidEngaged = false;
 private boolean resetEncoder = false;
 private double innerArmEncoderSetPoint = 0.0;
 private boolean ignoreEncoder = false;
+private boolean resetOuterArmEncoder = false;
+private double tiltTimeLimit = 0.5;
 
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
@@ -60,9 +66,12 @@ private final String climbSpeedEntryName = "Climber Speed";
 private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
 private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Tilt Speed");
 private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Outer Arm Speed");
-private NetworkTableEntry entryResetEncoder = netTblClimber.getEntry("Reset Encoder");
+private NetworkTableEntry entryResetEncoder = netTblClimber.getEntry("Reset Inner Arm Encoder");
+private NetworkTableEntry entryResetOuterArmEncoder = netTblClimber.getEntry("Reset Outer Arm Encoder");
 private NetworkTableEntry entryInnerArmSetPoint = netTblClimber.getEntry("Enter value for inner arm encoder");
 private NetworkTableEntry entryIgnoreEncoder = netTblClimber.getEntry("Ignore Encoder");
+private NetworkTableEntry entryTiltTimeLimit = netTblClimber.getEntry("Tilt Time Limit");
+private NetworkTableEntry entryTiltRetractLimit = netTblClimber.getEntry("Tilt Retract Limit Switch");
 
 private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
 private NetworkTableEntry entryOuterArmMotorSpeed= netTblClimber.getEntry("OuterArmMotorSpeed");
@@ -92,6 +101,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
     tiltMotor = new VictorSPX(CanBusConfig.TILT);
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
+    tiltRetractLimit = new DigitalInput(0);
 
 
     // set factory default for all motors
@@ -113,6 +123,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     innerArmMotor.setSelectedSensorPosition(0);
     outerArmMotor.setSelectedSensorPosition(0);
+    entryTiltTimeLimit.setDouble(tiltTimeLimit);
     /*
     // set Current Limits
     double supplyLimit = 10;
@@ -157,6 +168,17 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         }
     },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+    String resetOuterArmEncoderEntryName = NetworkTable.basenameKey(entryResetOuterArmEncoder.getName());
+    netTblClimber.addEntryListener(resetOuterArmEncoderEntryName, (table, key, entry, value, flags)->{
+        System.out.println("Encoder being reset");
+        if (value.getBoolean()){
+            System.out.println("Updating the instance att based on table data");
+            outerArmMotor.setSelectedSensorPosition(0);
+            resetOuterArmEncoder = false;
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+
     System.out.println(String.format("entryClimberSpeed.getName(): %s", entryClimberSpeed.getName()));
     netTblClimber.addEntryListener(climbSpeedEntryName, (table, key, entry, value, flags)->{
         System.out.println("The value for climber speed changed");
@@ -195,6 +217,10 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     public boolean getIgnoreEncoder(){
         return this.ignoreEncoder;
+    }
+
+    public boolean getTiltRetractLimit(){
+        return tiltRetractLimit.get();
     }
 
 // **********************************************
@@ -284,7 +310,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         outerArmMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    public void stopAdvance(){
+    public void stopOuterArms(){
 //outerArmSpeed = 0.0;
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
@@ -307,6 +333,10 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         return innerArmMotor.getSelectedSensorPosition();
     }
 
+    public double getOuterClimberPosition(){
+        return outerArmMotor.getSelectedSensorPosition();
+    }
+
     @Override
     public void periodic() {
         // System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
@@ -322,6 +352,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryOuterArmMotorCurrent.setDouble(outerArmMotor.getSupplyCurrent());
         // entryTiltMotorCurrent.setDouble(tiltMotor.getSupplyCurrent());
         entryTiltSpeed.setDouble(tiltSpeed);
+        entryTiltRetractLimit.setBoolean(tiltRetractLimit.get());
         entryOuterArmSpeed.setDouble(outerArmSpeed);
 
         entrySolenoidEngaged.setBoolean(solenoidEngaged);
@@ -333,6 +364,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryInnerArmPos.setDouble(currentInnerArmPos);
 
         entryResetEncoder.setBoolean(resetEncoder);
+        entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
         entryInnerArmSetPoint.setDouble(innerArmEncoderSetPoint);
         entryIgnoreEncoder.setBoolean(ignoreEncoder);
     

@@ -1,6 +1,7 @@
 package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 public class CommandStopOuterArms extends CommandBase{
@@ -52,7 +53,7 @@ public class CommandStopOuterArms extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.stopAdvance();
+        climber.stopOuterArms();
     }
 
     @Override
