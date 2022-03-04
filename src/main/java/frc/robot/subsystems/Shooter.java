@@ -29,7 +29,7 @@ private double feederSpeed = Speed.FEEDER.getSpeed();
 private enum Speed{
     FAR_HIGH_GOAL (18000),
     CLOSE_LOW_GOAL (6000),
-    FEEDER (1000);
+    FEEDER (1500);
 
     private double speed;
     Speed (double speedIn){
@@ -145,11 +145,11 @@ public void SpeedEnum(){
     }
 
     public void startFeederMotor(){
-        rightShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+        rightShooterMotor.set(ControlMode.Velocity, Speed.FEEDER.getSpeed());
     }
 
     public void stopFeeder(){
-        rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
+        rightShooterMotor.set(ControlMode.Velocity, 0.0);
     }
 
     public void stopShooter(){

@@ -68,6 +68,8 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+  private final JoystickButton backButton = new JoystickButton(xboxController, XboxController.Button.kBack.value);
+  private final JoystickButton startButton = new JoystickButton(xboxController, XboxController.Button.kStart.value);
 
   private final JoystickButton stick7 = new JoystickButton(stick, 7);
   private final JoystickButton stick8 = new JoystickButton(stick, 8);
@@ -86,6 +88,8 @@ public class RobotContainer {
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
   private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
   private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
+
+  
 
   // TODO: These need to be re-assigned to Primary Joystick
   // private final XboxController.Axis tiltAxis = XboxController.Axis.kLeftY;
@@ -167,28 +171,28 @@ public class RobotContainer {
 
 
     // Shooter:
-    rightBumper.whileHeld(commandReverseShooter)
+    aButton.whileHeld(commandReverseShooter)
                 .whenReleased(commandStopShooter);
-    leftBumper.whileHeld(commandActivateShooter)
-                .whenReleased(commandStopShooter);
+    rightTrigger.whenActive(commandActivateShooter)
+                .whenInactive(commandStopShooter);
 
-    leftStickUp.whenActive(commandStartFeeder);
-    leftStickUp.whenInactive(commandStopFeeder);
+    leftTrigger.whenActive(commandStartFeeder)
+                .whenInactive(commandStopFeeder);
     
     // Speed for shooter
-    xButton.whenPressed(commandFarHigh);
-    bButton.whenPressed(commandCloseLow);  
+    backButton.whenPressed(commandFarHigh);
+    startButton.whenPressed(commandCloseLow);  
   
 
     // Intake Commands
-    leftTrigger.whenActive(commandCargoIn)
+    rightBumper.whenActive(commandCargoIn)
       .whenInactive(commandCargoStop);
-    rightTrigger.whenActive(commandCargoOut)
+    yButton.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    aButton.whenPressed(commandIntakeUp)
+    bButton.whenPressed(commandIntakeUp)
         .whenReleased(commandIntakeStop);
-    yButton.whenPressed(commandIntakeDown)
+    xButton.whenPressed(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands

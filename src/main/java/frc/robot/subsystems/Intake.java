@@ -1,10 +1,11 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+//import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.EntryListenerFlags;
@@ -27,8 +28,9 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
+    private double intakeUpSpeed = 0.5;
     private double intakeRetractSpeed = 0.5;
-    private Encoder encoder;
+    //private RelativeEncoder encoder = intakeRetractLeft.getEncoder();
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
@@ -92,8 +94,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void intakeUp(){
-        intakeRetractLeft.set(intakeRetractSpeed);
-        intakeRetractRight.set(-intakeRetractSpeed);
+        intakeRetractLeft.set(intakeUpSpeed);
+        intakeRetractRight.set(-intakeUpSpeed);
     }
 
     public void intakeDown(){
