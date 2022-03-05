@@ -54,7 +54,7 @@ private boolean resetEncoder = false;
 private double innerArmEncoderSetPoint = 0.0;
 private boolean ignoreEncoder = false;
 private boolean resetOuterArmEncoder = false;
-private double tiltTimeLimit = 0.5;
+private double tiltTimeLimit = 1.5;
 
 
 
@@ -98,7 +98,7 @@ public Climber(){
     outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
     tiltMotor = new VictorSPX(CanBusConfig.TILT);
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
-    tiltRetractLimit = new DigitalInput(0);
+    tiltRetractLimit = new DigitalInput(9);
 
     //climberLimit = new DigitalInput(0);
 
@@ -219,9 +219,15 @@ public Climber(){
         return this.ignoreEncoder;
     }
 
-    public boolean getTiltRetractLimit(){
-        return tiltRetractLimit.get();
+    public boolean isFullyRetracted(){
+        return !tiltRetractLimit.get();
     }
+
+    public double getTiltTimeLimit(){
+        return tiltTimeLimit;
+    }
+
+    
 
 // **********************************************
 // Class Methods
@@ -231,6 +237,14 @@ public Climber(){
 // **********************************************
 // Instance Methods
 // **********************************************
+
+    public NetworkTableEntry getEntryTiltTimeLimit() {
+        return entryTiltTimeLimit;
+    }
+
+    public void setEntryTiltTimeLimit(NetworkTableEntry entryTiltTimeLimit) {
+        this.entryTiltTimeLimit = entryTiltTimeLimit;
+    }
 
     public void resetSpeed(){
         climbSpeed = startSpeed;

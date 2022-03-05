@@ -2,6 +2,7 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
@@ -55,7 +56,7 @@ public class CommandClimb extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.innerArmUp();
+        climber.innerArmDown();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class CommandClimb extends CommandBase{
     @Override
     public boolean isFinished() {
         boolean verdict = false;
-        if(!climber.getIgnoreEncoder() && climber.getClimberPosition() > 0){
+        if(!climber.getIgnoreEncoder() && climber.getClimberPosition() > Constants.ClimberConfig.FULLY_ASCENDED){
             verdict = true;
         }
         return verdict;

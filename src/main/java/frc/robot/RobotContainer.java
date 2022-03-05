@@ -20,6 +20,7 @@ import frc.robot.commands.DriveCommands;
 //Climber Commands
 import frc.robot.commands.ClimberCommands.CommandExtendOuterArms;
 import frc.robot.commands.ClimberCommands.CommandFullTilt;
+import frc.robot.commands.ClimberCommands.CommandFullTiltRetract;
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
 import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
@@ -92,6 +93,8 @@ public class RobotContainer {
   private final Trigger triggerContinueDescend = new Trigger(() -> dpadUp.get() && okToContinueDescend);
 
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
+  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.3);
+
   private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
   private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
 
@@ -128,6 +131,8 @@ public class RobotContainer {
   private final CommandStartTilt commandStartTilt = new CommandStartTilt(climber);
   private final CommandStopTilt commandStopTilt = new CommandStopTilt(climber);
   private final CommandFullTilt commandFullTilt = new CommandFullTilt(climber);
+  private final CommandFullTiltRetract commandFullTiltRetract = new CommandFullTiltRetract(climber);
+
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
   private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climber);
   private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
@@ -216,6 +221,8 @@ public class RobotContainer {
     dpadLeft.whenActive(commandRetractTilt)
           .whenInactive(commandStopTilt);
     leftStickUp.whenActive(commandFullTilt);
+    leftStickDown.whenActive(commandFullTiltRetract);
+
     rightStickDown.whenActive(commandRetractOuterArms)
           .whenInactive(commandStopOuterArms);
     rightStickUp.whenActive(commandExtendOuterArms)

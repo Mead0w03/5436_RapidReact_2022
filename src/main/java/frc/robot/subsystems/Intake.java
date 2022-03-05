@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
@@ -46,6 +47,10 @@ public class Intake extends SubsystemBase {
         intakeRetractLeft = new CANSparkMax(CanBusConfig.RETRACT_LEFT, MotorType.kBrushless);
         intakeRetractRight = new CANSparkMax(CanBusConfig.RETRACT_RIGHT, MotorType.kBrushless);
         intakeStorage = new CANSparkMax(CanBusConfig.STORAGE, MotorType.kBrushless);
+
+        intakeRetractLeft.setIdleMode(IdleMode.kBrake);
+        intakeRetractRight.setIdleMode(IdleMode.kBrake);
+
 
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();

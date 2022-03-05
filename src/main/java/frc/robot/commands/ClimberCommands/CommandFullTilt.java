@@ -14,7 +14,7 @@ public class CommandFullTilt extends CommandBase {
   /** Creates a new CommandFullTilt. */
   private Timer timer = new Timer();
   private Climber climber;
-  private double timeLimit = 0.5;
+  private double timeLimit;
   public CommandFullTilt(Climber climber) {
     
     this.addRequirements(climber);
@@ -26,7 +26,7 @@ public class CommandFullTilt extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    NetworkTableInstance.getDefault().getTable("Climber").getEntry("Tilt Time Limit").getDouble(0.5);
+    timeLimit = NetworkTableInstance.getDefault().getTable("Climber").getEntry("Tilt Time Limit").getDouble(0.5);
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
   }

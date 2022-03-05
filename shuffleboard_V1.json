@@ -270,6 +270,28 @@
               "_source0": "network_table:///SmartDashboard/Angle",
               "_title": "Angle"
             }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber Outer Arm position: ",
+              "_title": "Climber Outer Arm position: "
+            }
+          },
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber Inner Arm position: ",
+              "_title": "Climber Inner Arm position: "
+            }
           }
         }
       }
@@ -300,6 +322,13 @@
                   "_type": "Boolean Box",
                   "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[0]/Value",
                   "_title": "DigitalInput[0]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[9]/Value",
+                  "_title": "DigitalInput[9]/Value",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#8B0000FF"
                 }
@@ -439,17 +468,6 @@
               "_title": "/Climber/Outer Arm Speed"
             }
           },
-          "6,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///Climber/Reset Encoder",
-              "_title": "Climber/Reset Encoder"
-            }
-          },
           "6,4": {
             "size": [
               2,
@@ -492,6 +510,17 @@
               "_type": "Text View",
               "_source0": "network_table:///Climber/Tilt Time Limit",
               "_title": "/Climber/Tilt Time Limit"
+            }
+          },
+          "6,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Climber/Reset Inner Arm Encoder",
+              "_title": "Climber/Reset Inner Arm Encoder"
             }
           }
         }
