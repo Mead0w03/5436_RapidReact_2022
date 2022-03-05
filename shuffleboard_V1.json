@@ -278,8 +278,8 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Outer Arm position: ",
-              "_title": "Climber Outer Arm position: "
+              "_source0": "network_table:///SmartDashboard/Climber Inner Arm position: ",
+              "_title": "Climber Inner Arm position: "
             }
           },
           "8,2": {
@@ -289,8 +289,19 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Inner Arm position: ",
-              "_title": "Climber Inner Arm position: "
+              "_source0": "network_table:///SmartDashboard/Climber Outer Arm position: ",
+              "_title": "Climber Outer Arm position: "
+            }
+          },
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
+              "_title": "SendableChooser[0]"
             }
           }
         }
@@ -468,50 +479,6 @@
               "_title": "/Climber/Outer Arm Speed"
             }
           },
-          "6,4": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///Climber/Reset Outer Arm Encoder",
-              "_title": "Climber/Reset Outer Arm Encoder"
-            }
-          },
-          "8,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Outer Arm Speed",
-              "_title": "/Climber/Outer Arm Speed"
-            }
-          },
-          "8,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Switch",
-              "_source0": "network_table:///Climber/Ignore Encoder",
-              "_title": "Climber/Ignore Encoder"
-            }
-          },
-          "8,4": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt Time Limit",
-              "_title": "/Climber/Tilt Time Limit"
-            }
-          },
           "6,3": {
             "size": [
               2,
@@ -519,8 +486,8 @@
             ],
             "content": {
               "_type": "Toggle Button",
-              "_source0": "network_table:///Climber/Reset Inner Arm Encoder",
-              "_title": "Climber/Reset Inner Arm Encoder"
+              "_source0": "network_table:///Climber/Reset Encoder",
+              "_title": "Climber/Reset Encoder"
             }
           }
         }
@@ -561,12 +528,48 @@
           }
         }
       }
+    },
+    {
+      "title": "Tab 5",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "4,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Target Velocity",
+              "_title": "Shooter/Target Velocity"
+            }
+          },
+          "4,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Left Shooter Velocity",
+              "_title": "Shooter/Left Shooter Velocity"
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
+    "x": 4.0,
     "y": 0.0,
     "width": 1553.5999755859375,
-    "height": 881.5999755859375
+    "height": 808.0
   }
 }
