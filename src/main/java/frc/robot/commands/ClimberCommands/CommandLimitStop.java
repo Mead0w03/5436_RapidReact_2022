@@ -40,7 +40,7 @@ public class CommandLimitStop extends CommandBase {
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.stopAtLimit();
+        //climber.stopAtLimit();
     }
 
     @Override

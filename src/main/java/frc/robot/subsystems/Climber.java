@@ -41,7 +41,7 @@ private double currentOuterArmPos;
 private double currentInnerArmPos;
 private DigitalInput tiltRetractLimit;
 
-private DigitalInput climberLimit;
+//private DigitalInput climberLimit;
 
 
 private double climbSpeed = 0.3;
@@ -100,7 +100,7 @@ public Climber(){
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
     tiltRetractLimit = new DigitalInput(0);
 
-    climberLimit = new DigitalInput(0);
+    //climberLimit = new DigitalInput(0);
 
 
     // set factory default for all motors
@@ -371,7 +371,7 @@ public Climber(){
     
 
         SmartDashboard.putNumber("Climber Outer Arm position: ", outerArmMotor.getSelectedSensorPosition());
-        SmartDashboard.putBoolean("Limit Switch Status: ", climberLimit.get());
+       // SmartDashboard.putBoolean("Limit Switch Status: ", climberLimit.get());
         SmartDashboard.putNumber("Climber Inner Arm position: ", innerArmMotor.getSelectedSensorPosition());
 
         //stopAtLimitNOPID();
@@ -386,6 +386,7 @@ public Climber(){
     }
 
     //bind to button if needed
+    /*
     public void stopAtLimit() {
         
         if(!climberLimit.get()) {
@@ -393,7 +394,7 @@ public Climber(){
         } else {
             //do nothing
         }
-    }
+    } */
 
     @Override
     public void register() {

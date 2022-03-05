@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +30,11 @@ public class DriveBase extends SubsystemBase {
       motorFL = new CANSparkMax(CanBusConfig.FRONT_LEFT, MotorType.kBrushless);
       motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
       motorBL = new CANSparkMax(CanBusConfig.BACK_LEFT, MotorType.kBrushless);
+
+      motorFR.setIdleMode(IdleMode.kBrake);
+      motorFL.setIdleMode(IdleMode.kBrake);
+      motorBR.setIdleMode(IdleMode.kBrake);
+      motorBL.setIdleMode(IdleMode.kBrake);
 
       motorFR.setInverted(true);
       motorBR.setInverted(true);

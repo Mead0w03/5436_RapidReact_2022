@@ -215,7 +215,7 @@ public class RobotContainer {
           .whenInactive(commandStopTilt);
     dpadLeft.whenActive(commandRetractTilt)
           .whenInactive(commandStopTilt);
-    startButton.whenPressed(commandFullTilt);
+    leftStickUp.whenActive(commandFullTilt);
     rightStickDown.whenActive(commandRetractOuterArms)
           .whenInactive(commandStopOuterArms);
     rightStickUp.whenActive(commandExtendOuterArms)
