@@ -1,4 +1,5 @@
 package frc.robot.commands.ClimberCommands;
+import frc.robot.Constants.ClimberConfig;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -66,7 +67,7 @@ public class CommandContinueDescend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        boolean isFullyDescended = climber.getClimberPosition() < -200000;
+        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.FULLY_DESCENDED;
         if(isFullyDescended) robotContainer.setIsFullyDescended(true);
         return isFullyDescended;
     }
