@@ -19,6 +19,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  Dashboard Cronus_Dashboard = new Dashboard();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -29,7 +31,11 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    Cronus_Dashboard.init();
+
     
+
+
   }
 
   /**
@@ -94,4 +100,19 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public void updateSmartDashboard() {
+        //Climber
+            //SmartDashboard.putNumber("Middle Climber Speed: ", 0.0);
+            //SmartDashboard.putNumber("Outer Climber Speed: ", 0.0);
+            //SmartDashboard.putNumber("Tilt Climber Speed: ", 0.0);
+            SmartDashboard.putNumber("Climber Encoders: ", 0.0);
+        //Shooter
+            SmartDashboard.putNumber("RPM: ", 0.0);
+        //Drive Base
+            //SmartDashboard.putNumber("Deadband: ", 0.0);
+        //Intake
+            //SmartDashboard.putNumber("Intake Arm Speed: ", 0.0);
+            //SmartDashboard.putNumber("Intake Storage Speed: ", 0.0);
+  }
 }

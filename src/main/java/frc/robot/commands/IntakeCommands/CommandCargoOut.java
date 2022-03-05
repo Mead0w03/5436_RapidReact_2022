@@ -53,6 +53,7 @@ public class CommandCargoOut extends CommandBase{
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
         intake.intakeCargoOut();
+        intake.intakeOut();
     }
 
     @Override

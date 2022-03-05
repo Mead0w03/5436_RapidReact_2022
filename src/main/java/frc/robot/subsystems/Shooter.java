@@ -159,7 +159,7 @@ public void SpeedEnum(){
 
     public void periodic() {
         entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent());
-        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
+        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity()*.293);
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());
         entryLeftMotorStatorCurrent.setDouble(leftShooterMotor.getStatorCurrent());
         entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
