@@ -17,6 +17,7 @@ import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.AutonCommands.AutonCargoCommand;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
 import frc.robot.commands.AutonCommands.AutonShooterCommand;
 import frc.robot.commands.AutonCommands.AutonStartShooterCommand;
@@ -143,6 +144,7 @@ public class RobotContainer {
   private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter);
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
   private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
+  private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
