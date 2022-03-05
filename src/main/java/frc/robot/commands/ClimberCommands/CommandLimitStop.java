@@ -1,51 +1,37 @@
 package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
-public class CommandContinueDescend extends CommandBase{
-    // **********************************************
-    // Class Variables
-    // **********************************************
+public class CommandLimitStop extends CommandBase {
+    private Climber climber;
     
-    
-    // **********************************************
-    // Instance Variables
-    // **********************************************
-        private Climber climber;
-        private RobotContainer robotContainer;
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandContinueDescend(Climber climber, RobotContainer robotContainer){
-            System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
-            this.addRequirements(climber);
-            this.climber = climber;
-            this.robotContainer = robotContainer;
-        }
-    
+    public CommandLimitStop(Climber climber) {
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
+        this.climber = climber;
+        this.addRequirements(climber);
+    }
+
     // **********************************************
     // Getters & Setters
     // **********************************************
-    
     
     // **********************************************
     // Class Methods
     // **********************************************
     
-    
     // **********************************************
     // Instance Methods
     // **********************************************
     
-    
     @Override
     public void end(boolean interrupted) {
-        robotContainer.setOkToDescend(false);
+        // TODO Auto-generated method stub
+        super.end(interrupted);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
     }
@@ -54,21 +40,18 @@ public class CommandContinueDescend extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.innerArmDown();
+        climber.stopAtLimit();
     }
 
     @Override
     public void initialize() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        // Reset the start speed of climp
-        // climber.resetSpeed();
     }
 
     @Override
     public boolean isFinished() {
-        boolean isFullyDescended = climber.getClimberPosition() < -200000;
-        if(isFullyDescended) robotContainer.setIsFullyDescended(true);
-        return isFullyDescended;
+        return true;
+
     }
     
 }
