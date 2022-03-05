@@ -51,6 +51,7 @@ private boolean resetEncoder = false;
 private double innerArmEncoderSetPoint = 0.0;
 private boolean ignoreEncoder = false;
 
+/*
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
 
@@ -75,7 +76,7 @@ private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("Solenoi
 private NetworkTableEntry entryClimberPosition = netTblClimber.getEntry("ClimberPosition");
 private NetworkTableEntry entryOuterArmPos = netTblClimber.getEntry("outer arm current encoder value");
 private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("inner arm current encoder value");
-
+*/
 
 // **********************************************
 // Constructors
@@ -137,6 +138,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     //         innerArmMotor.setSelectedSensorPosition(innerArmEncoderSetPoint);
     //     }
     // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+/*
     String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
     netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
         System.out.println("Encoder being ignored");
@@ -186,7 +189,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
             tiltSpeed = value.getDouble();
         }
     },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+*/
 }
 
 // **********************************************
@@ -310,7 +313,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     @Override
     public void periodic() {
         // System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
+        /*
         entryCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
         entryClimberSpeed.setDouble(climbSpeed);
         // entryRightMotorSpeed.setDouble(rightMotor.get());
@@ -336,6 +339,8 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryInnerArmSetPoint.setDouble(innerArmEncoderSetPoint);
         entryIgnoreEncoder.setBoolean(ignoreEncoder);
     
+*/
+
 
     }
 

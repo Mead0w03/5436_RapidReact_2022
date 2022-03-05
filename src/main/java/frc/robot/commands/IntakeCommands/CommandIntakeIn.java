@@ -3,7 +3,7 @@ package frc.robot.commands.IntakeCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class CommandCargoOut extends CommandBase{
+public class CommandIntakeIn extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -18,7 +18,7 @@ public class CommandCargoOut extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandCargoOut(Intake intake){
+        public CommandIntakeIn(Intake intake){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(intake);
@@ -52,7 +52,7 @@ public class CommandCargoOut extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.intakeCargoOut();
+        intake.intakeIn();
     }
 
     @Override

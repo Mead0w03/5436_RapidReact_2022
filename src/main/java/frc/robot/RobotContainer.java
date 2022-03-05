@@ -32,12 +32,13 @@ import frc.robot.commands.ClimberCommands.CommandSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
 import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
 //Intake Commands
-import frc.robot.commands.IntakeCommands.CommandCargoIn;
+import frc.robot.commands.IntakeCommands.CommandIntakeIn;
+import frc.robot.commands.IntakeCommands.CommandIntakeLiftDown;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeDown;
-import frc.robot.commands.IntakeCommands.CommandIntakeStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeUp;
+import frc.robot.commands.IntakeCommands.CommandIntakeLiftDown;
+import frc.robot.commands.IntakeCommands.CommandIntakeLiftStop;
+import frc.robot.commands.IntakeCommands.CommandIntakeLiftUp;
 //Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
@@ -107,12 +108,12 @@ public class RobotContainer {
   private final DriveBase driveBase = new DriveBase();
 
   // Instantiate Intake commands
-  private final CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
+  private final CommandIntakeIn commandCargoIn = new CommandIntakeIn(intake);
   private final CommandCargoOut commandCargoOut = new CommandCargoOut(intake);
   private final CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
-  private final CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
-  private final CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
-  private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
+  private final CommandIntakeLiftUp commandIntakeUp = new CommandIntakeLiftUp(intake);
+  private final CommandIntakeLiftDown commandIntakeLiftDown = new CommandIntakeLiftDown(intake);
+  private final CommandIntakeLiftStop commandIntakeLiftStop = new CommandIntakeLiftStop(intake);
   
   // Instantiate Climber Commands
   private final CommandClimb commandClimb = new CommandClimb(climber, this);
@@ -191,9 +192,9 @@ public class RobotContainer {
       .whenInactive(commandCargoStop);
 
     bButton.whenPressed(commandIntakeUp)
-        .whenReleased(commandIntakeStop);
-    xButton.whenPressed(commandIntakeDown)
-        .whenReleased(commandIntakeStop);
+        .whenReleased(commandIntakeLiftStop);
+    xButton.whenPressed(commandIntakeLiftDown)
+        .whenReleased(commandIntakeLiftStop);
 
     // Climber commands - Secondary Commands
     dpadDown.whenActive(commandClimb)

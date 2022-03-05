@@ -13,7 +13,6 @@ public class CommandIntakeStop extends CommandBase{
     // Instance Variables
     // **********************************************
     private Intake intake;
-
     
     // **********************************************
     // Constructors
