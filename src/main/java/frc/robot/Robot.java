@@ -5,7 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
+
+import frc.robot.Climber.*;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -19,7 +24,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  Dashboard Cronus_Dashboard = new Dashboard();
+;  Dashboard Cronus_Dashboard = new Dashboard();
+  Shooter Cronus_Shooter = new Shooter();
+  Climber Cronus_Climber = new Climber()
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -103,16 +110,20 @@ public class Robot extends TimedRobot {
 
   public void updateSmartDashboard() {
         //Climber
+            SmartDashboard.putNumber("Climber Encoders: ", Cronus_Climber.getOuterArmPosition())
             //SmartDashboard.putNumber("Middle Climber Speed: ", 0.0);
-            //SmartDashboard.putNumber("Outer Climber Speed: ", 0.0);
-            //SmartDashboard.putNumber("Tilt Climber Speed: ", 0.0);
-            SmartDashboard.putNumber("Climber Encoders: ", 0.0);
+            //SmartDashboard.putNumber("Outer Climber Speed: ", 0.0)
+            SmartDashboard.putNumber("Climber Encoders: ", Cronus_Climber.getO);
         //Shooter
-            SmartDashboard.putNumber("RPM: ", 0.0);
-        //Drive Base
+
+
+            SmartDashboard.putNumber("RPM: ", Cronus_Shooter.getRPM());
+        //Dr//e Base
             //SmartDashboard.putNumber("Deadband: ", 0.0);
         //Intake
             //SmartDashboard.putNumber("Intake Arm Speed: ", 0.0);
-            //SmartDashboard.putNumber("Intake Storage Speed: ", 0.0);
+
+
+            ;            //SmartDashboard.putNumber("Intake Storage Speed: ", 0.0);
   }
 }

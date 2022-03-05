@@ -82,12 +82,10 @@ private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("inner arm c
 // Constructors
 // **********************************************
 
-public Climber (XboxController xboxController, XboxController.Axis articulateAxis, XboxController.Axis advanceAxis){
+public Climber (){
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
-    this.xboxController = xboxController;
-    this.tiltAxis = articulateAxis;
-    this.outerArmAxis = advanceAxis;
+    
 
     innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
     outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
@@ -308,6 +306,9 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
     public double getClimberPosition(){
         return innerArmMotor.getSelectedSensorPosition();
+    }
+    public double getOuterArmPosition() {
+        return outerArmMotor.getSelectedSensorPosition();
     }
 
     @Override

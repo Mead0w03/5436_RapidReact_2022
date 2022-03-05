@@ -129,7 +129,8 @@ public void SpeedEnum(){
 // **********************************************
 
     public void activateShooter(){    
-        leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+        //leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+        leftShooterMotor.set(ControlMode.Velocity, );
     }
 
     public void farHighGoal(){
@@ -154,6 +155,10 @@ public void SpeedEnum(){
 
     public void stopShooter(){
         leftShooterMotor.set(ControlMode.PercentOutput, 0.0); 
+    }
+
+    public double getRPM() {
+        return leftShooterMotor.getSelectedSensorVelocity();
     }
 
 
