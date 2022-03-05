@@ -9,6 +9,7 @@ import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import frc.robot.*;
 
 
 public class Shooter extends SubsystemBase {
@@ -21,11 +22,17 @@ public class Shooter extends SubsystemBase {
 // Instance Variables
 // **********************************************
 
+Dashboard dash = new Dashboard();
+
+private double manaualRPM;
+private double feederSpeed;
+
 
 private double kP = 0.0;
 private double kI = 0.0;
 private double targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
 private double feederSpeed = Speed.FEEDER.getSpeed();
+
 private enum Speed{
     FAR_HIGH_GOAL (18000),
     CLOSE_LOW_GOAL (6000),
@@ -71,6 +78,10 @@ public NetworkTableEntry entryD = shooterTable.getEntry("D coeficient");
 
 
 public Shooter(){
+
+    manaualRPM = dash.getManualRPM();
+    feederSpeed = dash.getFeederSpeed();
+
     shooterTable.addEntryListener("Target Velocity", (table, key, entry, value, flags) ->{
         System.out.println("shooter target speed changed value: " + value.getValue());
         targetVelocity_UnitsPer100ms = entryTargetVelocity.getDouble(0);
@@ -130,7 +141,7 @@ public void SpeedEnum(){
 
     public void activateShooter(){    
         //leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-        leftShooterMotor.set(ControlMode.Velocity, );
+        leftShooterMotor.set(ControlMode.Velocity, manaualRPM);
     }
 
     public void farHighGoal(){
@@ -146,7 +157,8 @@ public void SpeedEnum(){
     }
 
     public void startFeederMotor(){
-        rightShooterMotor.set(ControlMode.Velocity, Speed.FEEDER.getSpeed());
+        //rightShooterMotor.set(ControlMode.Velocity, Speed.FEEDER.getSpeed());
+        rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
     }
 
     public void stopFeeder(){
