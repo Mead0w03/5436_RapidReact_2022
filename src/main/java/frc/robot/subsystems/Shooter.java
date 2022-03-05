@@ -149,7 +149,7 @@ public void SpeedEnum(){
     }
 
     public void stopFeeder(){
-        rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
+        rightShooterMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
     public void stopShooter(){
