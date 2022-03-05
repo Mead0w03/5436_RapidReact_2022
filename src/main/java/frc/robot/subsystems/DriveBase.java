@@ -19,12 +19,19 @@ public class DriveBase extends SubsystemBase {
     private double xAxisDeadband;
     private double yAxisDeadband;
 
+
+    Dashboard driveDash = new Dashboard();
+
+    private double dDeadband;
+
     //TODO: need to create deaden parameter to change during testing
 
     /** DriveBase Constructor
      * initializes brushless motor drive train on can ids 1-4
      */
     public DriveBase() {
+      deadband = dDriveDash.getDeadband();
+
       motorFR = new CANSparkMax(CanBusConfig.FRONT_RIGHT, MotorType.kBrushless); 
       motorFL = new CANSparkMax(CanBusConfig.FRONT_LEFT, MotorType.kBrushless);
       motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
@@ -41,20 +48,17 @@ public class DriveBase extends SubsystemBase {
      * @return ouput after deadband
      */
     public double deaden(double input, double deadband) {
-        deadband = Math.min(1, deadband);
-        deadband = Math.max(0, deadband);
+        dDriveDash = Math.min(1, dDriveDash);
+        dDriveDash = Math.max(0, dDriveDash);
        
-        if (Math.abs(input) - deadband < 0) {
+        if (Math.abs(input) - dDriveDash < 0) {
           return 0;
         }
         else {
-          return Math.signum(input) * ((Math.abs(input) - deadband) / (1 - deadband));
+          return Math.signum(input) * ((Math.abs(input) - dDriveDash) / (1 - dDriveDash));
         }
     }// end of deaden() method
-      
-    /**
-     * i
-     */
+
     public void init() {
 
         motorFL.clearFaults();

@@ -19,17 +19,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 
 public class Intake extends SubsystemBase {
-    private CANSparkMax intakeCargo;
+    private CANSparkMax intake;
     private CANSparkMax intakeRetractLeft;
     private CANSparkMax intakeRetractRight;
-    private CANSparkMax intakeStorage;
+    private CANSparkMax intakeCargo;
     private RelativeEncoder intakeCargoEncoder;
     private RelativeEncoder intakeRetractLeftEncoder;
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
     private double intakeUpSpeed = 0.5;
-    private double intakeRetractSpeed = 0.5;
+    private double intakeDowned = 0.5;3
     //private RelativeEncoder encoder = intakeRetractLeft.getEncoder();
     //private double intakeSpeed = 0;
 
@@ -44,15 +44,15 @@ public class Intake extends SubsystemBase {
     NetworkTableEntry entryRetractRightEncoder = intakeTable.getEntry("Right Retract Encoder Speed");
 
     public Intake(){
-        intakeCargo = new CANSparkMax(CanBusConfig.CARGO, MotorType.kBrushless);
+        intake = new CANSparkMax(CanBusConfig.CARGO, MotorType.kBrushless);
         intakeRetractLeft = new CANSparkMax(CanBusConfig.RETRACT_LEFT, MotorType.kBrushless);
         intakeRetractRight = new CANSparkMax(CanBusConfig.RETRACT_RIGHT, MotorType.kBrushless);
-        intakeStorage = new CANSparkMax(CanBusConfig.STORAGE, MotorType.kBrushless);
+        intakeCargo = new CANSparkMax(CanBusConfig.STORAGE, MotorType.kBrushless);
 
-        intakeCargoEncoder = intakeCargo.getEncoder();
+        intakeCargoEncoder = intake.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
         intakeRetractRightEncoder = intakeRetractRight.getEncoder();
-        intakeStorageEncoder = intakeStorage.getEncoder();
+        intakeStorageEncoder = intakeCargo.getEncoder();
 
         intakeCargoEncoder.setPosition(0);
         intakeRetractLeftEncoder.setPosition(0);
@@ -72,38 +72,47 @@ public class Intake extends SubsystemBase {
          String intakeRetractSpeedName = NetworkTable.basenameKey(entryRetractSpeed.getName());
          intakeTable.addEntryListener(intakeRetractSpeedName, (table, key, entry, value, flags) -> {
              System.out.println("Retract speed changed value: " + value.getValue());
-             intakeRetractSpeed = value.getDouble();
+             intakeDownSpeed = value.getDouble();
           }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
          REVPhysicsSim.getInstance().addSparkMax(intakeRetractRight, DCMotor.getNEO(1));
     }
 
-    public void cargoIn(){
+    public void intakeIn(){
+        intake.set(intakeCargoSpeed);
+    }
+
+    public void intakeCargoIn(){
         intakeCargo.set(intakeCargoSpeed);
-        intakeStorage.set(intakeCargoSpeed);
     }
 
-    public void cargoOut(){
+    public void intakeOut(){
+        intake.set(-intakeCargoSpeed);
+    }
+
+    public void intakeCargoOut(){
         intakeCargo.set(-intakeCargoSpeed);
-        intakeStorage.set(-intakeCargoSpeed);
     }
 
-    public void cargoStop(){
+    public void intakeCargoStop(){
         intakeCargo.set(0);
-        intakeStorage.set(0);
     }
 
-    public void intakeUp(){
+    public void intakeStop(){
+        intake.set(0);
+    }
+
+    public void intakeLiftUp(){
         intakeRetractLeft.set(intakeUpSpeed);
         intakeRetractRight.set(-intakeUpSpeed);
     }
 
-    public void intakeDown(){
-        intakeRetractLeft.set(-intakeRetractSpeed);
-        intakeRetractRight.set(intakeRetractSpeed);
+    public void intakeLiftDown(){
+        intakeRetractLeft.set(-intakeDowned);
+        intakeRetractRight.set(intakeDowned);
     }
 
-    public void intakeStop(){
+    public void intakeLiftStop(){
         intakeRetractLeft.set(0);
         intakeRetractRight.set(0);
     }
@@ -115,8 +124,8 @@ public class Intake extends SubsystemBase {
         //SmartDashboard.putNumber("Intake Speed", intakeSpeed);
         
         entryCargoSpeed.setDouble(intakeCargoSpeed);
-        entryRetractSpeed.setDouble(intakeRetractSpeed);
-        entryCargoMotorPower.setDouble(intakeCargo.get());
+        entryRetractSpeed.setDouble(intakeDownSpeed);
+        entryCargoMotorPower.setDouble(intake.get());
         entryRetractLeftPower.setDouble(intakeRetractLeft.get());
         entryRetractRightPower.setDouble(intakeRetractRight.get());
         entryRetractLeftEncoder.setDouble(intakeRetractLeftEncoder.getPosition());

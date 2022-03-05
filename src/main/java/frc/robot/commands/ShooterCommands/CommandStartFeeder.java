@@ -8,8 +8,10 @@ import frc.robot.subsystems.Shooter;
 public class CommandStartFeeder extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Shooter shooter;
+  /*
   private Timer timer = new Timer();
   private final double timeLimit = 10;
+  */
   
 
   /**
@@ -26,8 +28,8 @@ public class CommandStartFeeder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
+    //timer.reset();
+    //timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,12 +42,12 @@ public class CommandStartFeeder extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopFeeder();
+    super.end(interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > timeLimit;
+    return true;
   }
 }
