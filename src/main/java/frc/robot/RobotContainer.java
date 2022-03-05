@@ -145,6 +145,7 @@ public class RobotContainer {
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
   private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
   private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
+ // private final SequentialCommandGroup autonShootDriveCommandGroup = new SequentialCommandGroup(autonDriveCommand,commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -156,6 +157,7 @@ public class RobotContainer {
     driveBase.setDefaultCommand(commandDrive);
     autonChooser.setDefaultOption("Drive Forward", autonDriveCommand);
     autonChooser.addOption("Shooter", autonShootCommandGroup);
+    //autonChooser.addOption("Drive-Shooter", autonShootDriveCommandGroup);
     SmartDashboard.putData(autonChooser);
 
   }
