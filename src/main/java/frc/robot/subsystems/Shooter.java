@@ -78,7 +78,7 @@ public Shooter(){
 
     leftShooterMotor = new TalonFX(Constants.CanBusConfig.LAUNCHER);
 
-    leftShooterMotor.setNeutralMode(NeutralMode.Brake);
+    leftShooterMotor.setNeutralMode(NeutralMode.Coast);
     leftShooterMotor.setInverted(false);
     leftShooterMotor.configClosedloopRamp(0.5);
     leftShooterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
@@ -149,7 +149,7 @@ public void SpeedEnum(){
     }
 
     public void startFeederMotor(){
-        rightShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+        rightShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms/4);
     }
 
     public void stopFeeder(){

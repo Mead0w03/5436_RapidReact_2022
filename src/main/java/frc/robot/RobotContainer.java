@@ -69,6 +69,10 @@ public class RobotContainer {
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
 
+  private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
+  private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
+
+
   private final JoystickButton stick7 = new JoystickButton(stick, 7);
   private final JoystickButton stick8 = new JoystickButton(stick, 8);
   private final JoystickButton stick9 = new JoystickButton(stick, 9);
@@ -167,31 +171,31 @@ public class RobotContainer {
 
 
     // Shooter:
-    rightBumper.whileHeld(commandReverseShooter)
+    aButton.whileHeld(commandReverseShooter)
                 .whenReleased(commandStopShooter);
-    leftBumper.whileHeld(commandActivateShooter)
-                .whenReleased(commandStopShooter);
+    rightTrigger.whenActive(commandActivateShooter)
+                .whenInactive(commandStopShooter);
 
-    aButton.whenPressed(commandStartFeeder)
-            .whenReleased(commandStopFeeder);
+    leftTrigger.whenActive(commandStartFeeder)
+            .whenInactive(commandStopFeeder);
     //leftStickUp.whenActive(commandStartFeeder);
     //leftStickUp.whenInactive(commandStopFeeder);
     //
     
     // Speed for shooter
-    xButton.whenPressed(commandFarHigh);
-    bButton.whenPressed(commandCloseLow);  
+    back.whenPressed(commandFarHigh);
+    start.whenPressed(commandCloseLow);  
   
 
     // Intake Commands
-    leftTrigger.whenActive(commandCargoIn)
+    rightBumper.whenActive(commandCargoIn)
       .whenInactive(commandCargoStop);
-    rightTrigger.whenActive(commandCargoOut)
+    yButton.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    //aButton.whenPressed(commandIntakeUp)
-      //  .whenReleased(commandIntakeStop);
-    yButton.whenPressed(commandIntakeDown)
+    bButton.whenPressed(commandIntakeUp)
+          .whenReleased(commandIntakeStop);
+    xButton.whenPressed(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
@@ -212,6 +216,7 @@ public class RobotContainer {
           .whenInactive(commandStopOuterArms);
 
     // Climber commands - Primary Commands
+    /*
     stick7.whenPressed(commandClimb)
         .whenReleased(commandStopClimb);
 
@@ -223,7 +228,7 @@ public class RobotContainer {
 
     stick12.whenPressed(commandRetractOuterArms)
         .whenReleased(commandStopOuterArms);
-    
+    */
 
     
     //TODO: reassign to new Joystick
