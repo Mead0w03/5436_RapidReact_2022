@@ -20,10 +20,21 @@ public final class Constants {
         public static final int FRONT_LEFT = 3; 
         public static final int BACK_RIGHT = 2; 
         public static final int BACK_LEFT = 4; 
+        
+        //public static final double deadband = .1;
 
         // Shooter
         public static final int LAUNCHER = 5;
         public static final int FEEDER = 6;
+
+        //public static final double highRPM = 1234; //update
+        //public static final double lowRPM = 1234; //update
+        //public static final double HkP = .001; //update
+        //public static final double HkI = 0.0;
+        //public static final double HkD = 0.0;
+        //public static final double LkP = .001; //update
+        //public static final double LkI = 0.0;
+        //public static final double LkD = 0.0;
 
         // Intake
         public static final int CARGO = 7;

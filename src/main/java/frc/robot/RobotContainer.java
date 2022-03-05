@@ -95,7 +95,7 @@ public class RobotContainer {
   // Instantiate subsystems
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber(xboxController, null, null);
+  private final Climber climber = new Climber();
   private final DriveBase driveBase = new DriveBase();
 
   // Instantiate Intake commands
@@ -157,8 +157,11 @@ public class RobotContainer {
     leftBumper.whileHeld(commandActivateShooter)
                 .whenReleased(commandStopShooter);
 
-    leftStickUp.whenActive(commandStartFeeder);
-    leftStickUp.whenInactive(commandStopFeeder);
+    aButton.whenPressed(commandStartFeeder)
+            .whenReleased(commandStopFeeder);
+    //leftStickUp.whenActive(commandStartFeeder);
+    //leftStickUp.whenInactive(commandStopFeeder);
+    //
     
     // Speed for shooter
     xButton.whenPressed(commandFarHigh);
@@ -171,8 +174,8 @@ public class RobotContainer {
     rightTrigger.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    aButton.whenPressed(commandIntakeUp)
-        .whenReleased(commandIntakeStop);
+    //aButton.whenPressed(commandIntakeUp)
+      //  .whenReleased(commandIntakeStop);
     yButton.whenPressed(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 

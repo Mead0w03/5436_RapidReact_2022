@@ -29,6 +29,9 @@ public class DriveBase extends SubsystemBase {
       motorFL = new CANSparkMax(CanBusConfig.FRONT_LEFT, MotorType.kBrushless);
       motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
       motorBL = new CANSparkMax(CanBusConfig.BACK_LEFT, MotorType.kBrushless);
+
+      motorBR.setInverted(true);
+      motorFR.setInverted(true);
     } //end of DriveBase() constructor
 
     /**

@@ -78,12 +78,12 @@ public class Intake extends SubsystemBase {
 
     public void cargoIn(){
         intakeCargo.set(intakeCargoSpeed);
-        intakeStorage.set(intakeCargoSpeed);
+        intakeStorage.set(-intakeCargoSpeed);
     }
 
     public void cargoOut(){
         intakeCargo.set(-intakeCargoSpeed);
-        intakeStorage.set(-intakeCargoSpeed);
+        intakeStorage.set(intakeCargoSpeed);
     }
 
     public void cargoStop(){

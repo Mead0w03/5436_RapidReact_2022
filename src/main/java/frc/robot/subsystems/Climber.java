@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -35,9 +36,8 @@ private TalonFX outerArmMotor;
 private VictorSPX tiltMotor;
 private VictorSPX solenoidMotor;
 
-private final XboxController xboxController;
-private final XboxController.Axis tiltAxis;
-private final XboxController.Axis outerArmAxis;
+private DigitalInput climberLimit;
+
 
 private double climbSpeed = 0.3;
 private double rateOfChange = .05;
@@ -46,6 +46,8 @@ private double outerArmSpeed = 0.5;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
 
+
+/*
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
 
@@ -67,22 +69,20 @@ private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("So
 private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
 private NetworkTableEntry entryClimberPosition = netTblClimber.getEntry("ClimberPosition");
 
-
+*/
 // **********************************************
 // Constructors
 // **********************************************
 
-public Climber (XboxController xboxController, XboxController.Axis articulateAxis, XboxController.Axis advanceAxis){
+public Climber(){
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
-    this.xboxController = xboxController;
-    this.tiltAxis = articulateAxis;
-    this.outerArmAxis = advanceAxis;
-
     innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
     outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
     tiltMotor = new VictorSPX(CanBusConfig.TILT);
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
+
+    climberLimit = new DigitalInput(0);
 
 
     // set factory default for all motors
@@ -101,6 +101,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     tiltMotor.setInverted(true);
 
     engageRatchet();
+    init();
 
     /*
     // set Current Limits
@@ -117,6 +118,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     // rightEncoder = rightMotor.getEncoder();
 
     // Configure the network table entries
+    /*
     System.out.println(String.format("entryClimberSpeed.getName(): %s", entryClimberSpeed.getName()));
     netTblClimber.addEntryListener(climbSpeedEntryName, (table, key, entry, value, flags)->{
         System.out.println("The value for climber speed changed");
@@ -146,7 +148,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
             tiltSpeed = value.getDouble();
         }
     },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+*/
 }
 
 // **********************************************
@@ -167,13 +169,13 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         climbSpeed = startSpeed;
     }
 
-    public void ascend(){
+    public void innerArmUp(){
         // todo:make speed variable
         innerArmMotor.set(ControlMode.PercentOutput, climbSpeed);
         // rightMotor.set(climbSpeed);
     }
 
-    public void descend(){
+    public void innerArmDown(){
         innerArmMotor.set(ControlMode.PercentOutput, -climbSpeed);
         // rightMotor.set(-climbSpeed);
     }
@@ -187,7 +189,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     public void stop(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
-    
+    /*
     public void increaseSpeed(){
         double newSpeed = climbSpeed += rateOfChange;
         if(newSpeed > 1.0) {
@@ -196,7 +198,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
             newSpeed = rateOfChange;
         }
         climbSpeed = newSpeed;
-    }
+    } 
 
     public void decreaseSpeed(){
         double newSpeed = climbSpeed -= rateOfChange;
@@ -206,7 +208,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
             newSpeed = 1;
         }
         climbSpeed = newSpeed;
-    }
+    } */
 
     public void startTilt(String direction){
         // limits speed between 0.1 - 0.5
@@ -241,7 +243,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         outerArmMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    public void stopAdvance(){
+    public void stopOuterArms(){
 //outerArmSpeed = 0.0;
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
@@ -268,6 +270,7 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     public void periodic() {
         // System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
+        /*
         entryCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
         entryClimberSpeed.setDouble(climbSpeed);
         // entryRightMotorSpeed.setDouble(rightMotor.get());
@@ -283,8 +286,31 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 
         entrySolenoidEngaged.setBoolean(solenoidEngaged);
         entryClimberPosition.setDouble(getClimberPosition());
-        
+        */
 
+        SmartDashboard.putNumber("Climber Outer Arm position: ", outerArmMotor.getSelectedSensorPosition());
+        SmartDashboard.putBoolean("Limit Switch Status: ", climberLimit.get());
+        SmartDashboard.putNumber("Climber Inner Arm position: ", innerArmMotor.getSelectedSensorPosition());
+
+        //stopAtLimitNOPID();
+
+    }
+
+    public void init() {
+        outerArmMotor.setSelectedSensorPosition(0.0);
+        outerArmMotor.clearStickyFaults();
+        innerArmMotor.clearStickyFaults();
+        tiltMotor.clearStickyFaults();
+    }
+
+    //bind to button if needed
+    public void stopAtLimit() {
+        
+        if(!climberLimit.get()) {
+            stop();
+        } else {
+            //do nothing
+        }
     }
 
     @Override
