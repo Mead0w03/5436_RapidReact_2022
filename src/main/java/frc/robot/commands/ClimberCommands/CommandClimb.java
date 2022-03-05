@@ -2,6 +2,7 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
 public class CommandClimb extends CommandBase{
@@ -14,16 +15,18 @@ public class CommandClimb extends CommandBase{
     // Instance Variables
     // **********************************************
         private Climber climber;
+        private RobotContainer robotContainer;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandClimb(Climber climber){
+        public CommandClimb(Climber climber, RobotContainer robotContainer){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(climber);
             this.climber = climber;
+            this.robotContainer = robotContainer;
         }
     
     // **********************************************
@@ -43,10 +46,9 @@ public class CommandClimb extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
+        robotContainer.setIsFullyDescended(false);
+        climber.stop();
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
     }
 
     @Override
@@ -65,7 +67,11 @@ public class CommandClimb extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        boolean verdict = false;
+        if(!climber.getIgnoreEncoder() && climber.getClimberPosition() > 0){
+            verdict = true;
+        }
+        return verdict;
     }
     
 }

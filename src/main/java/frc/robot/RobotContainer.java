@@ -18,13 +18,14 @@ import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
+import frc.robot.commands.AutonCommands.AutonIntakeUpCommand;
 import frc.robot.commands.AutonCommands.AutonShooterCommand;
 import frc.robot.commands.AutonCommands.AutonStartShooterCommand;
-import frc.robot.commands.ClimberCommands.CommandStartOuterArms;
+//Climber Commands
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
-import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
-import frc.robot.commands.ClimberCommands.CommandDescend;
+import frc.robot.commands.ClimberCommands.CommandClimb;
+import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
 import frc.robot.commands.ClimberCommands.CommandRetractTilt;
@@ -33,13 +34,17 @@ import frc.robot.commands.ClimberCommands.CommandStopTilt;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
 import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
+import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
+import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
+import frc.robot.commands.ClimberCommands.CommandStartOuterArms;
+//Intake Commands
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeDown;
 import frc.robot.commands.IntakeCommands.CommandIntakeStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeUp;
-// imports for shooter commands
+//Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
 import frc.robot.commands.ShooterCommands.CommandStartFeeder;
@@ -47,8 +52,6 @@ import frc.robot.commands.ShooterCommands.CommandStopFeeder;
 import frc.robot.commands.ShooterCommands.CommandStopShooter;
 import frc.robot.commands.ShooterCommands.CommandFarHigh;
 import frc.robot.commands.ShooterCommands.CommandCloseLow;
-//close high has not been created but drivers say it is a position
-//import frc.robot.commands.ShooterCommands.CommandCloseHigh;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -60,7 +63,8 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
   private XboxController xboxController = new XboxController(0); 
   private Joystick stick = new Joystick(1);
-  
+  private boolean okToContinueDescend = false;
+  private boolean isFullyDescended = false;
   //initialize buttons
   private final LeftTrigger leftTrigger = new LeftTrigger();
   private final Trigger rightTrigger = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightTrigger.value)>0.3);
@@ -82,8 +86,12 @@ public class RobotContainer {
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
+  private final Trigger triggerClearSolenoid = new Trigger(() -> dpadUp.get() && !okToContinueDescend && !isFullyDescended);
+  private final Trigger triggerContinueDescend = new Trigger(() -> dpadUp.get() && okToContinueDescend);
 
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
+  private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
+  private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
 
   // TODO: These need to be re-assigned to Primary Joystick
   // private final XboxController.Axis tiltAxis = XboxController.Axis.kLeftY;
@@ -92,10 +100,11 @@ public class RobotContainer {
   // private final Trigger advanceTrigger = new Trigger(() -> Math.abs(xboxController.getRawAxis(outerArmAxis.value)) > 0.2);
 
   
+  // TODO: Update the axis when instantiating Climber
+  //TODO list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
   // Instantiate subsystems
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  // TODO: Update the axis when instantiating Climber
   private final Climber climber = new Climber(xboxController, null, null);
   private final DriveBase driveBase = new DriveBase();
 
@@ -106,11 +115,10 @@ public class RobotContainer {
   private final CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
   private final CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
   private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
-  //to do list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
   
   // Instantiate Climber Commands
-  private final CommandClimb commandClimb = new CommandClimb(climber);
-  private final CommandDescend commandDescend = new CommandDescend(climber);
+  private final CommandClimb commandClimb = new CommandClimb(climber, this);
+  private final CommandContinueDescend commandContinueDescend = new CommandContinueDescend(climber, this);
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
   private final CommandDecreaseClimberSpeed commandDecreaseClimberSpeed = new CommandDecreaseClimberSpeed(climber);
@@ -124,7 +132,13 @@ public class RobotContainer {
   private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
 
-  // Instantiate shooter commands
+  private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
+  private final CommandSolenoidDescend commandSolenoidDescend = new CommandSolenoidDescend(climber, this);
+
+  //private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
+  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandSolenoidDescend);
+
+  // Instantiate Shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
   private final CommandStopShooter commandStopShooter = new CommandStopShooter(shooter);
   private final CommandReverseShooter commandReverseShooter = new CommandReverseShooter(shooter);
@@ -142,7 +156,8 @@ public class RobotContainer {
   private final AutonDriveCommand autonDriveCommand = new AutonDriveCommand(driveBase);
   private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter);
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
+  private final AutonIntakeUpCommand autonIntakeUpCommand = new AutonIntakeUpCommand(intake);
+  private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand, autonDriveCommand,autonIntakeUpCommand);
  // private final SequentialCommandGroup autonShootDriveCommandGroup = new SequentialCommandGroup(autonDriveCommand,commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
 
   //Auton routine chooser
@@ -160,6 +175,16 @@ public class RobotContainer {
 
   }
 
+  public void setOkToDescend(boolean inputValue){
+    this.okToContinueDescend = inputValue;
+  }
+  public boolean getDpadUp(){
+    return dpadUp.get();
+  }
+  public void setIsFullyDescended(boolean input){
+    this.isFullyDescended = input;
+  }
+
   private void configureButtonBindings() {
 
     // Shooter:
@@ -174,39 +199,43 @@ public class RobotContainer {
     // Speed for shooter
     xButton.whenPressed(commandFarHigh);
     bButton.whenPressed(commandCloseLow);  
-    //close high has not been created but drivers say it is a position
-    //aButton.whenPressed(commandCloseHigh);  
+  
 
     // Intake Commands
-    leftTrigger.whileActiveContinuous(commandCargoIn)
+    leftTrigger.whenActive(commandCargoIn)
       .whenInactive(commandCargoStop);
-    rightTrigger.whileActiveContinuous(commandCargoOut)
+    rightTrigger.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    aButton.whileHeld(commandIntakeUp)
+    aButton.whenPressed(commandIntakeUp)
         .whenReleased(commandIntakeStop);
-    yButton.whileHeld(commandIntakeDown)
+    yButton.whenPressed(commandIntakeDown)
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
-    dpadUp.whileActiveContinuous(commandClimb)
+    dpadDown.whenActive(commandClimb)
           .whenInactive(commandStopClimb);//
-    dpadDown.whileActiveContinuous(commandDescend)
-          .whenInactive(commandStopClimb);//
-    
+    // dpadUp.whenActive(commandGroupSolenoidDescend)
+    //       .whenInactive(commandStopClimb);//
+    triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
+    triggerContinueDescend.whenActive(commandContinueDescend)
+          .whenInactive(commandStopClimb);
+    dpadRight.whenActive(commandStartTilt)
+          .whenInactive(commandStopTilt);
+    dpadLeft.whenActive(commandRetractTilt)
+          .whenInactive(commandStopTilt);
+    rightStickDown.whenActive(commandRetractOuterArms)
+          .whenInactive(commandStopOuterArms);
+    rightStickUp.whenActive(commandStartOuterArms)
+          .whenInactive(commandStopOuterArms);
+
     // Climber commands - Primary Commands
     stick7.whenPressed(commandClimb)
         .whenReleased(commandStopClimb);
 
-    stick8.whenPressed(commandDescend)
+    stick8.whenPressed(commandGroupSolenoidDescend)
         .whenReleased(commandStopClimb);
-
-    stick9.whenPressed(commandStartTilt)
-        .whenReleased(commandStopTilt);
-
-    stick10.whenPressed(commandRetractTilt)
-        .whenReleased(commandStopTilt);
-
+    
     stick11.whenPressed(commandStartOuterArms)
         .whenReleased(commandStopOuterArms);
 
@@ -221,8 +250,6 @@ public class RobotContainer {
     // advanceTrigger.whileActiveContinuous(commandAdvance)
     //       .whenInactive(commandStopAdvance);
     
-    dpadLeft.whenActive(commandSolenoid);
-    dpadRight.whenActive(commandStopSolenoid);
     
   }
    

@@ -24,7 +24,7 @@ public class CommandStopSolenoid extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.stopSolenoid();
+    climber.releaseRatchet();
     System.out.println("Solenoid Stop");
   }
 

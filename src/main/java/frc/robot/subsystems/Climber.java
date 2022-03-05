@@ -34,16 +34,22 @@ private TalonFX innerArmMotor;
 private TalonFX outerArmMotor;
 private VictorSPX tiltMotor;
 private VictorSPX solenoidMotor;
+private double currentOuterArmPos;
+private double currentInnerArmPos;
 
 private final XboxController xboxController;
 private final XboxController.Axis tiltAxis;
 private final XboxController.Axis outerArmAxis;
 
-private double climbSpeed = 0.5;
+private double climbSpeed = 0.3;
 private double rateOfChange = .05;
-private double tiltSpeed = 0.5;
+private double tiltSpeed = 1.0;
 private double outerArmSpeed = 0.5;
 private final double startSpeed = 0.5;
+private boolean solenoidEngaged = false;
+private boolean resetEncoder = false;
+private double innerArmEncoderSetPoint = 0.0;
+private boolean ignoreEncoder = false;
 
 private final String netTblName = "Climber";
 private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
@@ -54,7 +60,9 @@ private final String climbSpeedEntryName = "Climber Speed";
 private NetworkTableEntry entryClimberSpeed= netTblClimber.getEntry(climbSpeedEntryName);
 private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Tilt Speed");
 private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Outer Arm Speed");
-
+private NetworkTableEntry entryResetEncoder = netTblClimber.getEntry("Reset Encoder");
+private NetworkTableEntry entryInnerArmSetPoint = netTblClimber.getEntry("Enter value for inner arm encoder");
+private NetworkTableEntry entryIgnoreEncoder = netTblClimber.getEntry("Ignore Encoder");
 
 private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
 private NetworkTableEntry entryOuterArmMotorSpeed= netTblClimber.getEntry("OuterArmMotorSpeed");
@@ -63,8 +71,10 @@ private NetworkTableEntry entryInnerArmMotorCurrent= netTblClimber.getEntry("Inn
 private NetworkTableEntry entryOuterArmMotorCurrent= netTblClimber.getEntry("OuterArmMotorCurrent");
 private NetworkTableEntry entryTiltMotorCurrent= netTblClimber.getEntry("TiltMotorCurrent");
 private NetworkTableEntry entrySolenoidMotorCurrent = netTblClimber.getEntry("SolenoidMotorCurrent");
-
-
+private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
+private NetworkTableEntry entryClimberPosition = netTblClimber.getEntry("ClimberPosition");
+private NetworkTableEntry entryOuterArmPos = netTblClimber.getEntry("outer arm current encoder value");
+private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("inner arm current encoder value");
 
 
 // **********************************************
@@ -96,7 +106,13 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     innerArmMotor.setNeutralMode(NeutralMode.Brake);
     tiltMotor.setNeutralMode(NeutralMode.Brake);
     solenoidMotor.setNeutralMode(NeutralMode.Brake);
+    innerArmMotor.setInverted(true);
+    tiltMotor.setInverted(true);
 
+    engageRatchet();
+
+    innerArmMotor.setSelectedSensorPosition(0);
+    outerArmMotor.setSelectedSensorPosition(0);
     /*
     // set Current Limits
     double supplyLimit = 10;
@@ -112,6 +128,35 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
     // rightEncoder = rightMotor.getEncoder();
 
     // Configure the network table entries
+
+    // String innerArmSetPointEntryName = NetworkTable.basenameKey(entryInnerArmSetPoint.getName());
+    // netTblClimber.addEntryListener(innerArmSetPointEntryName, (table, key, entry, value, flags)->{
+    //     System.out.println("Encoder being reset");
+    //     if (value.getDouble() != innerArmEncoderSetPoint){
+    //         innerArmEncoderSetPoint = value.getDouble();
+    //         innerArmMotor.setSelectedSensorPosition(innerArmEncoderSetPoint);
+    //     }
+    // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
+    netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
+        System.out.println("Encoder being ignored");
+        if (value.getBoolean()!=ignoreEncoder){
+            System.out.println("Updating the instance att based on table data");
+            ignoreEncoder = value.getBoolean();
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    System.out.println(String.format("entryResetEncoder.getName(): %s", entryResetEncoder.getName()));
+    String resetEncoderEntryName = NetworkTable.basenameKey(entryResetEncoder.getName());
+    netTblClimber.addEntryListener(resetEncoderEntryName, (table, key, entry, value, flags)->{
+        System.out.println("Encoder being reset");
+        if (value.getBoolean()){
+            System.out.println("Updating the instance att based on table data");
+            innerArmMotor.setSelectedSensorPosition(0);
+            resetEncoder = false;
+        }
+    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
     System.out.println(String.format("entryClimberSpeed.getName(): %s", entryClimberSpeed.getName()));
     netTblClimber.addEntryListener(climbSpeedEntryName, (table, key, entry, value, flags)->{
         System.out.println("The value for climber speed changed");
@@ -148,6 +193,9 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
 // Getters & Setters
 // **********************************************
 
+    public boolean getIgnoreEncoder(){
+        return this.ignoreEncoder;
+    }
 
 // **********************************************
 // Class Methods
@@ -173,9 +221,14 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         // rightMotor.set(-climbSpeed);
     }
 
+    public void stopAndEngageRatchet(){
+        innerArmMotor.set(ControlMode.PercentOutput, 0.0);
+        engageRatchet();
+        // rightMotor.set(0);
+    }
+
     public void stop(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
-        // rightMotor.set(0);
     }
     
     public void increaseSpeed(){
@@ -236,11 +289,22 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void startSolenoid(){
-        solenoidMotor.set(ControlMode.PercentOutput, 100);
-    }
-    public void stopSolenoid(){
+    public void engageRatchet(){
         solenoidMotor.set(ControlMode.PercentOutput, 0);
+        solenoidEngaged = true;
+    }
+
+    public void releaseRatchet(){
+        solenoidMotor.set(ControlMode.PercentOutput, 100);
+        solenoidEngaged = false;
+    }
+
+    public void resetEncoder(){
+        innerArmMotor.setSelectedSensorPosition(0.0);
+    }
+
+    public double getClimberPosition(){
+        return innerArmMotor.getSelectedSensorPosition();
     }
 
     @Override
@@ -260,7 +324,18 @@ public Climber (XboxController xboxController, XboxController.Axis articulateAxi
         entryTiltSpeed.setDouble(tiltSpeed);
         entryOuterArmSpeed.setDouble(outerArmSpeed);
 
-        
+        entrySolenoidEngaged.setBoolean(solenoidEngaged);
+        entryClimberPosition.setDouble(getClimberPosition());
+
+        currentOuterArmPos = outerArmMotor.getSelectedSensorPosition();
+        currentInnerArmPos = innerArmMotor.getSelectedSensorPosition();
+        entryOuterArmPos.setDouble(currentOuterArmPos);
+        entryInnerArmPos.setDouble(currentInnerArmPos);
+
+        entryResetEncoder.setBoolean(resetEncoder);
+        entryInnerArmSetPoint.setDouble(innerArmEncoderSetPoint);
+        entryIgnoreEncoder.setBoolean(ignoreEncoder);
+    
 
     }
 

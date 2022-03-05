@@ -23,12 +23,13 @@ public final class Constants {
 
         // Shooter
         public static final int LAUNCHER = 5;
-        public static final int FEEDER = 4;
+        public static final int FEEDER = 6;
 
         // Intake
         public static final int CARGO = 7;
         public static final int RETRACT_LEFT = 8;
         public static final int RETRACT_RIGHT = 9;
+        public static final int STORAGE = 15;
 
         // Climber
         public static final int INNER_ARM = 10;
@@ -45,5 +46,9 @@ public final class Constants {
         public static final int GYRO = 40;
         
 
+    }
+
+    public class ClimberConfig{
+        public static final double TARGET_MOVEMENT = 18500;
     }
 }

@@ -27,13 +27,9 @@ private double kI = 0.0;
 private double targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
 private double feederSpeed = Speed.FEEDER.getSpeed();
 private enum Speed{
-    FAR_HIGH_GOAL (14000),
+    FAR_HIGH_GOAL (18000),
     CLOSE_LOW_GOAL (6000),
-    FEEDER (3000);
-    //close high has not been created but drivers say it is a position
-    //CLOSE_HIGH_GOAL (#),
-
-    //STOP_SHOOTER (0.0);
+    FEEDER (1000);
 
     private double speed;
     Speed (double speedIn){
@@ -46,28 +42,26 @@ private enum Speed{
 }
 
 
-//make sure we have the right motors for falcon
 private TalonFX leftShooterMotor;
 private TalonFX rightShooterMotor;
 private int loops;
 
 
-public NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName()); // shooter speed
-public NetworkTableEntry entryShooterCurrentcommand = shooterTable.getEntry("Shooter current command");
-public NetworkTableEntry entryShooterPercentage = shooterTable.getEntry("Shooter percentage"); //shooter speed in % form
-public NetworkTableEntry entryShooterSpeed = shooterTable.getEntry("Shooter speed"); //shooter speed
-public NetworkTableEntry entryLeftShooterVelocity = shooterTable.getEntry("Left Shooter Velocity"); //shooter speed
-public NetworkTableEntry entryRightShooterVelocity = shooterTable.getEntry("Right Shooter Velocity"); //shooter speed
-public NetworkTableEntry entryAverageShooterVelocity = shooterTable.getEntry("Average Shooter Velocity"); //shooter velocity
-public NetworkTableEntry entryLeftMotorSupplyCurrent = shooterTable.getEntry("Left Motor Supply Current Draw"); //shooter velocity
-public NetworkTableEntry entryLeftMotorStatorCurrent = shooterTable.getEntry("Left Motor Stator Current Draw"); //shooter velocity
-public NetworkTableEntry entryLeftMotorVelocityError = shooterTable.getEntry("Left Motor Velocity Error"); //shooter velocity
-public NetworkTableEntry entryLeftMotorTargetVelocity = shooterTable.getEntry("Left Motor Target Velocity (clicks/100ms)"); //shooter velocity
-public NetworkTableEntry entryTargetVelocity = shooterTable.getEntry("Target Velocity"); //shooter velocity
-public NetworkTableEntry entryF = shooterTable.getEntry("F coeficient"); //shooter velocity
-public NetworkTableEntry entryP = shooterTable.getEntry("P coeficient"); //shooter velocity
-public NetworkTableEntry entryI = shooterTable.getEntry("I coeficient"); //shooter velocity
-public NetworkTableEntry entryD = shooterTable.getEntry("D coeficient"); //shooter velocity
+public NetworkTable shooterTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName()); 
+public NetworkTableEntry entryShooterPercentage = shooterTable.getEntry("Shooter percentage"); 
+public NetworkTableEntry entryShooterSpeed = shooterTable.getEntry("Shooter speed"); 
+public NetworkTableEntry entryLeftShooterVelocity = shooterTable.getEntry("Left Shooter Velocity"); 
+public NetworkTableEntry entryRightShooterVelocity = shooterTable.getEntry("Right Shooter Velocity"); 
+public NetworkTableEntry entryAverageShooterVelocity = shooterTable.getEntry("Average Shooter Velocity"); 
+public NetworkTableEntry entryLeftMotorSupplyCurrent = shooterTable.getEntry("Left Motor Supply Current Draw"); 
+public NetworkTableEntry entryLeftMotorStatorCurrent = shooterTable.getEntry("Left Motor Stator Current Draw"); 
+public NetworkTableEntry entryLeftMotorVelocityError = shooterTable.getEntry("Left Motor Velocity Error"); 
+public NetworkTableEntry entryLeftMotorTargetVelocity = shooterTable.getEntry("Left Motor Target Velocity (clicks/100ms)"); 
+public NetworkTableEntry entryTargetVelocity = shooterTable.getEntry("Target Velocity"); 
+public NetworkTableEntry entryF = shooterTable.getEntry("F coeficient"); 
+public NetworkTableEntry entryP = shooterTable.getEntry("P coeficient"); 
+public NetworkTableEntry entryI = shooterTable.getEntry("I coeficient"); 
+public NetworkTableEntry entryD = shooterTable.getEntry("D coeficient"); 
  
 // **********************************************
 // Constructors
@@ -112,8 +106,6 @@ public Shooter(){
     rightShooterMotor.config_kD(0, 0, 30);
     rightShooterMotor.config_kF(0, 0.05, 30);
 
-    //add an entry listener for changed values of "X", the lambda ("->" operator)
-    //defines the code that should run when "X" changes
     shooterTable.addEntryListener("P coeficient", (table, key, entry, value, flags) -> {
         kP = value.getDouble();
         System.out.println(String.format("p changed value: %.2f", kP));
@@ -147,26 +139,17 @@ public void SpeedEnum(){
     public void closeLowGoal(){
         targetVelocity_UnitsPer100ms = Speed.CLOSE_LOW_GOAL.getSpeed();
     }
-    //close high has not been created but drivers say it is a position
-    // public void closeHighGoal(){
-    //     targetVelocity_UnitsPer100ms = Speed.CLOSE_HIGH_GOAL.getSpeed();
-    // }
-
+    
     public void reverseShooter(){
-        targetVelocity_UnitsPer100ms = -Speed.CLOSE_LOW_GOAL.getSpeed();    
-        leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-        
+        leftShooterMotor.set(ControlMode.Velocity, -Speed.FEEDER.getSpeed());
     }
 
     public void startFeederMotor(){
-        targetVelocity_UnitsPer100ms = Speed.CLOSE_LOW_GOAL.getSpeed();    
         rightShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-        
     }
 
     public void stopFeeder(){
         rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
-        
     }
 
     public void stopShooter(){
@@ -175,11 +158,8 @@ public void SpeedEnum(){
 
 
     public void periodic() {
-        //Get the current command running on the subsystem
-        entryShooterCurrentcommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
-        // should print out:
-        entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent()); //motor in percent power
-        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity()); //left shooter RPM
+        entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent());
+        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());
         entryLeftMotorStatorCurrent.setDouble(leftShooterMotor.getStatorCurrent());
         entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
@@ -188,9 +168,6 @@ public void SpeedEnum(){
         entryTargetVelocity.setDouble(targetVelocity_UnitsPer100ms);
         entryP.setDouble(kP);
         entryI.setDouble(kI);
-        // //without encoders
-        // shooterPercentage = shooterSpeed * 100;
-        // entryShooterPercentage.setDouble(shooterPercentage);
 
         StringBuilder sb = new StringBuilder();
         sb.append("\tout");
@@ -213,14 +190,13 @@ public void SpeedEnum(){
 
     @Override
     public void register() {
-        // TODO Auto-generated method stub
         super.register();
     }
 
     @Override
     public void simulationPeriodic() {
-        entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent()); //motor in percent power
-        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity()); //left shooter RPM
+        entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent());
+        entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());
         entryLeftMotorStatorCurrent.setDouble(leftShooterMotor.getStatorCurrent());
         entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));

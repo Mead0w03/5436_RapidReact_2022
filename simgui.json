@@ -9,16 +9,5 @@
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }
-  },
-  "NetworkTables": {
-    "LiveWindow": {
-      "Climber": {
-        "open": true
-      },
-      "Intake": {
-        "open": true
-      },
-      "open": true
-    }
   }
 }
