@@ -438,7 +438,7 @@
           "3,0": {
             "size": [
               3,
-              5
+              4
             ],
             "content": {
               "_type": "Network Table Tree",
@@ -457,7 +457,7 @@
               "_title": "/Climber/Climber Speed"
             }
           },
-          "6,1": {
+          "8,0": {
             "size": [
               2,
               1
@@ -468,7 +468,7 @@
               "_title": "/Climber/Tilt Speed"
             }
           },
-          "6,2": {
+          "10,0": {
             "size": [
               2,
               1
@@ -479,15 +479,59 @@
               "_title": "/Climber/Outer Arm Speed"
             }
           },
-          "6,3": {
+          "6,1": {
             "size": [
               2,
               1
             ],
             "content": {
               "_type": "Toggle Button",
-              "_source0": "network_table:///Climber/Reset Encoder",
-              "_title": "Climber/Reset Encoder"
+              "_source0": "network_table:///Climber/Reset Inner Arm Encoder",
+              "_title": "Climber/Reset Inner Arm Encoder"
+            }
+          },
+          "10,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Climber/Reset Outer Arm Encoder",
+              "_title": "Climber/Reset Outer Arm Encoder"
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/inner arm current encoder value",
+              "_title": "Climber/inner arm current encoder value"
+            }
+          },
+          "10,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/outer arm current encoder value",
+              "_title": "Climber/outer arm current encoder value"
+            }
+          },
+          "8,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///Climber/Ignore Encoder",
+              "_title": "Climber/Ignore Encoder"
             }
           }
         }
@@ -569,7 +613,7 @@
   "windowGeometry": {
     "x": 4.0,
     "y": 0.0,
-    "width": 1553.5999755859375,
+    "width": 1826.0,
     "height": 808.0
   }
 }
