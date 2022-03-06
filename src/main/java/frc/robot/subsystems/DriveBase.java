@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 
@@ -16,14 +21,26 @@ public class DriveBase extends SubsystemBase {
     private CANSparkMax motorBL;
     private CANSparkMax motorBR;
 
+    //Gyro
+    private PigeonIMU gyro = new PigeonIMU(CanBusConfig.GYRO);
+
     //deadband instance variables
     private double xAxisDeadband;
     private double yAxisDeadband;
+
+    //Network Table instances
+    NetworkTable driveBaseTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
+    NetworkTableEntry entryDriveBaseCurrentCommand = driveBaseTable.getEntry("Drive Base Current Command");
+    NetworkTableEntry entryFREncoder = driveBaseTable.getEntry("FR Encoder");
+    NetworkTableEntry entryFLEncoder = driveBaseTable.getEntry("FL Encoder");
+    NetworkTableEntry entryBREncoder = driveBaseTable.getEntry("BR Encoder");
+    NetworkTableEntry entryBLEncoder = driveBaseTable.getEntry("BL Encoder");
 
     //TODO: need to create deaden parameter to change during testing
 
     /** DriveBase Constructor
      * initializes brushless motor drive train on can ids 1-4
+     * @param NetworkTableInstance 
      */
     public DriveBase() {
       motorFR = new CANSparkMax(CanBusConfig.FRONT_RIGHT, MotorType.kBrushless); 
@@ -119,6 +136,39 @@ public class DriveBase extends SubsystemBase {
       motorBL.set(0);
       motorBR.set(0);
     }//End of stopAllDrivetrainMotors()
+
+    public double getFrontRightEncoderValue(){
+      motorFR.getEncoder().setPosition(0.0);
+      
+      return motorFR.getEncoder().getPosition();
+    }
+
+    public double getBackRightEncoderValue(){
+      motorBR.getEncoder().setPosition(0.0);
+      
+      return motorBR.getEncoder().getPosition();
+    }
+
+    public double getFrontLeftEncoderValue(){
+      motorFR.getEncoder().setPosition(0.0);
+      return motorFL.getEncoder().getPosition();
+    }
+
+    public double getBackLeftEncoderValue(){
+      motorBL.getEncoder().setPosition(0.0);
+      return motorBL.getEncoder().getPosition();
+    }
+
+    @Override
+  public void periodic() {
+    //Get the current command running on the subsystem
+    entryDriveBaseCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
+    // This method will be called once per scheduler run
+    entryFREncoder.setDouble(getFrontRightEncoderValue());
+    entryBREncoder.setDouble(getBackRightEncoderValue());
+    entryFLEncoder.setDouble(getFrontLeftEncoderValue());
+    entryBLEncoder.setDouble(getBackLeftEncoderValue());
+  }
     
 }
 

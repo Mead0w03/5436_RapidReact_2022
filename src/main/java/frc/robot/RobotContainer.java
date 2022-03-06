@@ -8,6 +8,8 @@ import javax.swing.JToggleButton;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -17,13 +19,18 @@ import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.AutonCommands.AutonCargoCommand;
+import frc.robot.commands.AutonCommands.AutonDriveCommand;
+import frc.robot.commands.AutonCommands.AutonIntakeUpCommand;
+import frc.robot.commands.AutonCommands.AutonShooterCommand;
+import frc.robot.commands.AutonCommands.AutonStartShooterCommand;
 //Climber Commands
 import frc.robot.commands.ClimberCommands.CommandExtendOuterArms;
 import frc.robot.commands.ClimberCommands.CommandFullTilt;
 import frc.robot.commands.ClimberCommands.CommandFullTiltRetract;
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
-import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
+import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
@@ -72,7 +79,6 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
-  private final JoystickButton startButton = new JoystickButton(xboxController, XboxController.Button.kStart.value);
 
   private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
   private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
@@ -157,12 +163,31 @@ public class RobotContainer {
 
   private final DriveCommands commandDrive = new DriveCommands(driveBase, stick);
 
+  //close high has not been created but drivers say it is a position
+  //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
+
+  //Instantiate Auton commands
+  private final AutonDriveCommand autonDriveCommand = new AutonDriveCommand(driveBase);
+  private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter);
+  private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
+  private final AutonIntakeUpCommand autonIntakeUpCommand = new AutonIntakeUpCommand(intake);
+  private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(autonStartShooterCommand, commandStartFeeder, autonShooterCommand);
+  //private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
+  private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
+ // private final SequentialCommandGroup autonShootDriveCommandGroup = new SequentialCommandGroup(autonDriveCommand,commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
+
+  //Auton routine chooser
+  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
 
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
+    autonChooser.setDefaultOption("Drive Forward", autonDriveCommand);
+    autonChooser.addOption("Shooter", autonShootCommandGroup);
+    //autonChooser.addOption("Drive-Shooter", autonShootDriveCommandGroup);
+    SmartDashboard.putData(autonChooser);
 
   }
 
@@ -177,8 +202,6 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-
-
 
     // Shooter:
     aButton.whileHeld(commandReverseShooter)
@@ -260,6 +283,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    //return autonShootCommandGroup;
+    return autonChooser.getSelected();
   }
 }
