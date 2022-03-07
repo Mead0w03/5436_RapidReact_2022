@@ -48,7 +48,7 @@ public class CommandFullTiltRetract extends CommandBase {
   @Override
   public boolean isFinished() {
     boolean isTimedOut = timer.get() > timeLimit;
-    boolean isFullyRetracted = climber.isFullyRetracted();
+    boolean isFullyRetracted = climber.getIsTiltFullyRetracted();
     return isTimedOut || isFullyRetracted;
   }
 }

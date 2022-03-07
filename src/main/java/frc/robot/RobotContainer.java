@@ -34,6 +34,7 @@ import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
+import frc.robot.commands.ClimberCommands.CommandRetractOuterArmsToLegalLimit;
 import frc.robot.commands.ClimberCommands.CommandRetractTilt;
 import frc.robot.commands.ClimberCommands.CommandStopOuterArms;
 import frc.robot.commands.ClimberCommands.CommandStopTilt;
@@ -104,6 +105,8 @@ public class RobotContainer {
   private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
   private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
 
+  
+
   // TODO: These need to be re-assigned to Primary Joystick
   // private final XboxController.Axis tiltAxis = XboxController.Axis.kLeftY;
   // private final XboxController.Axis outerArmAxis = XboxController.Axis.kRightY;
@@ -116,8 +119,11 @@ public class RobotContainer {
   // Instantiate subsystems
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
+  public final Climber climber = new Climber();
   private final DriveBase driveBase = new DriveBase();
+
+  private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climber.getAreOuterArmsTooLong());
+
 
   // Instantiate Intake commands
   private final CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
@@ -209,8 +215,8 @@ public class RobotContainer {
     rightTrigger.whenActive(commandActivateShooter)
                 .whenInactive(commandStopShooter);
 
-    leftTrigger.whenActive(commandStartFeeder)
-            .whenInactive(commandStopFeeder);
+    leftTrigger.whenActive(new CommandStartFeeder(shooter))
+            .whenInactive(new CommandStopFeeder(shooter));
     //leftStickUp.whenActive(commandStartFeeder);
     //leftStickUp.whenInactive(commandStopFeeder);
     //
@@ -250,6 +256,8 @@ public class RobotContainer {
           .whenInactive(commandStopOuterArms);
     rightStickUp.whenActive(commandExtendOuterArms)
           .whenInactive(commandStopOuterArms);
+
+    // triggerOuterArmsTooHigh.whenActive(new CommandRetractOuterArmsToLegalLimit(climber));
 
     // Climber commands - Primary Commands
     /*

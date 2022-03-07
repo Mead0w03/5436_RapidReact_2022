@@ -65,5 +65,6 @@ public final class Constants {
         public static final double FULLY_ASCENDED = 78000;
         public static final double OUTER_FULLY_EXTENDED = 350000; //355000
         public static final double OUTER_FULLY_RETRACTED = 7500;
+        public static final double OUTER_LEGAL_LIMIT = 275000;
     }
 }

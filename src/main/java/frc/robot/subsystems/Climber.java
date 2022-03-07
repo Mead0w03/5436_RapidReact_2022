@@ -22,7 +22,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CanBusConfig;
+import frc.robot.Constants.ClimberConfig;
 
 public class Climber extends SubsystemBase {
 // **********************************************
@@ -219,7 +221,7 @@ public Climber(){
         return this.ignoreEncoder;
     }
 
-    public boolean isFullyRetracted(){
+    public boolean getIsTiltFullyRetracted(){
         return !tiltRetractLimit.get();
     }
 
@@ -227,7 +229,18 @@ public Climber(){
         return tiltTimeLimit;
     }
 
-    
+    public boolean getAreOuterArmsTooLong(){
+        // returns true when the limit switch is engaged and the outer arms exceed the encoder position
+        return getOuterClimberPosition() >= ClimberConfig.OUTER_LEGAL_LIMIT && getIsTiltFullyRetracted();
+      }
+
+    public double getClimberPosition(){
+        return innerArmMotor.getSelectedSensorPosition();
+    }
+
+    public double getOuterClimberPosition(){
+        return outerArmMotor.getSelectedSensorPosition();
+    }
 
 // **********************************************
 // Class Methods
@@ -343,13 +356,6 @@ public Climber(){
         innerArmMotor.setSelectedSensorPosition(0.0);
     }
 
-    public double getClimberPosition(){
-        return innerArmMotor.getSelectedSensorPosition();
-    }
-
-    public double getOuterClimberPosition(){
-        return outerArmMotor.getSelectedSensorPosition();
-    }
 
     @Override
     public void periodic() {
