@@ -584,7 +584,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "4,2": {
+          "5,2": {
             "size": [
               2,
               1
@@ -595,15 +595,111 @@
               "_title": "Shooter/Target Velocity"
             }
           },
-          "4,1": {
+          "7,0": {
             "size": [
               2,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Shooter/Left Shooter Velocity",
+              "_source0": "network_table:///Shooter/Feeder Speed",
               "_title": "Shooter/Left Shooter Velocity"
+            }
+          },
+          "3,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Feeder Speed",
+              "_title": "/Shooter/Feeder Speed"
+            }
+          },
+          "3,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Right Shooter Velocity",
+              "_title": "/Shooter/Right Shooter Velocity"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Retract Intake Speed",
+              "_title": "/Intake/Retract Intake Speed"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Left Shooter Velocity",
+              "_title": "/Shooter/Left Shooter Velocity"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 6",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "3,0": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 0,
+              "imageHeight": 0
+            }
+          },
+          "3,2": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://Driver Camera 2",
+              "_title": "Driver Camera 2",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "QUARTER_CW",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           }
         }
@@ -613,7 +709,7 @@
   "windowGeometry": {
     "x": 4.0,
     "y": 0.0,
-    "width": 1826.0,
+    "width": 1553.5999755859375,
     "height": 808.0
   }
 }

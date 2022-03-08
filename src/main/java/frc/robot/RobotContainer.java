@@ -195,7 +195,8 @@ public class RobotContainer {
     autonChooser.addOption("Shooter", autonShootCommandGroup);
     //autonChooser.addOption("Drive-Shooter", autonShootDriveCommandGroup);
     SmartDashboard.putData(autonChooser);
-    CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture("Front Driver Camera", 0);
+    CameraServer.startAutomaticCapture("Rear Driver Camera", 1);
 
   }
 
