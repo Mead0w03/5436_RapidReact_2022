@@ -27,8 +27,8 @@ private double kI = 0.0;
 private double targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
 private double feederSpeed = Speed.FEEDER.getSpeed();
 private enum Speed{
-    FAR_HIGH_GOAL (18000),
-    CLOSE_LOW_GOAL (6000),
+    FAR_HIGH_GOAL (20000),
+    CLOSE_LOW_GOAL (7000),
     FEEDER (1000);
 
     private double speed;
@@ -62,6 +62,7 @@ public NetworkTableEntry entryF = shooterTable.getEntry("F coeficient");
 public NetworkTableEntry entryP = shooterTable.getEntry("P coeficient"); 
 public NetworkTableEntry entryI = shooterTable.getEntry("I coeficient"); 
 public NetworkTableEntry entryD = shooterTable.getEntry("D coeficient"); 
+public NetworkTableEntry entryFeederSpeed = shooterTable.getEntry("Feeder Speed");
  
 // **********************************************
 // Constructors
@@ -122,6 +123,8 @@ rightShooterMotor.setNeutralMode(NeutralMode.Brake);
         leftShooterMotor.config_kI(0, kI, 30);
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+    entryFeederSpeed.setDouble(feederSpeed);
+
 }
 public void SpeedEnum(){
 
@@ -149,7 +152,7 @@ public void SpeedEnum(){
     }
 
     public void startFeederMotor(){
-        rightShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms/4);
+        rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
     }
 
     public void stopFeeder(){
@@ -172,6 +175,9 @@ public void SpeedEnum(){
         entryTargetVelocity.setDouble(targetVelocity_UnitsPer100ms);
         entryP.setDouble(kP);
         entryI.setDouble(kI);
+        
+        entryRightShooterVelocity.setDouble(rightShooterMotor.getSelectedSensorVelocity());
+        feederSpeed = entryFeederSpeed.getDouble(1000);
 
         StringBuilder sb = new StringBuilder();
         sb.append("\tout");
@@ -209,6 +215,7 @@ public void SpeedEnum(){
         entryTargetVelocity.setDouble(targetVelocity_UnitsPer100ms);
         entryP.setDouble(kP);
         entryI.setDouble(kI);
+        feederSpeed = entryFeederSpeed.getDouble(1000);
     }
 
 } 

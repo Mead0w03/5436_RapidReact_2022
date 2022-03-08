@@ -25,8 +25,9 @@ public void initialize() {
 // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
-     autonShooter.activateShooter();
-     System.out.println("Execute, AutonStartCommand");
+    autonShooter.farHighGoal();
+    autonShooter.activateShooter();
+    System.out.println("Execute, AutonStartCommand");
  }
 
  // Called once the command ends or is interrupted.

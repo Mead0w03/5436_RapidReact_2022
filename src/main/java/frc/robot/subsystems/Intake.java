@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
-    private double intakeRetractSpeed = 0.5;
+    private double intakeRetractSpeed = 0.2;
     private Encoder encoder;
     //private double intakeSpeed = 0;
 
@@ -83,12 +83,12 @@ public class Intake extends SubsystemBase {
 
     public void cargoIn(){
         intakeCargo.set(intakeCargoSpeed);
-        intakeStorage.set(-intakeCargoSpeed);
+        intakeStorage.set(intakeCargoSpeed);
     }
 
     public void cargoOut(){
         intakeCargo.set(-intakeCargoSpeed);
-        intakeStorage.set(intakeCargoSpeed);
+        intakeStorage.set(-intakeCargoSpeed);
     }
 
     public void cargoStop(){

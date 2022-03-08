@@ -30,7 +30,7 @@ public AutonDriveCommand(DriveBase driveBase){
  // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
-     autonDriveBase.drive(-speed, -speed);
+     autonDriveBase.drive(speed, speed);
      
      System.out.println("Execute,AutonDriveCommand");
      //SmartDashboard.putString("Execute", "AutonDriveCommand");
@@ -50,7 +50,7 @@ public AutonDriveCommand(DriveBase driveBase){
      boolean shouldExit = false;
      //SmartDashboard.putNumber("Timer", timer.get());
      System.out.println(String.format("Timer %.2f", timer.get()));
-    if(timer.get() > 1.0){
+    if(timer.get() > 1.5){
         shouldExit = true;
     }
    return shouldExit;
