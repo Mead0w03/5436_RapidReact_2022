@@ -34,7 +34,7 @@ public class CommandStartFeeder extends CommandBase {
   @Override
   public void execute() {
         shooter.startFeederMotor();
-        System.out.println(this.getClass().getSimpleName());
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName())); 
   }
 
   // Called once the command ends or is interrupted.

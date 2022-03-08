@@ -47,7 +47,8 @@ public class AutonCargoCommand extends CommandBase{
     public void end(boolean interrupted) {
         // TODO Auto-generated method stub
         super.end(interrupted);
-        timer.stop();
+        //intake.cargoStop();
+        //timer.stop();
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
     }
@@ -62,12 +63,13 @@ public class AutonCargoCommand extends CommandBase{
     @Override
     public void initialize() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        timer.reset();
-        timer.start();
+        //timer.reset();
+        //timer.start();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.get()>1.5 ? true : false; //1.5 IS PLACEHOLDER VALUE
+        //return timer.get()>2.0 ? true : false; //1.5 IS PLACEHOLDER VALUE
+        return true;
     }
 }

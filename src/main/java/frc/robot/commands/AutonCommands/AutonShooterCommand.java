@@ -1,5 +1,6 @@
 package frc.robot.commands.AutonCommands;
 
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -9,10 +10,14 @@ import edu.wpi.first.wpilibj.Timer;
 public class AutonShooterCommand extends CommandBase {
 
 private Shooter autonShooter;
+private Intake intake;
 private Timer timer;
+private double timeLimit;
 
-public AutonShooterCommand(Shooter shooter){
+public AutonShooterCommand(Shooter shooter, Intake intake, double time){
     this.autonShooter = shooter;
+    this.intake = intake;
+    this.timeLimit = time;
     this.addRequirements(autonShooter);
     timer = new Timer();
     
@@ -39,6 +44,7 @@ public void initialize() {
     // SmartDashboard.putString("End" ,"AutonShooterCommand");
     autonShooter.stopShooter();
     autonShooter.stopFeeder();
+    intake.cargoStop();
      System.out.println("End,AutonShooterCommand");
  }
 
@@ -46,7 +52,7 @@ public void initialize() {
  @Override
  public boolean isFinished() {
     boolean shouldExit = false;
-    if(timer.get() > 1.5){
+    if(timer.get() > timeLimit){
         shouldExit = true;
     }
     return shouldExit;

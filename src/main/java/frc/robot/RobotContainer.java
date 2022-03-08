@@ -21,6 +21,7 @@ import frc.robot.triggers.LeftTrigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.AutonCommands.AutonCargoCommand;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
+import frc.robot.commands.AutonCommands.AutonIntakeDownCommand;
 import frc.robot.commands.AutonCommands.AutonIntakeUpCommand;
 import frc.robot.commands.AutonCommands.AutonShooterCommand;
 import frc.robot.commands.AutonCommands.AutonStartShooterCommand;
@@ -174,12 +175,14 @@ public class RobotContainer {
 
   //Instantiate Auton commands
   private final AutonDriveCommand autonDriveCommand = new AutonDriveCommand(driveBase);
-  private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter);
+  private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter, intake, 5.0);
+  private AutonShooterCommand autonDriveShooterCommand = new AutonShooterCommand(shooter, intake, 1.5);
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  private final AutonIntakeUpCommand autonIntakeUpCommand = new AutonIntakeUpCommand(intake);
-  private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(new AutonDriveCommand(driveBase), autonStartShooterCommand, commandStartFeeder, autonShooterCommand);
+  //private final AutonIntakeUpCommand autonIntakeUpCommand = new AutonIntakeUpCommand(intake);
+  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), autonDriveShooterCommand);
+  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase), new AutonIntakeDownCommand(intake), new AutonCargoCommand(intake), autonStartShooterCommand, commandStartFeeder, autonShooterCommand);
   //private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
-  private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
+  //private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
  // private final SequentialCommandGroup autonShootDriveCommandGroup = new SequentialCommandGroup(autonDriveCommand,commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
 
   //Auton routine chooser
@@ -190,9 +193,9 @@ public class RobotContainer {
 
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
-    autonChooser.setDefaultOption("Drive Forward", autonDriveCommand);
-    autonChooser.addOption("Shooter", autonShootCommandGroup);
-    //autonChooser.addOption("Drive-Shooter", autonShootDriveCommandGroup);
+    //autonChooser.addOption("Drive Forward", autonDriveCommand);
+    autonChooser.setDefaultOption("Drive-Shoot", autonDriveShootCG);
+    autonChooser.addOption("Full-Routine", autonFullRoutineCG);
     SmartDashboard.putData(autonChooser);
 
   }
