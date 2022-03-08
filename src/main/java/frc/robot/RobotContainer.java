@@ -6,6 +6,7 @@ package frc.robot;
 
 import javax.swing.JToggleButton;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -59,6 +60,7 @@ import frc.robot.commands.ShooterCommands.CommandStopShooter;
 import frc.robot.commands.ShooterCommands.CommandFarHigh;
 import frc.robot.commands.ShooterCommands.CommandCloseLow;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -187,13 +189,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
     autonChooser.setDefaultOption("Drive Forward", autonDriveCommand);
     autonChooser.addOption("Shooter", autonShootCommandGroup);
     //autonChooser.addOption("Drive-Shooter", autonShootDriveCommandGroup);
     SmartDashboard.putData(autonChooser);
+    CameraServer.startAutomaticCapture();
 
   }
 

@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class Vision extends SubsystemBase {
 
@@ -17,6 +19,7 @@ public class Vision extends SubsystemBase {
     private double goodRange;
 
     private DriveBase driveTrain;
+
 
     public Vision(NetworkTable limelight, DriveBase driveTrain) {
         visionLimelight = limelight;
@@ -87,7 +90,9 @@ public class Vision extends SubsystemBase {
         return alignStatus;
     }
 
-
+    public void displayCamera(){
+       CameraServer.startAutomaticCapture("Driver Camera", 0);
+    }
 
 
     
