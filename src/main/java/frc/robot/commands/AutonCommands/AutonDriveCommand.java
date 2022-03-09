@@ -9,10 +9,13 @@ public class AutonDriveCommand extends CommandBase {
 
 private DriveBase autonDriveBase;
 private Timer timer;
-private double speed = 0.2;
+private double speed = 0.0;
+private double timeLimit = 0.0;
 
-public AutonDriveCommand(DriveBase driveBase){
+public AutonDriveCommand(DriveBase driveBase, double time, double speed){
     this.autonDriveBase = driveBase;
+    this.timeLimit = time;
+    this.speed = speed;
     timer = new Timer();
     this.addRequirements(autonDriveBase);
     System.out.println("In AutonDriveCommand");
@@ -47,12 +50,7 @@ public AutonDriveCommand(DriveBase driveBase){
  // Returns true when the command should end.
  @Override
  public boolean isFinished() {
-     boolean shouldExit = false;
-     //SmartDashboard.putNumber("Timer", timer.get());
-     System.out.println(String.format("Timer %.2f", timer.get()));
-    if(timer.get() > 1.5){
-        shouldExit = true;
-    }
-   return shouldExit;
+     
+   return timer.get() > timeLimit ? true : false;
 }
 }

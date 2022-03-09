@@ -174,16 +174,14 @@ public class RobotContainer {
   //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
 
   //Instantiate Auton commands
-  private final AutonDriveCommand autonDriveCommand = new AutonDriveCommand(driveBase);
-  private final AutonShooterCommand autonShooterCommand = new AutonShooterCommand(shooter, intake, 5.0);
-  private AutonShooterCommand autonDriveShooterCommand = new AutonShooterCommand(shooter, intake, 1.5);
+  
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  //private final AutonIntakeUpCommand autonIntakeUpCommand = new AutonIntakeUpCommand(intake);
-  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), autonDriveShooterCommand);
-  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase), new AutonIntakeDownCommand(intake), new AutonCargoCommand(intake), autonStartShooterCommand, commandStartFeeder, autonShooterCommand);
-  //private final SequentialCommandGroup autonShootCommandGroup = new SequentialCommandGroup(commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
-  //private final AutonCargoCommand autonCargoCommand = new AutonCargoCommand(intake);
- // private final SequentialCommandGroup autonShootDriveCommandGroup = new SequentialCommandGroup(autonDriveCommand,commandStartFeeder, autonStartShooterCommand, autonShooterCommand);
+  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
+  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2),  
+  autonStartShooterCommand, commandStartFeeder, new AutonShooterCommand(shooter, intake, 1.5), new AutonIntakeDownCommand(intake) 
+  ,new AutonCargoCommand(intake),new AutonDriveCommand(driveBase, 0.75, 0.2), new AutonDriveCommand(driveBase, 0.75, -0.2), 
+  new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
+  
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
