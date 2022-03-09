@@ -96,12 +96,12 @@ public class Intake extends SubsystemBase {
         intakeStorage.set(0);
     }
 
-    public void intakeUp(){
+    public void intakeDown(){
         intakeRetractLeft.set(intakeRetractSpeed);
         intakeRetractRight.set(-intakeRetractSpeed);
     }
 
-    public void intakeDown(){
+    public void intakeUp(){
         intakeRetractLeft.set(-intakeRetractSpeed);
         intakeRetractRight.set(intakeRetractSpeed);
     }

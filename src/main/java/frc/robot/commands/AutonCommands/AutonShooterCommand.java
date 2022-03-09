@@ -45,6 +45,7 @@ public void initialize() {
     autonShooter.stopShooter();
     autonShooter.stopFeeder();
     intake.cargoStop();
+    
      System.out.println("End,AutonShooterCommand");
  }
 
