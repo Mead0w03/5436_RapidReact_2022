@@ -176,7 +176,9 @@ public class RobotContainer {
   //Instantiate Auton commands
   
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
+  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), 
+  new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5), 
+  new AutonDriveCommand(driveBase, 2.0, 0.2));
   private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2),  
   autonStartShooterCommand, commandStartFeeder, new AutonShooterCommand(shooter, intake, 1.5), new AutonIntakeDownCommand(intake) 
   ,new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 2.0, 0.2),new AutonDriveCommand(driveBase, 2.0, -0.2), 
