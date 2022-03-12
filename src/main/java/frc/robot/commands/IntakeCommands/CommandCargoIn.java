@@ -39,7 +39,6 @@ public class CommandCargoIn extends CommandBase{
     // Instance Methods
     // **********************************************
     
-    
     @Override
     public void end(boolean interrupted) {
         // TODO Auto-generated method stub

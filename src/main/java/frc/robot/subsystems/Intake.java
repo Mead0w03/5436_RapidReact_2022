@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
     private double intakeCargoSpeed = 0.5;
-    private double intakeRetractSpeed = 0.2;
+    private double intakeRetractSpeed = 0.35;
     private Encoder encoder;
     //private double intakeSpeed = 0;
 

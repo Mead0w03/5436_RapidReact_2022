@@ -29,7 +29,7 @@ private double feederSpeed = Speed.FEEDER.getSpeed();
 private enum Speed{
     FAR_HIGH_GOAL (20000),
     CLOSE_LOW_GOAL (7000),
-    FEEDER (1000);
+    FEEDER (2000);
 
     private double speed;
     Speed (double speedIn){

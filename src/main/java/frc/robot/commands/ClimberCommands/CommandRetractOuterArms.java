@@ -56,6 +56,7 @@ public class CommandRetractOuterArms extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        
        boolean isFullyRetracted = climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
        boolean encoderActive = !climber.getIgnoreEncoder();
         return isFullyRetracted && encoderActive;

@@ -51,7 +51,7 @@ public class CommandSolenoidDescend extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        if(robotContainer.getDpadUp()){
+        if(robotContainer.getLStickUp()){
             // climber.stop();
             robotContainer.setOkToDescend(true);            
         }else{

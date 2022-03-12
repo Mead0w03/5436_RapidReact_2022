@@ -523,9 +523,9 @@
               "_title": "Climber/outer arm current encoder value"
             }
           },
-          "8,3": {
+          "2,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -548,15 +548,75 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,1": {
+          "3,0": {
             "size": [
               3,
-              4
+              2
             ],
             "content": {
               "_type": "Network Table Tree",
               "_source0": "network_table:///Intake",
               "_title": "/Intake"
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Retract Intake Speed",
+              "_title": "Intake/Retract Intake Speed"
+            }
+          },
+          "7,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://intake cam",
+              "_title": "intake cam",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": 15,
+              "imageWidth": 160,
+              "imageHeight": 120
+            }
+          },
+          "0,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://shooter cam",
+              "_title": "shooter cam",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "QUARTER_CW",
+              "compression": -1.0,
+              "fps": 15,
+              "imageWidth": 160,
+              "imageHeight": 120
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///Climber/Ignore Encoder",
+              "_title": "Climber/Ignore Encoder"
             }
           },
           "6,1": {
@@ -566,8 +626,41 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Intake/Cargo Intake Speed",
-              "_title": "/Intake/Cargo Intake Speed"
+              "_source0": "network_table:///Climber/Climber Speed",
+              "_title": "Climber/Climber Speed"
+            }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Feeder Speed",
+              "_title": "Shooter/Feeder Speed"
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Left Shooter Velocity",
+              "_title": "Shooter/Left Shooter Velocity"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Outer Arm Speed",
+              "_title": "Climber/Outer Arm Speed"
             }
           }
         }
@@ -605,6 +698,17 @@
               "_source0": "network_table:///Shooter/Left Shooter Velocity",
               "_title": "Shooter/Left Shooter Velocity"
             }
+          },
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shooter/Feeder Speed",
+              "_title": "/Shooter/Feeder Speed"
+            }
           }
         }
       }
@@ -613,7 +717,7 @@
   "windowGeometry": {
     "x": 4.0,
     "y": 0.0,
-    "width": 1826.0,
+    "width": 1553.5999755859375,
     "height": 808.0
   }
 }

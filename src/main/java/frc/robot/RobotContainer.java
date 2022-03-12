@@ -93,15 +93,18 @@ public class RobotContainer {
   private final JoystickButton stick11 = new JoystickButton(stick, 11);
   private final JoystickButton stick12 = new JoystickButton(stick, 12);
 
+  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
+  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.3);
+
+
   private final Trigger dpadUp = new Trigger(() -> xboxController.getPOV() == 0);
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
-  private final Trigger triggerClearSolenoid = new Trigger(() -> dpadUp.get() && !okToContinueDescend && !isFullyDescended);
-  private final Trigger triggerContinueDescend = new Trigger(() -> dpadUp.get() && okToContinueDescend);
+  private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
+  private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
 
-  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
-  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.3);
+  
 
   private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
   private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
@@ -192,8 +195,10 @@ public class RobotContainer {
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
     //autonChooser.addOption("Drive Forward", autonDriveCommand);
-    autonChooser.setDefaultOption("Drive-Shoot", autonDriveShootCG);
-    autonChooser.addOption("Full-Routine", autonFullRoutineCG);
+    //autonChooser.setDefaultOption("Drive-Shoot", autonDriveShootCG);
+    //autonChooser.addOption("Full-Routine", autonFullRoutineCG);
+    autonChooser.setDefaultOption("Full-Routine", autonFullRoutineCG);
+    autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
     SmartDashboard.putData(autonChooser);
 
   }
@@ -201,8 +206,8 @@ public class RobotContainer {
   public void setOkToDescend(boolean inputValue){
     this.okToContinueDescend = inputValue;
   }
-  public boolean getDpadUp(){
-    return dpadUp.get();
+  public boolean getLStickUp(){
+    return leftStickUp.get();
   }
   public void setIsFullyDescended(boolean input){
     this.isFullyDescended = input;
@@ -239,8 +244,10 @@ public class RobotContainer {
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
-    dpadDown.whenActive(commandClimb)
-          .whenInactive(commandStopClimb);//
+    //dpadDown.whenActive(commandClimb)
+          //.whenInactive(commandStopClimb);//
+    leftStickDown.whenActive(commandClimb)
+          .whenInactive(commandStopClimb);
     // dpadUp.whenActive(commandGroupSolenoidDescend)
     //       .whenInactive(commandStopClimb);//
     triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
@@ -250,8 +257,8 @@ public class RobotContainer {
           .whenInactive(commandStopTilt);
     dpadLeft.whenActive(commandRetractTilt)
           .whenInactive(commandStopTilt);
-    leftStickUp.whenActive(commandFullTilt);
-    leftStickDown.whenActive(commandFullTiltRetract);
+   // leftStickUp.whenActive(commandFullTilt);
+   // leftStickDown.whenActive(commandFullTiltRetract);
 
     rightStickDown.whenActive(commandRetractOuterArms)
           .whenInactive(commandStopOuterArms);

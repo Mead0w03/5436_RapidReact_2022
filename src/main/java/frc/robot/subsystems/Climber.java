@@ -46,15 +46,15 @@ private DigitalInput tiltRetractLimit;
 //private DigitalInput climberLimit;
 
 
-private double climbSpeed = 0.3;
+private double climbSpeed = 0.6;
 private double rateOfChange = .05;
 private double tiltSpeed = 1.0;
-private double outerArmSpeed = 0.5;
+private double outerArmSpeed = 0.7;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
 private boolean resetEncoder = false;
 private double innerArmEncoderSetPoint = 0.0;
-private boolean ignoreEncoder = false;
+private boolean ignoreEncoder = true;
 private boolean resetOuterArmEncoder = false;
 private double tiltTimeLimit = 1.5;
 
@@ -150,14 +150,15 @@ public Climber(){
     //         innerArmMotor.setSelectedSensorPosition(innerArmEncoderSetPoint);
     //     }
     // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-    String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
-    netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
-        System.out.println("Encoder being ignored");
-        if (value.getBoolean()!=ignoreEncoder){
-            System.out.println("Updating the instance att based on table data");
-            ignoreEncoder = value.getBoolean();
-        }
-    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    // String 
+    // EncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
+    // netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
+    //     System.out.println("Encoder being ignored");
+    //     if (value.getBoolean()!=ignoreEncoder){
+    //         System.out.println("Updating the instance att based on table data");
+    //         ignoreEncoder = value.getBoolean();
+    //     }
+    // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
     System.out.println(String.format("entryResetEncoder.getName(): %s", entryResetEncoder.getName()));
     String resetEncoderEntryName = NetworkTable.basenameKey(entryResetEncoder.getName());
