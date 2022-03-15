@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -26,6 +27,9 @@ private double kP = 0.0;
 private double kI = 0.0;
 private double targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
 private double feederSpeed = Speed.FEEDER.getSpeed();
+
+private boolean farSpeedTrue;
+
 private enum Speed{
     FAR_HIGH_GOAL (20000),
     CLOSE_LOW_GOAL (7000),
@@ -139,12 +143,17 @@ public void SpeedEnum(){
         leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
     }
 
-    public void farHighGoal(){
+    public boolean farHighGoal(){
         targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
+        farSpeedTrue = true;
+        return farSpeedTrue;
     }
 
-    public void closeLowGoal(){
+    public boolean closeLowGoal(){
         targetVelocity_UnitsPer100ms = Speed.CLOSE_LOW_GOAL.getSpeed();
+        farSpeedTrue = false;
+        return farSpeedTrue;
+
     }
     
     public void reverseShooter(){
@@ -165,6 +174,7 @@ public void SpeedEnum(){
 
 
     public void periodic() {
+        SmartDashboard.putBoolean("Far speed: ", farSpeedTrue);
         entryShooterPercentage.setDouble(leftShooterMotor.getMotorOutputPercent());
         entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());

@@ -49,7 +49,7 @@ private DigitalInput tiltRetractLimit;
 private double climbSpeed = 0.6;
 private double rateOfChange = .05;
 private double tiltSpeed = 1.0;
-private double outerArmSpeed = 0.7;
+private double outerArmSpeed = 0.8;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
 private boolean resetEncoder = false;

@@ -303,6 +303,19 @@
               "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
               "_title": "SendableChooser[0]"
             }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Far speed: ",
+              "_title": "Far speed: ",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -559,7 +572,7 @@
               "_title": "/Intake"
             }
           },
-          "5,2": {
+          "5,3": {
             "size": [
               1,
               1
@@ -638,7 +651,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Shooter/Feeder Speed",
-              "_title": "Shooter/Feeder Speed"
+              "_title": "Feeder Speed"
             }
           },
           "4,2": {
@@ -649,10 +662,10 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Shooter/Left Shooter Velocity",
-              "_title": "Shooter/Left Shooter Velocity"
+              "_title": "Shooter speed"
             }
           },
-          "6,2": {
+          "4,3": {
             "size": [
               1,
               1
@@ -661,6 +674,30 @@
               "_type": "Text View",
               "_source0": "network_table:///Climber/Outer Arm Speed",
               "_title": "Climber/Outer Arm Speed"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt Speed",
+              "_title": "Climber/Tilt Speed"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Far speed: ",
+              "_title": "SmartDashboard/Far speed: ",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
