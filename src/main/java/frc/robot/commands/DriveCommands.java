@@ -28,31 +28,15 @@ public class DriveCommands extends CommandBase{
         double xOutput = stick.getRawAxis(0);
         double yOutput = stick.getRawAxis(1);
 
-        if(xOutput > .3) {
-            xOutput *= .5;
-         
-         }
-         
-         if(yOutput > .3) {
-             yOutput *= .5;
-         }
-
         double L = driveBase.driveProcessing(driveBase.deaden(xOutput, .1), driveBase.deaden(yOutput, .1), "Left")[0];
         double R = driveBase.driveProcessing(driveBase.deaden(xOutput, .1), driveBase.deaden(yOutput, .1), "Right")[1];
-
-       
-
 
         SmartDashboard.putNumber("Left: ", L);
         SmartDashboard.putNumber("Right: ", R);
         SmartDashboard.putNumber("Y axis: ", stick.getRawAxis(1));
         SmartDashboard.putNumber("X axis: ", stick.getRawAxis(0));
 
-        //double R = -.1;
-        //double L = .1;
         driveBase.drive(L, R);
-
-        
     }
 
     @Override
