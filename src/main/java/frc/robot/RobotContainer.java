@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,6 +19,8 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
+import frc.robot.utils.DoubleButton;
+import frc.robot.utils.SingleButton;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.AutonCommands.AutonCargoCommand;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
@@ -48,9 +51,9 @@ import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
 import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeDown;
+import frc.robot.commands.IntakeCommands.CommandIntakeDownManual;
 import frc.robot.commands.IntakeCommands.CommandIntakeStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeUp;
+import frc.robot.commands.IntakeCommands.CommandIntakeUpManual;
 //Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
@@ -81,6 +84,10 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+  private final SingleButton bButtonAlone = new SingleButton(bButton, leftBumper);
+  private final SingleButton xButtonAlone = new SingleButton(xButton, leftBumper);
+  private final DoubleButton bAndLeftBumper = new DoubleButton(bButton, leftBumper);
+  private final DoubleButton xAndLeftBumper = new DoubleButton(xButton, leftBumper);
 
   private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
   private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
@@ -133,9 +140,12 @@ public class RobotContainer {
   private final CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
   private final CommandCargoOut commandCargoOut = new CommandCargoOut(intake);
   private final CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
-  private final CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
-  private final CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
+  private final CommandIntakeUpManual commandIntakeUp = new CommandIntakeUpManual(intake);
+  private final CommandIntakeDownManual commandIntakeDown = new CommandIntakeDownManual(intake);
   private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
+
+  private final InstantCommand commandResetIntakeEncoders = new InstantCommand( ()-> intake.resetRetractEncoders(), intake);
+ 
   
   // Instantiate Climber Commands
   private final CommandClimb commandClimb = new CommandClimb(climber, this);
@@ -237,6 +247,8 @@ public class RobotContainer {
       .whenInactive(commandCargoStop);
     yButton.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
+
+    xAndLeftBumper.whenPressed(commandResetIntakeEncoders);
 
     bButton.whenPressed(commandIntakeUp)
           .whenReleased(commandIntakeStop);

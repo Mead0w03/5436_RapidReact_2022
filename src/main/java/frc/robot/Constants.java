@@ -67,4 +67,8 @@ public final class Constants {
         public static final double OUTER_FULLY_RETRACTED = 7500;
         public static final double OUTER_LEGAL_LIMIT = 275000;
     }
+
+    public class IntakeConfig{
+        public static final double RETRACT_ARM_DOWN_POSITION = 5;
+    }
 }

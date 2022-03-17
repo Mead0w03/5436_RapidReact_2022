@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CanBusConfig;
 
 public class Intake extends SubsystemBase {
@@ -27,8 +29,12 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeRetractLeftEncoder;
     private RelativeEncoder intakeRetractRightEncoder;
     private RelativeEncoder intakeStorageEncoder;
+    private SparkMaxPIDController intakeRetractLeftPID;
+    private SparkMaxPIDController intakeRetractRightPID;
     private double intakeCargoSpeed = 0.5;
     private double intakeRetractSpeed = 0.35;
+    private double kP = 0.0;
+    private double kI = 0.0;
     private Encoder encoder;
     //private double intakeSpeed = 0;
 
@@ -43,24 +49,52 @@ public class Intake extends SubsystemBase {
     NetworkTableEntry entryRetractRightEncoder = intakeTable.getEntry("Right Retract Encoder Speed");
 
     public Intake(){
+        //declaring motor controllers
         intakeCargo = new CANSparkMax(CanBusConfig.CARGO, MotorType.kBrushless);
         intakeRetractLeft = new CANSparkMax(CanBusConfig.RETRACT_LEFT, MotorType.kBrushless);
         intakeRetractRight = new CANSparkMax(CanBusConfig.RETRACT_RIGHT, MotorType.kBrushless);
         intakeStorage = new CANSparkMax(CanBusConfig.STORAGE, MotorType.kBrushless);
 
+        //setting left motor to be follower of right + inverting left motor
+        intakeRetractLeft.follow(intakeRetractRight, true);
+
+        //setting idle motor mode
         intakeRetractLeft.setIdleMode(IdleMode.kBrake);
         intakeRetractRight.setIdleMode(IdleMode.kBrake);
 
-
+        //setting encoders
         intakeCargoEncoder = intakeCargo.getEncoder();
         intakeRetractLeftEncoder = intakeRetractLeft.getEncoder();
         intakeRetractRightEncoder = intakeRetractRight.getEncoder();
         intakeStorageEncoder = intakeStorage.getEncoder();
 
-        intakeCargoEncoder.setPosition(0);
-        intakeRetractLeftEncoder.setPosition(0);
-        intakeRetractRightEncoder.setPosition(0);
-        intakeStorageEncoder.setPosition(0);
+        //setting PID controllers
+        intakeRetractLeftPID = intakeRetractLeft.getPIDController();
+        intakeRetractLeftPID.setP(kP);
+        intakeRetractLeftPID.setI(kI);
+        intakeRetractLeftPID.setD(0.0);
+        intakeRetractLeftPID.setFF(0.2);
+        intakeRetractRightPID = intakeRetractRight.getPIDController();
+        intakeRetractRightPID.setP(kP);
+        intakeRetractRightPID.setI(kI);
+        intakeRetractRightPID.setD(0.0);
+        intakeRetractRightPID.setFF(0.2);
+
+        intakeTable.addEntryListener("P coeficient", (table, key, entry, value, flags) -> {
+            kP = value.getDouble();
+            System.out.println(String.format("p changed value: %.2f", kP));
+            intakeRetractLeftPID.setP(kP);
+            intakeRetractRightPID.setP(kP);
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    
+        intakeTable.addEntryListener("I coeficient", (table, key, entry, value, flags) -> {
+            kI = value.getDouble();
+            System.out.println(String.format("I changed value: %.2f", kP));
+            intakeRetractLeftPID.setI(kI);
+            intakeRetractRightPID.setI(kI);
+            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        
+
 
         //SmartDashboard.putNumber("Intake Speed", intakeSpeed);
 
@@ -81,6 +115,18 @@ public class Intake extends SubsystemBase {
          REVPhysicsSim.getInstance().addSparkMax(intakeRetractRight, DCMotor.getNEO(1));
     }
 
+    public void resetAllEncoders(){
+        intakeCargoEncoder.setPosition(0);
+        intakeRetractLeftEncoder.setPosition(0);
+        intakeRetractRightEncoder.setPosition(0);
+        intakeStorageEncoder.setPosition(0);
+    }
+
+    public void resetRetractEncoders(){
+        intakeRetractLeftEncoder.setPosition(0);
+        intakeRetractRightEncoder.setPosition(0);
+    }
+
     public void cargoIn(){
         intakeCargo.set(intakeCargoSpeed);
         intakeStorage.set(intakeCargoSpeed);
@@ -97,18 +143,42 @@ public class Intake extends SubsystemBase {
     }
 
     public void intakeDown(){
-        intakeRetractLeft.set(intakeRetractSpeed);
         intakeRetractRight.set(-intakeRetractSpeed);
+        //left is declared as follower
     }
 
     public void intakeUp(){
-        intakeRetractLeft.set(-intakeRetractSpeed);
         intakeRetractRight.set(intakeRetractSpeed);
+        //left is declared as follower
     }
 
     public void intakeStop(){
-        intakeRetractLeft.set(0);
         intakeRetractRight.set(0);
+        //left is declared as follower
+    }
+
+    public void intakeMove(String direction, String type){
+        int d = 0;
+
+        if(type == "PWM"){
+            if(direction.equalsIgnoreCase("Up")){
+                intakeRetractRightPID.setReference(0, CANSparkMax.ControlType.kPosition);
+                intakeRetractLeftPID.setReference(0, CANSparkMax.ControlType.kPosition);
+            } else if(direction.equalsIgnoreCase("Down")){
+                intakeRetractRightPID.setReference(Constants.IntakeConfig.RETRACT_ARM_DOWN_POSITION, CANSparkMax.ControlType.kPosition);
+                intakeRetractLeftPID.setReference(Constants.IntakeConfig.RETRACT_ARM_DOWN_POSITION, CANSparkMax.ControlType.kPosition);
+            } else {
+                System.out.println("Invalid type/direction parameter sent.");
+            }
+        } else if (type == "Manual"){
+            if(direction.equalsIgnoreCase("Up")){
+                intakeRetractRight.set(intakeRetractSpeed);
+            } else if(direction.equalsIgnoreCase("Down")){
+                intakeRetractRight.set(-intakeRetractSpeed);
+            } else {
+                System.out.println("Invalid type/direction parameter sent.");
+            }
+        }
     }
 
 

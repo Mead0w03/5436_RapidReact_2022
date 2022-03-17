@@ -3,7 +3,7 @@ package frc.robot.commands.IntakeCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class CommandIntakeDown extends CommandBase{
+public class CommandIntakeUpManual extends CommandBase{
     // **********************************************
     // Class Variables
     // **********************************************
@@ -18,7 +18,7 @@ public class CommandIntakeDown extends CommandBase{
     // Constructors
     // **********************************************
 
-        public CommandIntakeDown(Intake intake){
+        public CommandIntakeUpManual(Intake intake){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             this.addRequirements(intake);
@@ -42,7 +42,7 @@ public class CommandIntakeDown extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
+        
         super.end(interrupted);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
@@ -52,7 +52,7 @@ public class CommandIntakeDown extends CommandBase{
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        intake.intakeDown();
+        intake.intakeMove("Up", "Manual");
     }
 
     @Override
