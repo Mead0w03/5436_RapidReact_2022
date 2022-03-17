@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -52,8 +53,10 @@ import frc.robot.commands.IntakeCommands.CommandCargoIn;
 import frc.robot.commands.IntakeCommands.CommandCargoOut;
 import frc.robot.commands.IntakeCommands.CommandCargoStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeDownManual;
+import frc.robot.commands.IntakeCommands.CommandIntakeDownPWM;
 import frc.robot.commands.IntakeCommands.CommandIntakeStop;
 import frc.robot.commands.IntakeCommands.CommandIntakeUpManual;
+import frc.robot.commands.IntakeCommands.CommandIntakeUpPWM;
 //Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
@@ -142,6 +145,8 @@ public class RobotContainer {
   private final CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
   private final CommandIntakeUpManual commandIntakeUp = new CommandIntakeUpManual(intake);
   private final CommandIntakeDownManual commandIntakeDown = new CommandIntakeDownManual(intake);
+  private final CommandIntakeUpPWM commandIntakeUpPWM = new  CommandIntakeUpPWM(intake);
+  private final CommandIntakeDownPWM commandIntakeDownPWM = new CommandIntakeDownPWM(intake);
   private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
 
   private final InstantCommand commandResetIntakeEncoders = new InstantCommand( ()-> intake.resetRetractEncoders(), intake);
@@ -189,7 +194,9 @@ public class RobotContainer {
   //Instantiate Auton commands
   
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
+  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), 
+  new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), 
+  new AutonShooterCommand(shooter, intake, 1.5)); 
   private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2),  
   autonStartShooterCommand, commandStartFeeder, new AutonShooterCommand(shooter, intake, 1.5), new AutonIntakeDownCommand(intake) 
   ,new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 2.0, 0.2),new AutonDriveCommand(driveBase, 2.0, -0.2), 
@@ -198,6 +205,11 @@ public class RobotContainer {
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
+
+  //Intake chooser
+  private final SendableChooser<Boolean> intakeChooser = new SendableChooser<>();
+
+  //private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new ConditionalCommand(commandIntakeUp, commandIntakeUpPWM, ()-> intakeChooser.getSelected()));
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -209,7 +221,11 @@ public class RobotContainer {
     //autonChooser.addOption("Full-Routine", autonFullRoutineCG);
     autonChooser.setDefaultOption("Full-Routine", autonFullRoutineCG);
     autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
+    intakeChooser.setDefaultOption("Manual", true);
+    intakeChooser.addOption("PWM", false);
     SmartDashboard.putData(autonChooser);
+    SmartDashboard.putData(intakeChooser);
+    System.out.println(intakeChooser.getSelected());
 
   }
 
@@ -250,9 +266,14 @@ public class RobotContainer {
 
     xAndLeftBumper.whenPressed(commandResetIntakeEncoders);
 
-    bButton.whenPressed(commandIntakeUp)
+    // bButton.whenPressed(commandIntakeUp)
+    //       .whenReleased(commandIntakeStop);
+    // xButton.whenPressed(commandIntakeDown)
+    //     .whenReleased(commandIntakeStop);
+
+    bButton.whenPressed(new ConditionalCommand(commandIntakeUp, commandIntakeUpPWM, ()-> intakeChooser.getSelected()))
           .whenReleased(commandIntakeStop);
-    xButton.whenPressed(commandIntakeDown)
+    xButton.whenPressed(new ConditionalCommand(commandIntakeDown, commandIntakeDownPWM, ()-> intakeChooser.getSelected()))
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
@@ -312,6 +333,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     //return autonShootCommandGroup;
+    
     return autonChooser.getSelected();
   }
 }
