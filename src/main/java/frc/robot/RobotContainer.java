@@ -180,11 +180,9 @@ public class RobotContainer {
   
   private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
   private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
-  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2),  
-  autonStartShooterCommand, commandStartFeeder, new AutonShooterCommand(shooter, intake, 1.5), new AutonIntakeDownCommand(intake) 
-  ,new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 2.0, 0.2),new AutonDriveCommand(driveBase, 2.0, -0.2), 
-  new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
-  
+  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.0, 0.2),  
+  new AutonIntakeDownCommand(intake), new AutonCargoCommand(intake), commandStartFeeder, new AutonStartShooterCommand(shooter), 
+  new AutonDriveCommand(driveBase, 1.0, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();

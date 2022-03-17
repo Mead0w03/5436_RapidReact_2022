@@ -172,6 +172,9 @@ public void SpeedEnum(){
         leftShooterMotor.set(ControlMode.PercentOutput, 0.0); 
     }
 
+    public double getSensorVelocity(){
+        return leftShooterMotor.getSelectedSensorVelocity();    
+    }
 
     public void periodic() {
         SmartDashboard.putBoolean("Far speed: ", farSpeedTrue);

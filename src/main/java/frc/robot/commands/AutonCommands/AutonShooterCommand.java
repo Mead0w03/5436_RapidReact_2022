@@ -35,6 +35,9 @@ public void initialize() {
  public void execute() {
      autonShooter.farHighGoal();
      System.out.println("Execute,AutonShooterCommand");
+     if (autonShooter.getSensorVelocity() < 19000.0){
+        autonShooter.stopFeeder();
+     }
      //SmartDashboard.putString("Execute", "AutonShooterCommand");
  }
 
