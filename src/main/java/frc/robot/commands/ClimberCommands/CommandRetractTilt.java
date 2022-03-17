@@ -36,8 +36,6 @@ public class CommandRetractTilt extends CommandBase {
     
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         climber.stopTilt();
     }
@@ -45,7 +43,6 @@ public class CommandRetractTilt extends CommandBase {
     @Override
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
         climber.startTilt("retract");
     }
 

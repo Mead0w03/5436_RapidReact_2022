@@ -433,6 +433,50 @@
               "Layout/Label position": "BOTTOM",
               "_children": []
             }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/s_Outer Arm Power",
+              "_title": "Climber/s_Outer Arm Power"
+            }
+          },
+          "11,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/s_Inner Arm Power",
+              "_title": "Climber/s_Inner Arm Power"
+            }
+          },
+          "12,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/s_Tilt  Power",
+              "_title": "Climber/s_Tilt  Power"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/s_Climber Speed",
+              "_title": "Climber/s_Climber Speed"
+            }
           }
         }
       }
@@ -457,28 +501,6 @@
               "_type": "Network Table Tree",
               "_source0": "network_table:///Climber",
               "_title": "/Climber"
-            }
-          },
-          "6,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Climber Speed",
-              "_title": "/Climber/Climber Speed"
-            }
-          },
-          "8,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt Speed",
-              "_title": "/Climber/Tilt Speed"
             }
           },
           "10,0": {
@@ -514,28 +536,6 @@
               "_title": "Climber/Reset Outer Arm Encoder"
             }
           },
-          "6,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/inner arm current encoder value",
-              "_title": "Climber/inner arm current encoder value"
-            }
-          },
-          "10,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/outer arm current encoder value",
-              "_title": "Climber/outer arm current encoder value"
-            }
-          },
           "2,0": {
             "size": [
               1,
@@ -545,6 +545,105 @@
               "_type": "Toggle Switch",
               "_source0": "network_table:///Climber/Ignore Encoder",
               "_title": "Climber/Ignore Encoder"
+            }
+          },
+          "7,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt kD",
+              "_title": "Climber/Tilt kD"
+            }
+          },
+          "8,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt kF",
+              "_title": "Climber/Tilt kF"
+            }
+          },
+          "6,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt kI",
+              "_title": "Climber/Tilt kI"
+            }
+          },
+          "5,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt kP",
+              "_title": "/Climber/Tilt kP"
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Inner Encoder",
+              "_title": "Climber/Inner Encoder"
+            }
+          },
+          "10,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Outer Encoder",
+              "_title": "Climber/Outer Encoder"
+            }
+          },
+          "8,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt Encoder",
+              "_title": "Climber/Tilt Encoder"
+            }
+          },
+          "8,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///Climber/Reset Tilt Encoder",
+              "_title": "Climber/Reset Tilt Encoder"
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Inner Arm Speed",
+              "_title": "Climber/Inner Arm Speed"
             }
           }
         }
@@ -752,9 +851,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 4.0,
-    "y": 0.0,
-    "width": 1553.5999755859375,
-    "height": 808.0
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
   }
 }

@@ -179,9 +179,10 @@ public void SpeedEnum(){
         entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());
         entryLeftMotorStatorCurrent.setDouble(leftShooterMotor.getStatorCurrent());
-        entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
-        entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
-        entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
+        if (leftShooterMotor.getControlMode() == ControlMode.Velocity){
+            entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
+            entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
+        }
         entryTargetVelocity.setDouble(targetVelocity_UnitsPer100ms);
         entryP.setDouble(kP);
         entryI.setDouble(kI);
@@ -219,9 +220,11 @@ public void SpeedEnum(){
         entryLeftShooterVelocity.setDouble(leftShooterMotor.getSelectedSensorVelocity());
         entryLeftMotorSupplyCurrent.setDouble(leftShooterMotor.getSupplyCurrent());
         entryLeftMotorStatorCurrent.setDouble(leftShooterMotor.getStatorCurrent());
-        entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
-        entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
-        entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
+        if (leftShooterMotor.getControlMode() == ControlMode.Velocity){
+            entryLeftMotorVelocityError.setDouble(leftShooterMotor.getClosedLoopError(0));
+            entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
+            entryLeftMotorTargetVelocity.setDouble(leftShooterMotor.getClosedLoopTarget(0));
+        }
         entryTargetVelocity.setDouble(targetVelocity_UnitsPer100ms);
         entryP.setDouble(kP);
         entryI.setDouble(kI);

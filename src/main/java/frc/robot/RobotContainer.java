@@ -256,6 +256,7 @@ public class RobotContainer {
     triggerContinueDescend.whenActive(commandContinueDescend)
           .whenInactive(commandStopClimb);
     dpadRight.whenActive(commandFullTilt);
+    dpadLeft.whileActiveContinuous(commandRetractTilt);
     //dpadRight.whileActiveContinuous(commandStartTilt);
     //dpadLeft.whileActiveContinuous(commandRetractTilt);
    // leftStickUp.whenActive(commandFullTilt);
