@@ -22,7 +22,7 @@ public class CommandStartTilt extends CommandBase{
         public CommandStartTilt(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(climber);
+            //this.addRequirements(climber);
             this.climber = climber;
         }
     
@@ -46,7 +46,7 @@ public class CommandStartTilt extends CommandBase{
         // TODO Auto-generated method stub
         super.end(interrupted);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
+        climber.stopTilt();
     }
 
     @Override

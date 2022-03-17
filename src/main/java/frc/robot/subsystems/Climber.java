@@ -9,9 +9,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -37,18 +40,19 @@ public class Climber extends SubsystemBase {
 // **********************************************
 private TalonFX innerArmMotor;
 private TalonFX outerArmMotor;
-private VictorSPX tiltMotor;
+private CANSparkMax tiltMotor;
 private VictorSPX solenoidMotor;
 private double currentOuterArmPos;
 private double currentInnerArmPos;
 private DigitalInput tiltRetractLimit;
-
+private SparkMaxPIDController tiltPIDController;
+private RelativeEncoder tiltEncoder;
 //private DigitalInput climberLimit;
 
 
 private double climbSpeed = 0.6;
 private double rateOfChange = .05;
-private double tiltSpeed = 1.0;
+private double tiltSpeed = 0.3;
 private double outerArmSpeed = 0.8;
 private final double startSpeed = 0.5;
 private boolean solenoidEngaged = false;
@@ -98,7 +102,7 @@ public Climber(){
     
     innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
     outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
-    tiltMotor = new VictorSPX(CanBusConfig.TILT);
+    tiltMotor = new CANSparkMax(CanBusConfig.TILT, MotorType.kBrushless);
     solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
     tiltRetractLimit = new DigitalInput(9);
 
@@ -108,14 +112,16 @@ public Climber(){
     // set factory default for all motors
     innerArmMotor.configFactoryDefault();
     outerArmMotor.configFactoryDefault();
-    tiltMotor.configFactoryDefault();
+    //tiltMotor.configFactoryDefault();
+    tiltMotor.restoreFactoryDefaults();
     solenoidMotor.configFactoryDefault();
 
 
     // set braking mode for all
     outerArmMotor.setNeutralMode(NeutralMode.Brake);
     innerArmMotor.setNeutralMode(NeutralMode.Brake);
-    tiltMotor.setNeutralMode(NeutralMode.Brake);
+    //tiltMotor.setNeutralMode(NeutralMode.Brake);
+    tiltMotor.setIdleMode(IdleMode.kBrake);
     solenoidMotor.setNeutralMode(NeutralMode.Brake);
     innerArmMotor.setInverted(true);
     tiltMotor.setInverted(true);
@@ -317,12 +323,26 @@ public Climber(){
             speed = -tiltSpeed;
         }
 
-        tiltMotor.set(ControlMode.PercentOutput, speed);
+        //tiltMotor.set(ControlMode.PercentOutput, speed);
+        tiltMotor.set(speed);
     }
 
     public void stopTilt(){
         //tiltSpeed = 0.0;
-        tiltMotor.set(ControlMode.PercentOutput, 0.0);
+        //tiltMotor.set(ControlMode.PercentOutput, 0.0);
+        tiltMotor.set(0.0);
+    }
+
+    public void initTiltPositionControl(){
+        tiltPIDController = tiltMotor.getPIDController();
+        tiltEncoder = tiltMotor.getEncoder();
+        tiltEncoder.setPosition(0.0);
+        tiltPIDController.setP(0.2);
+    }
+
+    public void tiltOut(){
+        tiltPIDController.setReference(6, ControlType.kPosition);
+
     }
 
     public void startOuterArms(String direction){
@@ -368,7 +388,7 @@ public Climber(){
         // entryRightMotorSpeed.setDouble(rightMotor.get());
         entryInnerArmMotorSpeed.setDouble(innerArmMotor.getMotorOutputPercent());
         entryOuterArmMotorSpeed.setDouble(outerArmMotor.getMotorOutputPercent());
-        entryTiltMotorSpeed.setDouble(tiltMotor.getMotorOutputPercent());
+        entryTiltMotorSpeed.setDouble(tiltMotor.get());
         
         entryInnerArmMotorCurrent.setDouble(innerArmMotor.getSupplyCurrent());
         entryOuterArmMotorCurrent.setDouble(outerArmMotor.getSupplyCurrent());
@@ -403,7 +423,6 @@ public Climber(){
         outerArmMotor.setSelectedSensorPosition(0.0);
         outerArmMotor.clearStickyFaults();
         innerArmMotor.clearStickyFaults();
-        tiltMotor.clearStickyFaults();
     }
 
     //bind to button if needed

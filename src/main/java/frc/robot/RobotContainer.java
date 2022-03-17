@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -253,17 +255,19 @@ public class RobotContainer {
     triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
     triggerContinueDescend.whenActive(commandContinueDescend)
           .whenInactive(commandStopClimb);
-    dpadRight.whenActive(commandStartTilt)
-          .whenInactive(commandStopTilt);
-    dpadLeft.whenActive(commandRetractTilt)
-          .whenInactive(commandStopTilt);
+    dpadRight.whenActive(commandFullTilt);
+    //dpadRight.whileActiveContinuous(commandStartTilt);
+    //dpadLeft.whileActiveContinuous(commandRetractTilt);
    // leftStickUp.whenActive(commandFullTilt);
    // leftStickDown.whenActive(commandFullTiltRetract);
 
-    rightStickDown.whenActive(commandRetractOuterArms)
-          .whenInactive(commandStopOuterArms);
-    rightStickUp.whenActive(commandExtendOuterArms)
-          .whenInactive(commandStopOuterArms);
+    // rightStickDown.whenActive(commandRetractOuterArms)
+    //       .whenInactive(commandStopOuterArms);
+    Command condCommand = new ConditionalCommand(new CommandRetractOuterArms(climber), new CommandStopOuterArms(climber), ()->rightStickDown.get());
+    rightStickDown.whileActiveContinuous(commandRetractOuterArms);
+    rightStickUp.whileActiveContinuous(commandExtendOuterArms);
+    // rightStickUp.whenActive(commandExtendOuterArms)
+    //       .whenInactive(commandStopOuterArms);
 
     // triggerOuterArmsTooHigh.whenActive(new CommandRetractOuterArmsToLegalLimit(climber));
 

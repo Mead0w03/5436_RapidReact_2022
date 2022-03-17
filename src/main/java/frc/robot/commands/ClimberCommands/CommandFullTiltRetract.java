@@ -15,7 +15,7 @@ public class CommandFullTiltRetract extends CommandBase {
   private Timer timer = new Timer();
 
   public CommandFullTiltRetract(Climber climber) {
-    this.addRequirements(climber);
+    //this.addRequirements(climber);
     this.climber = climber;
   }
 

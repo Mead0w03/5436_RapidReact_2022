@@ -13,7 +13,7 @@ public class CommandStopSolenoid extends CommandBase {
   /** Creates a new CommandStopSolenoid. */
   public CommandStopSolenoid(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.addRequirements(climber);
+    //this.addRequirements(climber);
     this.climber = climber;
   }
 

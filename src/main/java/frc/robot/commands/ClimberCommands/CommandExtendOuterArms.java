@@ -23,7 +23,7 @@ public class CommandExtendOuterArms extends CommandBase{
         public CommandExtendOuterArms(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(climber);
+            //this.addRequirements(climber);
             this.climber = climber;
         }
     

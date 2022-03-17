@@ -17,7 +17,7 @@ public class CommandFullTilt extends CommandBase {
   private double timeLimit;
   public CommandFullTilt(Climber climber) {
     
-    this.addRequirements(climber);
+    //this.addRequirements(climber);
     this.climber = climber;
   }
 
@@ -26,7 +26,8 @@ public class CommandFullTilt extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    timeLimit = NetworkTableInstance.getDefault().getTable("Climber").getEntry("Tilt Time Limit").getDouble(0.5);
+    climber.initTiltPositionControl();
+    //timeLimit = NetworkTableInstance.getDefault().getTable("Climber").getEntry("Tilt Time Limit").getDouble(0.5);
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
   }
@@ -34,7 +35,8 @@ public class CommandFullTilt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.startTilt("forward");
+    //climber.startTilt("forward");
+    climber.tiltOut();
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     System.out.println(String.format("Tilt timed out at %.2f", timer.get()));
   }
@@ -42,13 +44,13 @@ public class CommandFullTilt extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopTilt();
+    //climber.stopTilt();
     System.out.println(String.format("Tilt timed out at %.2f", timer.get()));
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > timeLimit;
+    return true;
   }
 }
