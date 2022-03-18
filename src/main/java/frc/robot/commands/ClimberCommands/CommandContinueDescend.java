@@ -66,7 +66,7 @@ public class CommandContinueDescend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.FULLY_DESCENDED;
+        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.INNER_FULLY_DESCENDED;
         if(isFullyDescended) robotContainer.setIsFullyDescended(true);
         return isFullyDescended;
     }

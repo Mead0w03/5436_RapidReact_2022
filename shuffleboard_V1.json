@@ -599,7 +599,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Climber/Inner Encoder",
-              "_title": "Climber/Inner Encoder"
+              "_title": "/Climber/Inner Encoder"
             }
           },
           "10,2": {
@@ -610,7 +610,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Climber/Outer Encoder",
-              "_title": "Climber/Outer Encoder"
+              "_title": "/Climber/Outer Encoder"
             }
           },
           "8,2": {
@@ -621,7 +621,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Climber/Tilt Encoder",
-              "_title": "Climber/Tilt Encoder"
+              "_title": "/Climber/Tilt Encoder"
             }
           },
           "8,1": {
@@ -643,7 +643,40 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Climber/Inner Arm Speed",
-              "_title": "Climber/Inner Arm Speed"
+              "_title": "/Climber/Inner Arm Speed"
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Tilt Speed",
+              "_title": "/Climber/Tilt Speed"
+            }
+          },
+          "7,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Inner Arm kP",
+              "_title": "/Climber/Inner Arm kP"
+            }
+          },
+          "11,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Climber/Outer Arm kP",
+              "_title": "/Climber/Outer Arm kP"
             }
           }
         }

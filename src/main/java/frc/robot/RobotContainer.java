@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -20,6 +21,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
+import frc.robot.Constants.ClimberConfig;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.AutonCommands.AutonCargoCommand;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
@@ -36,6 +38,8 @@ import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
+import frc.robot.commands.ClimberCommands.CommandInnerArmToPosition;
+import frc.robot.commands.ClimberCommands.CommandOuterArmToPosition;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArmsToLegalLimit;
 import frc.robot.commands.ClimberCommands.CommandRetractTilt;
@@ -257,6 +261,19 @@ public class RobotContainer {
           .whenInactive(commandStopClimb);
     dpadRight.whenActive(commandFullTilt);
     dpadLeft.whileActiveContinuous(commandRetractTilt);
+    ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
+        new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_READY),
+        new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_CLIMB_READY),
+        new CommandFullTilt(climber)); 
+        
+    ParallelCommandGroup climbZeroCommandGroup = new ParallelCommandGroup(
+        new CommandInnerArmToPosition(climber, 0),
+        new CommandOuterArmToPosition(climber, 0),
+        new CommandFullTiltRetract(climber));
+      
+    dpadUp.whenActive(climbReadyCommandGroup);
+    dpadDown.whenActive(climbZeroCommandGroup);
+    
     //dpadRight.whileActiveContinuous(commandStartTilt);
     //dpadLeft.whileActiveContinuous(commandRetractTilt);
    // leftStickUp.whenActive(commandFullTilt);

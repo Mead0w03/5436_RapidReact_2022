@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
@@ -16,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 import frc.robot.Constants.ClimberConfig;
@@ -101,6 +104,11 @@ private NetworkTableEntry entryTiltKi = netTblClimber.getEntry("Tilt kI");
 private NetworkTableEntry entryTiltKd = netTblClimber.getEntry("Tilt kD");
 private NetworkTableEntry entryTiltKf = netTblClimber.getEntry("Tilt kF");
 
+// Inner P Value
+private NetworkTableEntry entryInnerArmKp = netTblClimber.getEntry("Inner Arm kP");
+
+// Outer P Value
+private NetworkTableEntry entryOuterArmKp = netTblClimber.getEntry("Outer Arm kP");
 
 // **********************************************
 // Constructors
@@ -229,6 +237,14 @@ public Climber(){
         tiltPIDController.setReference(targetPosition, ControlType.kPosition);
     }
 
+    public void innerArmToPosition(double targetPosition){
+        innerArmMotor.set(TalonFXControlMode.Position, targetPosition);
+    } 
+    
+    public void outerArmToPosition(double targetPosition){
+        outerArmMotor.set(TalonFXControlMode.Position, targetPosition);
+    }
+
     public void startOuterArms(String direction){
         // limits speed between 0.1 - 0.5
         //outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
@@ -323,7 +339,43 @@ public Climber(){
         // Setup PID controller for tilt Motor
         tiltPIDController = tiltMotor.getPIDController();
         tiltPIDController.setP(0.2);
-        
+        tiltPIDController.setOutputRange(0, 0.3);
+
+        // Setup PID controller for Inner Arm
+        /* Config the sensor used for Primary PID and sensor direction */
+        int timeOut = 30;
+        int pidIndex = 0;
+        int allowableError = 0;
+        double maxPower = 1;
+        innerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
+        innerArmMotor.configNominalOutputForward(0, timeOut);
+		innerArmMotor.configNominalOutputReverse(0, timeOut);
+		innerArmMotor.configPeakOutputForward(maxPower, timeOut);
+		innerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
+        innerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
+
+		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+		innerArmMotor.config_kF(pidIndex, 0, timeOut);
+		innerArmMotor.config_kP(pidIndex, 0.15, timeOut);
+		innerArmMotor.config_kI(pidIndex, 0, timeOut);
+		innerArmMotor.config_kD(pidIndex, 0, timeOut);
+
+
+        // Setup PID controller for Outer Arm
+        outerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
+        outerArmMotor.configNominalOutputForward(0, timeOut);
+		outerArmMotor.configNominalOutputReverse(0, timeOut);
+		outerArmMotor.configPeakOutputForward(maxPower, timeOut);
+		outerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
+        outerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
+
+		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+		outerArmMotor.config_kF(pidIndex, 0, timeOut);
+		outerArmMotor.config_kP(pidIndex, 0.15, timeOut);
+		outerArmMotor.config_kI(pidIndex, 0, timeOut);
+		outerArmMotor.config_kD(pidIndex, 0, timeOut);
+
+
         // engage the ratchet
         engageRatchet();
 
@@ -404,6 +456,7 @@ public Climber(){
             System.out.println("Inner Arm Encoder being reset");
             if (value.getBoolean()){
                 System.out.println("Resetting inner arm encoder");
+                innerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
                 innerArmMotor.setSelectedSensorPosition(0);
                 resetInnerArmEncoder = false;
                 entryResetInnerArmEncoder.setBoolean(resetInnerArmEncoder);
@@ -416,6 +469,7 @@ public Climber(){
         netTblClimber.addEntryListener(resetOuterArmEncoderEntryName, (table, key, entry, value, flags)->{
             if (value.getBoolean()){
                 System.out.println("Resetting Outer Arm Encoder");
+                outerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
                 outerArmMotor.setSelectedSensorPosition(0);
                 resetOuterArmEncoder = false;
                 entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
@@ -428,6 +482,7 @@ public Climber(){
         netTblClimber.addEntryListener(resetTiltEncoderEntryName, (table, key, entry, value, flags)->{
             if (value.getBoolean()){
                 System.out.println("Resetting Tilt Encoder");
+                tiltMotor.set(0);
                 tiltEncoder.setPosition(0.0);
                 resetTiltEncoder = false;
                 entryResetTiltEncoder.setBoolean(resetTiltEncoder);
@@ -488,6 +543,7 @@ public Climber(){
             }
         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+
         // kI
         entryTiltKi.setDouble(tiltPIDController.getI());
         String tiltKiEntryName = NetworkTable.basenameKey(entryTiltKi.getName());
@@ -539,6 +595,39 @@ public Climber(){
             }
         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         // *****************************************************************************************
+
+
+        
+        entryInnerArmKp.setDouble(0.15);
+        String innerArmKpEntryName = NetworkTable.basenameKey(entryInnerArmKp.getName());
+        netTblClimber.addEntryListener(innerArmKpEntryName, (table, key, entry, value, flags)->{
+            double proposedValue = value.getDouble();
+            boolean isPositive = proposedValue >= 0;
+            boolean isWithinUpperBound = proposedValue < 1.0;
+            if (isPositive && isWithinUpperBound){
+                System.out.println("Changing Inner Arm kP");    
+                innerArmMotor.config_kP(0, proposedValue);
+            } else {
+                // set the entry back
+                // entryInnerArmKp.setDouble(tiltPIDController.getP());
+            }
+        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+
+        entryOuterArmKp.setDouble(0.15);
+         String outerArmKpEntryName = NetworkTable.basenameKey(entryOuterArmKp.getName());
+         netTblClimber.addEntryListener(outerArmKpEntryName, (table, key, entry, value, flags)->{
+             double proposedValue = value.getDouble();
+             boolean isPositive = proposedValue >= 0;
+             boolean isWithinUpperBound = proposedValue < 1.0;
+             if (isPositive && isWithinUpperBound){
+                 System.out.println("Changing Outer Arm kP");    
+                 outerArmMotor.config_kP(0, proposedValue);
+             } else {
+                 // set the entry back
+                 // entryInnerArmKp.setDouble(tiltPIDController.getP());
+             }
+         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
     }
     

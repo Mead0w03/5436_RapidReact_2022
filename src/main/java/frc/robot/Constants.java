@@ -60,15 +60,25 @@ public final class Constants {
     }
 
     public class ClimberConfig{
+        //inner arm
         public static final double TARGET_MOVEMENT = 18500;
-        public static final double FULLY_DESCENDED = -193800;  //205000
-        public static final double FULLY_ASCENDED = 78000;
+        public static final double INNER_FULLY_DESCENDED = -193800;  //205000
+        public static final double INNER_FULLY_ASCENDED = 78000;
+        public static final double INNER_CLIMB_READY = 10240;
+        
+        
+        
+        //outer arm
+        public static final double OUTER_CLIMB_READY = 10240;
         public static final double OUTER_FULLY_EXTENDED = 350000; //355000
         public static final double OUTER_FULLY_RETRACTED = 7500;
         public static final double OUTER_LEGAL_LIMIT = 275000;
 
+        //tilt
         public static final double FULLY_TILTED_OUT = 10.0;
         public static final double FULLY_TILTED_IN = 0.0;
         
+        
     }
 }
+ 
