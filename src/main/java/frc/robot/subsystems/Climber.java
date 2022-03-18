@@ -17,11 +17,13 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 import frc.robot.Constants.ClimberConfig;
+import frc.robot.util.PIDCoef;
 
 public class Climber extends SubsystemBase {
 // **********************************************
@@ -61,10 +63,9 @@ private boolean resetTiltEncoder = false;
 
 private double tiltTimeLimit = 1.5;
 
+private final String subsystemName = "Climber";
 
-
-private final String netTblName = "Climber";
-private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(netTblName);
+private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(subsystemName);
 
 private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber Command");
 
@@ -99,16 +100,19 @@ private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("Inner Encod
 private NetworkTableEntry entryTiltMotorPos = netTblClimber.getEntry("Tilt Encoder");
 
 // Tilt PIDF Values
-private NetworkTableEntry entryTiltKp = netTblClimber.getEntry("Tilt kP");
-private NetworkTableEntry entryTiltKi = netTblClimber.getEntry("Tilt kI");
-private NetworkTableEntry entryTiltKd = netTblClimber.getEntry("Tilt kD");
-private NetworkTableEntry entryTiltKf = netTblClimber.getEntry("Tilt kF");
+// private NetworkTableEntry entryTiltKp = netTblClimber.getEntry("Tilt kP");
+// private NetworkTableEntry entryTiltKi = netTblClimber.getEntry("Tilt kI");
+// private NetworkTableEntry entryTiltKd = netTblClimber.getEntry("Tilt kD");
+// private NetworkTableEntry entryTiltKf = netTblClimber.getEntry("Tilt kF");
 
 // Inner P Value
-private NetworkTableEntry entryInnerArmKp = netTblClimber.getEntry("Inner Arm kP");
+// private NetworkTableEntry entryInnerArmKp = netTblClimber.getEntry("Inner Arm kP");
 
 // Outer P Value
-private NetworkTableEntry entryOuterArmKp = netTblClimber.getEntry("Outer Arm kP");
+// private NetworkTableEntry entryOuterArmKp = netTblClimber.getEntry("Outer Arm kP");
+
+// private NetworkTableEntry entryTiltPidKp = netTblClimber.getEntry("Tilt PID kP");
+
 
 // **********************************************
 // Constructors
@@ -121,14 +125,18 @@ public Climber(){
     init();
     setNetworkTableListeners();
 
-
-
-
+    // PID Coefficients
+    PIDCoef tiltCoef = new PIDCoef(subsystemName, "Tilt", tiltMotor, 0.2);
+    PIDCoef innerArmCoef = new PIDCoef(subsystemName, "Inner Arm", innerArmMotor, 0.15);
+    PIDCoef outerArmCoef = new PIDCoef(subsystemName, "Outer Arm", outerArmMotor, 0.15);
+    
+    SmartDashboard.putData(this);   
 }
 
 // **********************************************
 // Getters & Setters
 // **********************************************
+
 
     public boolean getIgnoreEncoder(){
         return this.ignoreEncoder;
@@ -196,26 +204,6 @@ public Climber(){
     public void stop(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
-    /*
-    public void increaseSpeed(){
-        double newSpeed = climbSpeed += rateOfChange;
-        if(newSpeed > 1.0) {
-            newSpeed = 1;
-        } else if(newSpeed < 0){
-            newSpeed = rateOfChange;
-        }
-        climbSpeed = newSpeed;
-    } 
-
-    public void decreaseSpeed(){
-        double newSpeed = climbSpeed -= rateOfChange;
-        if(newSpeed <= 0.0){
-            newSpeed = rateOfChange;
-        } else if (newSpeed >1){
-            newSpeed = 1;
-        }
-        climbSpeed = newSpeed;
-    } */
 
     public void startTilt(String direction){
         double speed = 0.0;
@@ -301,6 +289,12 @@ public Climber(){
         entryInnerArmPos.setDouble(innerArmMotor.getSelectedSensorPosition());
         entryTiltMotorPos.setDouble(tiltEncoder.getPosition());
 
+        entryIgnoreEncoder.setBoolean(ignoreEncoder);
+        entryInnerArmSpeed.setDouble(innerArmSpeed);
+        entryOuterArmSpeed.setDouble(outerArmSpeed);
+        entryTiltSpeed.setDouble(tiltSpeed);
+        entryTiltTimeLimit.setDouble(tiltTimeLimit);
+
     }
 
     public void init() {
@@ -309,6 +303,7 @@ public Climber(){
         outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
         solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
         tiltMotor = new CANSparkMax(CanBusConfig.TILT, MotorType.kBrushless);
+
         
         //instantiate sensors
         tiltRetractLimit = new DigitalInput(9);
@@ -354,7 +349,6 @@ public Climber(){
 		innerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
         innerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
 
-		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
 		innerArmMotor.config_kF(pidIndex, 0, timeOut);
 		innerArmMotor.config_kP(pidIndex, 0.15, timeOut);
 		innerArmMotor.config_kI(pidIndex, 0, timeOut);
@@ -407,42 +401,55 @@ public Climber(){
         super.simulationPeriodic();
     }
     
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // TODO Auto-generated method stub
+        System.out.println("Running initSendable in Climber");
+        builder.addDoubleProperty("Inner Arm Speed", () -> this.innerArmSpeed, (value) -> {this.innerArmSpeed = value; System.out.printf("innerArmSpeed=%.2f\n", innerArmSpeed);});
+        builder.addDoubleProperty("Outer Arm Speed", () -> this.outerArmSpeed, (value) -> this.outerArmSpeed = value);
+        builder.addDoubleProperty("Tilt Speed", () -> this.tiltSpeed, (value) -> this.tiltSpeed = value);
+        builder.addDoubleProperty("Tilt Time Limit", () -> this.tiltTimeLimit, (value) -> this.tiltTimeLimit = value);
+        builder.addBooleanProperty("Ignore Encoders", () -> this.ignoreEncoder, (value) -> this.ignoreEncoder = value);
+
+    }
+
     public void setNetworkTableListeners(){
         
         // Create listeners for arm speeds and set initial values
         // *****************************************************************************************
-        // Inner Arm
-        entryInnerArmSpeed.setDouble(innerArmSpeed);
-        String innerArmEntryName = NetworkTable.basenameKey(entryInnerArmSpeed.getName());
-        netTblClimber.addEntryListener(innerArmEntryName, (table, key, entry, value, flags)->{
-            System.out.println("The value for innerArmSpeed changed");
-            if (innerArmSpeed != value.getDouble()){
-                System.out.println("Updating inner arm speed from network table");
-                innerArmSpeed = value.getDouble();
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // // Inner Arm
+        // entryInnerArmSpeed.setDouble(innerArmSpeed);
+        // String innerArmEntryName = NetworkTable.basenameKey(entryInnerArmSpeed.getName());
+        // netTblClimber.addEntryListener(innerArmEntryName, (table, key, entry, value, flags)->{
+        //     System.out.println("The value for innerArmSpeed changed");
+        //     if (innerArmSpeed != value.getDouble()){
+        //         System.out.println("Updating inner arm speed from network table");
+        //         innerArmSpeed = value.getDouble();
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-        // Outer Arm
-        entryOuterArmSpeed.setDouble(outerArmSpeed);
-        String outerArmEntryName = NetworkTable.basenameKey(entryOuterArmSpeed.getName());
-        netTblClimber.addEntryListener(outerArmEntryName, (table, key, entry, value, flags)-> {
-            System.out.println("The value for outerArmSpeed changed");
-            if (outerArmSpeed != value.getDouble()){
-                System.out.println("Updating the instance att based on table data");
-                outerArmSpeed = value.getDouble();
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // // Outer Arm
+        // entryOuterArmSpeed.setDouble(outerArmSpeed);
+        // String outerArmEntryName = NetworkTable.basenameKey(entryOuterArmSpeed.getName());
+        // netTblClimber.addEntryListener(outerArmEntryName, (table, key, entry, value, flags)-> {
+        //     System.out.println("The value for outerArmSpeed changed");
+        //     if (outerArmSpeed != value.getDouble()){
+        //         System.out.println("Updating the instance att based on table data");
+        //         outerArmSpeed = value.getDouble();
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-        // Tilt Motoer
-        entryTiltSpeed.setDouble(tiltSpeed);
-        String tiltEntryName = NetworkTable.basenameKey(entryTiltSpeed.getName());
-        netTblClimber.addEntryListener(tiltEntryName, (table, key, entry, value, flags)-> {
-            System.out.println("The value for tiltSpeed changed");
-            if (tiltSpeed != value.getDouble()){
-                System.out.println("Updating the instance att based on table data");
-                tiltSpeed = value.getDouble();
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // // Tilt Motoer
+        // entryTiltSpeed.setDouble(tiltSpeed);
+        // String tiltEntryName = NetworkTable.basenameKey(entryTiltSpeed.getName());
+        // netTblClimber.addEntryListener(tiltEntryName, (table, key, entry, value, flags)-> {
+        //     System.out.println("The value for tiltSpeed changed");
+        //     if (tiltSpeed != value.getDouble()){
+        //         System.out.println("Updating the instance att based on table data");
+        //         tiltSpeed = value.getDouble();
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         // *****************************************************************************************
 
 
@@ -494,141 +501,150 @@ public Climber(){
 
         // Encoder override
         // *****************************************************************************************
-        entryIgnoreEncoder.setBoolean(ignoreEncoder);
-        String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
-        netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
-            if (value.getBoolean()!=ignoreEncoder){
-                System.out.println("Changing Ignore Encoders");    
-                ignoreEncoder = value.getBoolean();
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // entryIgnoreEncoder.setBoolean(ignoreEncoder);
+        // String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
+        // netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
+        //     if (value.getBoolean()!=ignoreEncoder){
+        //         System.out.println("Changing Ignore Encoders");    
+        //         ignoreEncoder = value.getBoolean();
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         // *****************************************************************************************
 
 
-        // Tilt Time Limit
-        // *****************************************************************************************
-        entryTiltTimeLimit.setDouble(tiltTimeLimit);
-        String tiltTimeLimitEntryName = NetworkTable.basenameKey(entryTiltTimeLimit.getName());
-        netTblClimber.addEntryListener(tiltTimeLimitEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue > 0;
-            boolean isWithinUpperBound = proposedValue < 5.0;
-            boolean isNewValue = proposedValue != tiltTimeLimit;
-            if (isNewValue && isPositive && isWithinUpperBound){
-                System.out.println("Changing Tilt Time Limit");    
-                tiltTimeLimit = proposedValue;
-            } else {
-                // set the entry back
-                entryTiltTimeLimit.setDouble(tiltTimeLimit);
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // // Tilt Time Limit
+        // // *****************************************************************************************
+        // entryTiltTimeLimit.setDouble(tiltTimeLimit);
+        // String tiltTimeLimitEntryName = NetworkTable.basenameKey(entryTiltTimeLimit.getName());
+        // netTblClimber.addEntryListener(tiltTimeLimitEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue > 0;
+        //     boolean isWithinUpperBound = proposedValue < 5.0;
+        //     boolean isNewValue = proposedValue != tiltTimeLimit;
+        //     if (isNewValue && isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Tilt Time Limit");    
+        //         tiltTimeLimit = proposedValue;
+        //     } else {
+        //         // set the entry back
+        //         entryTiltTimeLimit.setDouble(tiltTimeLimit);
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         // *****************************************************************************************
 
         // Tilt PID Limits
         // *****************************************************************************************
         // kP
-        entryTiltKp.setDouble(tiltPIDController.getP());
-        String tiltKpEntryName = NetworkTable.basenameKey(entryTiltKp.getName());
-        netTblClimber.addEntryListener(tiltKpEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue >= 0;
-            boolean isWithinUpperBound = proposedValue < 1.0;
-            boolean isNewValue = proposedValue != tiltPIDController.getP();
-            if (isNewValue && isPositive && isWithinUpperBound){
-                System.out.println("Changing Tilt kP");    
-                tiltPIDController.setP(proposedValue);
-            } else {
-                // set the entry back
-                entryTiltKp.setDouble(tiltPIDController.getP());
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // entryTiltKp.setDouble(tiltPIDController.getP());
+        // String tiltKpEntryName = NetworkTable.basenameKey(entryTiltKp.getName());
+        // netTblClimber.addEntryListener(tiltKpEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue >= 0;
+        //     boolean isWithinUpperBound = proposedValue < 1.0;
+        //     boolean isNewValue = proposedValue != tiltPIDController.getP();
+        //     if (isNewValue && isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Tilt kP");    
+        //         tiltPIDController.setP(proposedValue);
+        //     } else {
+        //         // set the entry back
+        //         entryTiltKp.setDouble(tiltPIDController.getP());
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
 
         // kI
-        entryTiltKi.setDouble(tiltPIDController.getI());
-        String tiltKiEntryName = NetworkTable.basenameKey(entryTiltKi.getName());
-        netTblClimber.addEntryListener(tiltKiEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue >= 0;
-            boolean isWithinUpperBound = proposedValue < 1.0;
-            boolean isNewValue = proposedValue != tiltPIDController.getI();
-            if (isNewValue && isPositive && isWithinUpperBound){
-                System.out.println("Changing Tilt kI");    
-                tiltPIDController.setI(proposedValue);
-            } else {
-                // set the entry back
-                entryTiltKi.setDouble(tiltPIDController.getI());
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // entryTiltKi.setDouble(tiltPIDController.getI());
+        // String tiltKiEntryName = NetworkTable.basenameKey(entryTiltKi.getName());
+        // netTblClimber.addEntryListener(tiltKiEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue >= 0;
+        //     boolean isWithinUpperBound = proposedValue < 1.0;
+        //     boolean isNewValue = proposedValue != tiltPIDController.getI();
+        //     if (isNewValue && isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Tilt kI");    
+        //         tiltPIDController.setI(proposedValue);
+        //     } else {
+        //         // set the entry back
+        //         entryTiltKi.setDouble(tiltPIDController.getI());
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         // kD
-        entryTiltKd.setDouble(tiltPIDController.getD());
-        String tiltKdEntryName = NetworkTable.basenameKey(entryTiltKd.getName());
-        netTblClimber.addEntryListener(tiltKdEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue >= 0;
-            boolean isWithinUpperBound = proposedValue < 1.0;
-            boolean isNewValue = proposedValue != tiltPIDController.getD();
-            if (isNewValue && isPositive && isWithinUpperBound){
-                System.out.println("Changing Tilt kD");    
-                tiltPIDController.setD(proposedValue);
-            } else {
-                // set the entry back
-                entryTiltKd.setDouble(tiltPIDController.getD());
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // entryTiltKd.setDouble(tiltPIDController.getD());
+        // String tiltKdEntryName = NetworkTable.basenameKey(entryTiltKd.getName());
+        // netTblClimber.addEntryListener(tiltKdEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue >= 0;
+        //     boolean isWithinUpperBound = proposedValue < 1.0;
+        //     boolean isNewValue = proposedValue != tiltPIDController.getD();
+        //     if (isNewValue && isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Tilt kD");    
+        //         tiltPIDController.setD(proposedValue);
+        //     } else {
+        //         // set the entry back
+        //         entryTiltKd.setDouble(tiltPIDController.getD());
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
         // kF
-        entryTiltKf.setDouble(tiltPIDController.getFF());
-        String tiltKfEntryName = NetworkTable.basenameKey(entryTiltKf.getName());
-        netTblClimber.addEntryListener(tiltKfEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue >= 0;
-            boolean isWithinUpperBound = proposedValue < 1.0;
-            boolean isNewValue = proposedValue != tiltPIDController.getFF();
-            if (isNewValue && isPositive && isWithinUpperBound){
-                System.out.println("Changing Tilt kF");    
-                tiltPIDController.setFF(proposedValue);
-            } else {
-                // set the entry back
-                entryTiltKd.setDouble(tiltPIDController.getFF());
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // entryTiltKf.setDouble(tiltPIDController.getFF());
+        // String tiltKfEntryName = NetworkTable.basenameKey(entryTiltKf.getName());
+        // netTblClimber.addEntryListener(tiltKfEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue >= 0;
+        //     boolean isWithinUpperBound = proposedValue < 1.0;
+        //     boolean isNewValue = proposedValue != tiltPIDController.getFF();
+        //     if (isNewValue && isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Tilt kF");    
+        //         tiltPIDController.setFF(proposedValue);
+        //     } else {
+        //         // set the entry back
+        //         entryTiltKd.setDouble(tiltPIDController.getFF());
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         // *****************************************************************************************
 
 
-        
-        entryInnerArmKp.setDouble(0.15);
-        String innerArmKpEntryName = NetworkTable.basenameKey(entryInnerArmKp.getName());
-        netTblClimber.addEntryListener(innerArmKpEntryName, (table, key, entry, value, flags)->{
-            double proposedValue = value.getDouble();
-            boolean isPositive = proposedValue >= 0;
-            boolean isWithinUpperBound = proposedValue < 1.0;
-            if (isPositive && isWithinUpperBound){
-                System.out.println("Changing Inner Arm kP");    
-                innerArmMotor.config_kP(0, proposedValue);
-            } else {
-                // set the entry back
-                // entryInnerArmKp.setDouble(tiltPIDController.getP());
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+        // Inner Arm PID Coefficients
+        // *****************************************************************************************
+        // kP
+        // entryInnerArmKp.setDouble(0.15);
+        // String innerArmKpEntryName = NetworkTable.basenameKey(entryInnerArmKp.getName());
+        // netTblClimber.addEntryListener(innerArmKpEntryName, (table, key, entry, value, flags)->{
+        //     double proposedValue = value.getDouble();
+        //     boolean isPositive = proposedValue >= 0;
+        //     boolean isWithinUpperBound = proposedValue < 1.0;
+        //     if (isPositive && isWithinUpperBound){
+        //         System.out.println("Changing Inner Arm kP");    
+        //         innerArmMotor.config_kP(0, proposedValue);
+        //     } else {
+        //         // set the entry back
+        //         // entryInnerArmKp.setDouble(tiltPIDController.getP());
+        //     }
+        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
 
-        entryOuterArmKp.setDouble(0.15);
-         String outerArmKpEntryName = NetworkTable.basenameKey(entryOuterArmKp.getName());
-         netTblClimber.addEntryListener(outerArmKpEntryName, (table, key, entry, value, flags)->{
-             double proposedValue = value.getDouble();
-             boolean isPositive = proposedValue >= 0;
-             boolean isWithinUpperBound = proposedValue < 1.0;
-             if (isPositive && isWithinUpperBound){
-                 System.out.println("Changing Outer Arm kP");    
-                 outerArmMotor.config_kP(0, proposedValue);
-             } else {
-                 // set the entry back
-                 // entryInnerArmKp.setDouble(tiltPIDController.getP());
-             }
-         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        // Outer Arm PID Coefficients
+        // *****************************************************************************************
+        // kP
+        // entryOuterArmKp.setDouble(0.15);
+        //  String outerArmKpEntryName = NetworkTable.basenameKey(entryOuterArmKp.getName());
+        //  netTblClimber.addEntryListener(outerArmKpEntryName, (table, key, entry, value, flags)->{
+        //      double proposedValue = value.getDouble();
+        //      boolean isPositive = proposedValue >= 0;
+        //      boolean isWithinUpperBound = proposedValue < 1.0;
+        //      if (isPositive && isWithinUpperBound){
+        //          System.out.println("Changing Outer Arm kP");    
+        //          outerArmMotor.config_kP(0, proposedValue);
+        //      } else {
+        //          // set the entry back
+        //          // entryInnerArmKp.setDouble(tiltPIDController.getP());
+        //      }
+        //  },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
 
     }
+
+    
     
 }

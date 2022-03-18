@@ -2,7 +2,7 @@
   "tabPane": [
     {
       "title": "SmartDashboard",
-      "autoPopulate": true,
+      "autoPopulate": false,
       "autoPopulatePrefix": "SmartDashboard/",
       "widgetPane": {
         "gridSize": 128.0,
@@ -316,6 +316,17 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/tilt kP",
+              "_title": "Climber/tilt kP"
+            }
           }
         }
       }
@@ -477,12 +488,386 @@
               "_source0": "network_table:///LiveWindow/Climber/s_Climber Speed",
               "_title": "Climber/s_Climber Speed"
             }
+          },
+          "11,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/tilt kP",
+              "_title": "Climber/tilt kP"
+            }
+          },
+          "12,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm/_kD",
+              "_title": "Climber/Outer Arm/_kD"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm/_kF",
+              "_title": "Climber/Outer Arm/_kF"
+            }
+          },
+          "11,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm/_kI",
+              "_title": "Climber/Outer Arm/_kI"
+            }
+          },
+          "12,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm/_kP",
+              "_title": "Climber/Outer Arm/_kP"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt/Motor Name",
+              "_title": "Climber/Tilt/Motor Name"
+            }
+          },
+          "11,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm/Motor Name",
+              "_title": "Climber/Outer Arm/Motor Name"
+            }
+          },
+          "12,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm/Motor Name",
+              "_title": "Climber/Inner Arm/Motor Name"
+            }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt/_kD",
+              "_title": "Climber/Tilt/_kD"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt/_kF",
+              "_title": "Climber/Tilt/_kF"
+            }
+          },
+          "2,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt/_kI",
+              "_title": "Climber/Tilt/_kI"
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt/_kP",
+              "_title": "Climber/Tilt/_kP"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm/_kD",
+              "_title": "Climber/Inner Arm/_kD"
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm/_kF",
+              "_title": "Climber/Inner Arm/_kF"
+            }
+          },
+          "6,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm/_kI",
+              "_title": "Climber/Inner Arm/_kI"
+            }
+          },
+          "7,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm/_kP",
+              "_title": "Climber/Inner Arm/_kP"
+            }
+          },
+          "8,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/Motor Name",
+              "_title": "Climber/Climber/Outer Arm/Motor Name"
+            }
+          },
+          "9,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kP",
+              "_title": "Climber/Climber/Outer Arm/_kP"
+            }
+          },
+          "10,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kI",
+              "_title": "Climber/Climber/Outer Arm/_kI"
+            }
+          },
+          "11,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kD",
+              "_title": "Climber/Climber/Outer Arm/_kD"
+            }
+          },
+          "12,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kF",
+              "_title": "Climber/Climber/Outer Arm/_kF"
+            }
+          },
+          "0,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Tilt/Motor Name",
+              "_title": "Climber/Climber/Tilt/Motor Name"
+            }
+          },
+          "1,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Tilt/_kP",
+              "_title": "Climber/Climber/Tilt/_kP"
+            }
+          },
+          "2,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Tilt/_kI",
+              "_title": "Climber/Climber/Tilt/_kI"
+            }
+          },
+          "3,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Tilt/_kD",
+              "_title": "Climber/Climber/Tilt/_kD"
+            }
+          },
+          "4,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Tilt/_kF",
+              "_title": "Climber/Climber/Tilt/_kF"
+            }
+          },
+          "5,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Inner Arm/Motor Name",
+              "_title": "Climber/Climber/Inner Arm/Motor Name"
+            }
+          },
+          "6,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Inner Arm/_kP",
+              "_title": "Climber/Climber/Inner Arm/_kP"
+            }
+          },
+          "7,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Inner Arm/_kI",
+              "_title": "Climber/Climber/Inner Arm/_kI"
+            }
+          },
+          "8,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Inner Arm/_kD",
+              "_title": "Climber/Climber/Inner Arm/_kD"
+            }
+          },
+          "9,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Inner Arm/_kF",
+              "_title": "Climber/Climber/Inner Arm/_kF"
+            }
+          },
+          "10,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Outer Arm Speed",
+              "_title": "Climber/Outer Arm Speed"
+            }
+          },
+          "11,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Inner Arm Speed",
+              "_title": "Climber/Inner Arm Speed"
+            }
+          },
+          "12,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Tilt Speed",
+              "_title": "Climber/Tilt Speed"
+            }
           }
         }
       }
     },
     {
-      "title": "Tab 3",
+      "title": "Climber",
       "autoPopulate": true,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -492,7 +877,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,0": {
+          "3,1": {
             "size": [
               3,
               4
@@ -501,17 +886,6 @@
               "_type": "Network Table Tree",
               "_source0": "network_table:///Climber",
               "_title": "/Climber"
-            }
-          },
-          "10,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Outer Arm Speed",
-              "_title": "/Climber/Outer Arm Speed"
             }
           },
           "6,1": {
@@ -534,61 +908,6 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///Climber/Reset Outer Arm Encoder",
               "_title": "Climber/Reset Outer Arm Encoder"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Switch",
-              "_source0": "network_table:///Climber/Ignore Encoder",
-              "_title": "Climber/Ignore Encoder"
-            }
-          },
-          "7,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt kD",
-              "_title": "Climber/Tilt kD"
-            }
-          },
-          "8,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt kF",
-              "_title": "Climber/Tilt kF"
-            }
-          },
-          "6,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt kI",
-              "_title": "Climber/Tilt kI"
-            }
-          },
-          "5,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt kP",
-              "_title": "/Climber/Tilt kP"
             }
           },
           "6,2": {
@@ -635,26 +954,15 @@
               "_title": "Climber/Reset Tilt Encoder"
             }
           },
-          "6,0": {
+          "6,3": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Climber/Inner Arm Speed",
-              "_title": "/Climber/Inner Arm Speed"
-            }
-          },
-          "8,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Tilt Speed",
-              "_title": "/Climber/Tilt Speed"
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Arm/_kP",
+              "_title": "/SmartDashboard/Climber/Inner Arm/_kP"
             }
           },
           "7,3": {
@@ -664,8 +972,85 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Climber/Inner Arm kP",
-              "_title": "/Climber/Inner Arm kP"
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Arm/_kI",
+              "_title": "/SmartDashboard/Climber/Inner Arm/_kI"
+            }
+          },
+          "6,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Arm/_kD",
+              "_title": "/SmartDashboard/Climber/Inner Arm/_kD"
+            }
+          },
+          "7,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Arm/_kF",
+              "_title": "/SmartDashboard/Climber/Inner Arm/_kF"
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt/_kP",
+              "_title": "/SmartDashboard/Climber/Tilt/_kP"
+            }
+          },
+          "9,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt/_kI",
+              "_title": "/SmartDashboard/Climber/Tilt/_kI"
+            }
+          },
+          "8,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt/_kD",
+              "_title": "/SmartDashboard/Climber/Tilt/_kD"
+            }
+          },
+          "9,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt/_kF",
+              "_title": "/SmartDashboard/Climber/Tilt/_kF"
+            }
+          },
+          "10,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kP",
+              "_title": "LiveWindow/Climber/Climber/Outer Arm/_kP"
             }
           },
           "11,3": {
@@ -675,8 +1060,97 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Climber/Outer Arm kP",
-              "_title": "/Climber/Outer Arm kP"
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kI",
+              "_title": "LiveWindow/Climber/Climber/Outer Arm/_kI"
+            }
+          },
+          "10,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kD",
+              "_title": "LiveWindow/Climber/Climber/Outer Arm/_kD"
+            }
+          },
+          "11,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Climber/Climber/Outer Arm/_kF",
+              "_title": "LiveWindow/Climber/Climber/Outer Arm/_kF"
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Arm Speed",
+              "_title": "SmartDashboard/Climber/Inner Arm Speed",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.05,
+              "Visuals/Display value": true
+            }
+          },
+          "10,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Climber/Outer Arm Speed",
+              "_title": "SmartDashboard/Climber/Outer Arm Speed",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.05,
+              "Visuals/Display value": true
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt Speed",
+              "_title": "SmartDashboard/Climber/Tilt Speed",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.05,
+              "Visuals/Display value": true
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/Climber/Ignore Encoders",
+              "_title": "SmartDashboard/Climber/Ignore Encoders"
+            }
+          },
+          "8,5": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Tilt Time Limit",
+              "_title": "/SmartDashboard/Climber/Tilt Time Limit"
             }
           }
         }
