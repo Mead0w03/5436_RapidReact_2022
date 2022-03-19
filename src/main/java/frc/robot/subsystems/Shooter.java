@@ -11,6 +11,8 @@ import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import java.util.function.BooleanSupplier;
+
 
 public class Shooter extends SubsystemBase {
 
@@ -25,6 +27,7 @@ public class Shooter extends SubsystemBase {
 
 private double kP = 0.0;
 private double kI = 0.0;
+private double kF;
 private double targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
 private double feederSpeed = Speed.FEEDER.getSpeed();
 
@@ -81,6 +84,10 @@ public Shooter(){
         targetVelocity_UnitsPer100ms = entryTargetVelocity.getDouble(0);
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+    SmartDashboard.putNumber("Shooter kF: ", 0.0);
+
+    kF = getkF();
+
     leftShooterMotor = new TalonFX(Constants.CanBusConfig.LAUNCHER);
 
     leftShooterMotor.setNeutralMode(NeutralMode.Coast);
@@ -99,7 +106,7 @@ public Shooter(){
     leftShooterMotor.config_kF(0, 0.05, 30);
 
     rightShooterMotor = new TalonFX(Constants.CanBusConfig.FEEDER);
-rightShooterMotor.setNeutralMode(NeutralMode.Brake);
+    rightShooterMotor.setNeutralMode(NeutralMode.Brake);
 
     rightShooterMotor.setInverted(true);
     rightShooterMotor.configClosedloopRamp(0.5);
@@ -113,7 +120,7 @@ rightShooterMotor.setNeutralMode(NeutralMode.Brake);
     rightShooterMotor.config_kP(0, kP, 30);
     rightShooterMotor.config_kI(0, kI, 30);
     rightShooterMotor.config_kD(0, 0, 30);
-    rightShooterMotor.config_kF(0, 0.05, 30);
+    rightShooterMotor.config_kF(0, .08, 30);
 
     shooterTable.addEntryListener("P coeficient", (table, key, entry, value, flags) -> {
         kP = value.getDouble();
@@ -130,9 +137,16 @@ rightShooterMotor.setNeutralMode(NeutralMode.Brake);
     entryFeederSpeed.setDouble(feederSpeed);
 
 }
-public void SpeedEnum(){
 
+public double getkF() {
+    return SmartDashboard.getNumber("Shooter kF: ", 0.0);
 }
+
+public BooleanSupplier atVelocity() {
+    return ()-> targetVelocity_UnitsPer100ms == leftShooterMotor.getSelectedSensorVelocity();
+}
+
+
 
 
 // **********************************************
@@ -142,6 +156,8 @@ public void SpeedEnum(){
     public void activateShooter(){    
         leftShooterMotor.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
     }
+
+    
 
     public boolean farHighGoal(){
         targetVelocity_UnitsPer100ms = Speed.FAR_HIGH_GOAL.getSpeed();
@@ -161,7 +177,8 @@ public void SpeedEnum(){
     }
 
     public void startFeederMotor(){
-        rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
+        //rightShooterMotor.set(ControlMode.Velocity, feederSpeed);
+        rightShooterMotor.set(ControlMode.PercentOutput, 1.0);
     }
 
     public void stopFeeder(){

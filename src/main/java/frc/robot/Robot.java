@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import java.util.Timer.*;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +24,10 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  Timer display_timer = new Timer();
+
+  double timePassed = 0;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -30,6 +37,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    display_timer.reset();
+    timePassed = 0;
     //SmartDashboard.putData(Scheduler.getInstance());
   }
 
@@ -47,11 +56,27 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    
+    if((int)display_timer.get() < 90) {
+      timePassed =  (int)display_timer.get();
+    } else {
+      timePassed =  90;
+    }
+    
+
+
+    SmartDashboard.putNumber("Current Time: ", 90 - timePassed);
   }
+/*
+  public double remainingTime() {
+    double timeLeft = 90; 
+  }*/
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -65,6 +90,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    display_timer.start();
+
   }
 
   /** This function is called periodically during autonomous. */
