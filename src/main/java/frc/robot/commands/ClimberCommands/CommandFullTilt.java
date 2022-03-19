@@ -6,6 +6,7 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 import frc.robot.Constants.ClimberConfig;
@@ -13,6 +14,9 @@ import frc.robot.Constants.ClimberConfig;
 public class CommandFullTilt extends CommandBase {
   /** Creates a new CommandFullTilt. */
   private Climber climber;
+  private Timer timer = new Timer();
+  private double timeLimit;
+
   public CommandFullTilt(Climber climber) {
     
     //this.addRequirements(climber);
@@ -23,7 +27,9 @@ public class CommandFullTilt extends CommandBase {
   @Override
   public void initialize() {
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-    
+    timeLimit = climber.getTiltTimeLimit();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

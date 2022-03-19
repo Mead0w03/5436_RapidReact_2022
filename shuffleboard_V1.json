@@ -10,325 +10,7 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "titleType": 0,
-        "tiles": {
-          "0,1": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Grid Layout",
-              "_title": "Climber",
-              "Layout/Number of columns": 3,
-              "Layout/Number of rows": 3,
-              "Layout/Label position": "BOTTOM",
-              "_children": {
-                "0,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///Climber/Climber Speed",
-                  "_title": "Climber/Climber Speed"
-                },
-                "1,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///Climber/Articulate Speed",
-                  "_title": "Climber/Articulate Speed"
-                },
-                "2,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///Climber/Advance Speed",
-                  "_title": "Climber/Advance Speed"
-                },
-                "0,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///Climber/VertMotorSpeed",
-                  "_title": "VertMotorPower",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "1,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///Climber/ArticulateMotorSpeed",
-                  "_title": "ArticulateMotorPower",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "2,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///Climber/AdvanceMotorSpeed",
-                  "_title": "AdvanceMotorPower",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "0,2": {
-                  "_type": "Number Bar",
-                  "_source0": "network_table:///Climber/VertMotorCurrent",
-                  "_title": "VertMotorCurrent",
-                  "Range/Min": 0.0,
-                  "Range/Max": 50.0,
-                  "Range/Center": 0.0,
-                  "Visuals/Num tick marks": 6,
-                  "Visuals/Show text": true
-                },
-                "1,2": {
-                  "_type": "Number Bar",
-                  "_source0": "network_table:///Climber/ArticulateMotorCurrent",
-                  "_title": "ArticulateMotorCurrent",
-                  "Range/Min": 0.0,
-                  "Range/Max": 50.0,
-                  "Range/Center": 0.0,
-                  "Visuals/Num tick marks": 6,
-                  "Visuals/Show text": true
-                },
-                "2,2": {
-                  "_type": "Number Bar",
-                  "_source0": "network_table:///Climber/AdvanceMotorCurrent",
-                  "_title": "AdvanceMotorCurrent",
-                  "Range/Min": 0.0,
-                  "Range/Max": 50.0,
-                  "Range/Center": 0.0,
-                  "Visuals/Num tick marks": 6,
-                  "Visuals/Show text": true
-                }
-              }
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Climber Command",
-              "_title": "Climber/Climber Command"
-            }
-          },
-          "0,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Climber/Climber Speed",
-              "_title": "Vert Speed"
-            }
-          },
-          "5,1": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///Intake",
-              "_title": "Intake"
-            }
-          },
-          "9,1": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///Shooter",
-              "_title": "Shooter"
-            }
-          },
-          "9,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Shooter/P coeficient",
-              "_title": "Shooter/P coeficient"
-            }
-          },
-          "10,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Shooter/I coeficient",
-              "_title": "Shooter/I coeficient"
-            }
-          },
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/BackRight",
-              "_title": "BackRight"
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/FrontRight",
-              "_title": "FrontRight"
-            }
-          },
-          "5,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/BackLeft",
-              "_title": "BackLeft"
-            }
-          },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/FrontLeft",
-              "_title": "FrontLeft"
-            }
-          },
-          "7,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Intake Speed",
-              "_title": "Intake Speed"
-            }
-          },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left: ",
-              "_title": "Left: "
-            }
-          },
-          "11,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right: ",
-              "_title": "Right: "
-            }
-          },
-          "12,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Y axis: ",
-              "_title": "Y axis: "
-            }
-          },
-          "4,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/X axis: ",
-              "_title": "X axis: "
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Angle",
-              "_title": "Angle"
-            }
-          },
-          "4,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Inner Arm position: ",
-              "_title": "Climber Inner Arm position: "
-            }
-          },
-          "8,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Outer Arm position: ",
-              "_title": "Climber Outer Arm position: "
-            }
-          },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
-              "_title": "SendableChooser[0]"
-            }
-          },
-          "8,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Far speed: ",
-              "_title": "Far speed: ",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "0,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber/tilt kP",
-              "_title": "Climber/tilt kP"
-            }
-          }
-        }
+        "tiles": {}
       }
     },
     {
@@ -877,10 +559,10 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,1": {
+          "0,0": {
             "size": [
               3,
-              4
+              5
             ],
             "content": {
               "_type": "Network Table Tree",
@@ -888,7 +570,7 @@
               "_title": "/Climber"
             }
           },
-          "6,1": {
+          "4,1": {
             "size": [
               2,
               1
@@ -899,7 +581,7 @@
               "_title": "Climber/Reset Inner Arm Encoder"
             }
           },
-          "10,1": {
+          "8,1": {
             "size": [
               2,
               1
@@ -910,7 +592,7 @@
               "_title": "Climber/Reset Outer Arm Encoder"
             }
           },
-          "6,2": {
+          "4,2": {
             "size": [
               2,
               1
@@ -921,7 +603,7 @@
               "_title": "/Climber/Inner Encoder"
             }
           },
-          "10,2": {
+          "8,2": {
             "size": [
               2,
               1
@@ -932,7 +614,7 @@
               "_title": "/Climber/Outer Encoder"
             }
           },
-          "8,2": {
+          "6,2": {
             "size": [
               2,
               1
@@ -943,7 +625,7 @@
               "_title": "/Climber/Tilt Encoder"
             }
           },
-          "8,1": {
+          "6,1": {
             "size": [
               2,
               1
@@ -954,7 +636,7 @@
               "_title": "Climber/Reset Tilt Encoder"
             }
           },
-          "6,3": {
+          "4,3": {
             "size": [
               1,
               1
@@ -965,7 +647,7 @@
               "_title": "/SmartDashboard/Climber/Inner Arm/_kP"
             }
           },
-          "7,3": {
+          "5,3": {
             "size": [
               1,
               1
@@ -976,7 +658,7 @@
               "_title": "/SmartDashboard/Climber/Inner Arm/_kI"
             }
           },
-          "6,4": {
+          "4,4": {
             "size": [
               1,
               1
@@ -987,7 +669,7 @@
               "_title": "/SmartDashboard/Climber/Inner Arm/_kD"
             }
           },
-          "7,4": {
+          "5,4": {
             "size": [
               1,
               1
@@ -998,7 +680,7 @@
               "_title": "/SmartDashboard/Climber/Inner Arm/_kF"
             }
           },
-          "8,3": {
+          "6,3": {
             "size": [
               1,
               1
@@ -1009,7 +691,7 @@
               "_title": "/SmartDashboard/Climber/Tilt/_kP"
             }
           },
-          "9,3": {
+          "7,3": {
             "size": [
               1,
               1
@@ -1020,7 +702,7 @@
               "_title": "/SmartDashboard/Climber/Tilt/_kI"
             }
           },
-          "8,4": {
+          "6,4": {
             "size": [
               1,
               1
@@ -1031,7 +713,7 @@
               "_title": "/SmartDashboard/Climber/Tilt/_kD"
             }
           },
-          "9,4": {
+          "7,4": {
             "size": [
               1,
               1
@@ -1042,7 +724,7 @@
               "_title": "/SmartDashboard/Climber/Tilt/_kF"
             }
           },
-          "10,3": {
+          "8,3": {
             "size": [
               1,
               1
@@ -1053,7 +735,7 @@
               "_title": "LiveWindow/Climber/Climber/Outer Arm/_kP"
             }
           },
-          "11,3": {
+          "9,3": {
             "size": [
               1,
               1
@@ -1064,7 +746,7 @@
               "_title": "LiveWindow/Climber/Climber/Outer Arm/_kI"
             }
           },
-          "10,4": {
+          "8,4": {
             "size": [
               1,
               1
@@ -1075,7 +757,7 @@
               "_title": "LiveWindow/Climber/Climber/Outer Arm/_kD"
             }
           },
-          "11,4": {
+          "9,4": {
             "size": [
               1,
               1
@@ -1086,7 +768,7 @@
               "_title": "LiveWindow/Climber/Climber/Outer Arm/_kF"
             }
           },
-          "6,0": {
+          "4,0": {
             "size": [
               2,
               1
@@ -1101,7 +783,7 @@
               "Visuals/Display value": true
             }
           },
-          "10,0": {
+          "8,0": {
             "size": [
               2,
               1
@@ -1116,7 +798,7 @@
               "Visuals/Display value": true
             }
           },
-          "8,0": {
+          "6,0": {
             "size": [
               2,
               1
@@ -1131,7 +813,7 @@
               "Visuals/Display value": true
             }
           },
-          "4,0": {
+          "3,0": {
             "size": [
               1,
               1
@@ -1142,7 +824,7 @@
               "_title": "SmartDashboard/Climber/Ignore Encoders"
             }
           },
-          "8,5": {
+          "6,5": {
             "size": [
               1,
               1

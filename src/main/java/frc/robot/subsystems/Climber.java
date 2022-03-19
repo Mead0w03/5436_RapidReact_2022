@@ -246,6 +246,10 @@ public Climber(){
         outerArmMotor.set(ControlMode.PercentOutput, speed);
     }
 
+    public void runOuterArmsToSpeed(double speed){
+        outerArmMotor.set(ControlMode.PercentOutput, speed);
+    }
+
     public void stopOuterArms(){
 //outerArmSpeed = 0.0;
         outerArmMotor.set(ControlMode.PercentOutput, 0.0);
@@ -289,7 +293,6 @@ public Climber(){
         entryInnerArmPos.setDouble(innerArmMotor.getSelectedSensorPosition());
         entryTiltMotorPos.setDouble(tiltEncoder.getPosition());
 
-        entryIgnoreEncoder.setBoolean(ignoreEncoder);
         entryInnerArmSpeed.setDouble(innerArmSpeed);
         entryOuterArmSpeed.setDouble(outerArmSpeed);
         entryTiltSpeed.setDouble(tiltSpeed);
@@ -410,7 +413,7 @@ public Climber(){
         builder.addDoubleProperty("Outer Arm Speed", () -> this.outerArmSpeed, (value) -> this.outerArmSpeed = value);
         builder.addDoubleProperty("Tilt Speed", () -> this.tiltSpeed, (value) -> this.tiltSpeed = value);
         builder.addDoubleProperty("Tilt Time Limit", () -> this.tiltTimeLimit, (value) -> this.tiltTimeLimit = value);
-        builder.addBooleanProperty("Ignore Encoders", () -> this.ignoreEncoder, (value) -> this.ignoreEncoder = value);
+        builder.addBooleanProperty("Ignore Encoders", () -> this.ignoreEncoder, (value) -> {this.ignoreEncoder = value; System.out.printf("Setting encoder %s\n", ignoreEncoder);});
 
     }
 

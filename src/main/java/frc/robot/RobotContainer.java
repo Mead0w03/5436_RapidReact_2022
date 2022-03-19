@@ -39,6 +39,7 @@ import frc.robot.commands.ClimberCommands.CommandClimb;
 import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandInnerArmToPosition;
+import frc.robot.commands.ClimberCommands.CommandMoveOuterArmsVariableSpeed;
 import frc.robot.commands.ClimberCommands.CommandOuterArmToPosition;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArms;
 import frc.robot.commands.ClimberCommands.CommandRetractOuterArmsToLegalLimit;
@@ -206,6 +207,7 @@ public class RobotContainer {
     autonChooser.setDefaultOption("Full-Routine", autonFullRoutineCG);
     autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
     SmartDashboard.putData(autonChooser);
+    SmartDashboard.putData(new CommandFullTilt(climber));
 
   }
 
@@ -250,17 +252,27 @@ public class RobotContainer {
         .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
-    //dpadDown.whenActive(commandClimb)
-          //.whenInactive(commandStopClimb);//
     leftStickDown.whenActive(commandClimb)
           .whenInactive(commandStopClimb);
-    // dpadUp.whenActive(commandGroupSolenoidDescend)
-    //       .whenInactive(commandStopClimb);//
+    
+    // Inner Climber Commands
     triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
     triggerContinueDescend.whenActive(commandContinueDescend)
           .whenInactive(commandStopClimb);
+    
+    
+    // Outer Climber
+    // rightStickDown.whileActiveContinuous(commandRetractOuterArms);
+    // rightStickUp.whileActiveContinuous(commandExtendOuterArms);
+    rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
+
+    // Tilt
     dpadRight.whenActive(commandFullTilt);
     dpadLeft.whileActiveContinuous(commandRetractTilt);
+
+    // Suto climb Commands
     ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
         new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_READY),
         new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_CLIMB_READY),
@@ -281,9 +293,6 @@ public class RobotContainer {
 
     // rightStickDown.whenActive(commandRetractOuterArms)
     //       .whenInactive(commandStopOuterArms);
-    Command condCommand = new ConditionalCommand(new CommandRetractOuterArms(climber), new CommandStopOuterArms(climber), ()->rightStickDown.get());
-    rightStickDown.whileActiveContinuous(commandRetractOuterArms);
-    rightStickUp.whileActiveContinuous(commandExtendOuterArms);
     // rightStickUp.whenActive(commandExtendOuterArms)
     //       .whenInactive(commandStopOuterArms);
 
