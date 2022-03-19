@@ -34,8 +34,8 @@ public class Intake extends SubsystemBase {
     private SparkMaxPIDController intakeRetractLeftPID;
     private SparkMaxPIDController intakeRetractRightPID;
     private double intakeCargoSpeed = 0.5;
-    private double intakeRetractSpeed = 0.35;
-    private double kP = 0.0;
+    private double intakeRetractSpeed = 0.1;
+    private double kP = 0.2;
     private double kI = 0.0;
     public int flip = 0;
     public String retractMode = "Manual";
@@ -74,15 +74,17 @@ public class Intake extends SubsystemBase {
 
         //setting PID controllers
         intakeRetractLeftPID = intakeRetractLeft.getPIDController();
+        intakeRetractLeftPID.setOutputRange(-0.4, 0.4);
         intakeRetractLeftPID.setP(kP);
         intakeRetractLeftPID.setI(kI);
         intakeRetractLeftPID.setD(0.0);
-        intakeRetractLeftPID.setFF(0.2);
+        intakeRetractLeftPID.setFF(0.05);
         intakeRetractRightPID = intakeRetractRight.getPIDController();
+        intakeRetractRightPID.setOutputRange(-0.4, 0.4);
         intakeRetractRightPID.setP(kP);
         intakeRetractRightPID.setI(kI);
         intakeRetractRightPID.setD(0.0);
-        intakeRetractRightPID.setFF(0.2);
+        intakeRetractRightPID.setFF(0.05);
 
         intakeTable.addEntryListener("P coeficient", (table, key, entry, value, flags) -> {
             kP = value.getDouble();
@@ -127,6 +129,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void resetRetractEncoders(){
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         intakeRetractLeftEncoder.setPosition(0);
         intakeRetractRightEncoder.setPosition(0);
     }
@@ -157,24 +160,29 @@ public class Intake extends SubsystemBase {
     }
 
     public void intakeStop(){
-        intakeRetractRight.set(0);
+        if(retractMode !="PID"){
+            intakeRetractRight.set(0);
+        }
         //left is declared as follower
     }
 
     public void intakeMove(String direction, String type){
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         int d = 0;
 
         if(type == "PID"){
+            System.out.println("Entering PID Control");
             if(direction.equalsIgnoreCase("Up")){
                 intakeRetractRightPID.setReference(0, CANSparkMax.ControlType.kPosition);
-                intakeRetractLeftPID.setReference(0, CANSparkMax.ControlType.kPosition);
+                //intakeRetractLeftPID.setReference(0, CANSparkMax.ControlType.kPosition);
             } else if(direction.equalsIgnoreCase("Down")){
                 intakeRetractRightPID.setReference(Constants.IntakeConfig.RETRACT_ARM_DOWN_POSITION, CANSparkMax.ControlType.kPosition);
-                intakeRetractLeftPID.setReference(Constants.IntakeConfig.RETRACT_ARM_DOWN_POSITION, CANSparkMax.ControlType.kPosition);
+                //intakeRetractLeftPID.setReference(Constants.IntakeConfig.RETRACT_ARM_DOWN_POSITION, CANSparkMax.ControlType.kPosition);
             } else {
                 System.out.println("Invalid type/direction parameter sent.");
             }
         } else if (type == "Manual"){
+            System.out.println("Entering Manual Mode");
             if(direction.equalsIgnoreCase("Up")){
                 intakeRetractRight.set(intakeRetractSpeed);
             } else if(direction.equalsIgnoreCase("Down")){
@@ -186,6 +194,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void changeIntakeMode(){
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         int i;
         flip++; //increasing flip variable
         i = flip % 2;
@@ -197,15 +206,7 @@ public class Intake extends SubsystemBase {
     }
 
     public BooleanSupplier isRetractModePID(){
-        boolean b;
-        BooleanSupplier returnValue;
-        if(retractMode.equals("PID")){
-            b = true;
-        } else {
-            b = false;
-        }
-        returnValue = ()-> b == true;
-        return returnValue;
+         return ()-> retractMode.equals("PID");
     }
 
 
