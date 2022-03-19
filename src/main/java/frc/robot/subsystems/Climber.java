@@ -337,7 +337,7 @@ public Climber(){
         // Setup PID controller for tilt Motor
         tiltPIDController = tiltMotor.getPIDController();
         tiltPIDController.setP(0.2);
-        tiltPIDController.setOutputRange(0, 0.3);
+        tiltPIDController.setOutputRange(-1, 1);
 
         // Setup PID controller for Inner Arm
         /* Config the sensor used for Primary PID and sensor direction */
@@ -414,7 +414,15 @@ public Climber(){
         builder.addDoubleProperty("Tilt Speed", () -> this.tiltSpeed, (value) -> this.tiltSpeed = value);
         builder.addDoubleProperty("Tilt Time Limit", () -> this.tiltTimeLimit, (value) -> this.tiltTimeLimit = value);
         builder.addBooleanProperty("Ignore Encoders", () -> this.ignoreEncoder, (value) -> {this.ignoreEncoder = value; System.out.printf("Setting encoder %s\n", ignoreEncoder);});
-
+        builder.addDoubleProperty("Enter Inner Climb Mode", () -> ClimberConfig.INNER_ENTER_CLIMB, (value) -> ClimberConfig.INNER_ENTER_CLIMB = value);
+        builder.addDoubleProperty("Inner Prep Mid Climb", () -> ClimberConfig.INNER_PREP_MID, (value) -> ClimberConfig.INNER_PREP_MID = value);
+        builder.addDoubleProperty("Inner Mid Climb", () -> ClimberConfig.INNER_CLIMB_MID, (value) -> ClimberConfig.INNER_CLIMB_MID = value);
+        builder.addDoubleProperty("Inner Advance High", () -> ClimberConfig.INNER_ADVANCE_HIGH, (value) -> ClimberConfig.INNER_ADVANCE_HIGH = value);
+        builder.addDoubleProperty("Outer Enter Climb", () -> ClimberConfig.OUTER_ENTER_CLIMB, (value) -> ClimberConfig.OUTER_ENTER_CLIMB = value);
+        builder.addDoubleProperty("Outer Reach Mid", () -> ClimberConfig.OUTER_REACH_MID, (value) -> ClimberConfig.OUTER_REACH_MID = value);
+        builder.addDoubleProperty("Outer Advance High", () -> ClimberConfig.OUTER_ADVANCE_HIGH, (value) -> ClimberConfig.OUTER_ADVANCE_HIGH = value);
+        builder.addDoubleProperty("Full Tilt Out", () -> ClimberConfig.FULLY_TILTED_OUT, (value) -> ClimberConfig.FULLY_TILTED_OUT = value);
+        builder.addDoubleProperty("Full Tilt In", () -> ClimberConfig.FULLY_TILTED_IN, (value) -> ClimberConfig.FULLY_TILTED_IN = value);
     }
 
     public void setNetworkTableListeners(){

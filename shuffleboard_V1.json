@@ -834,6 +834,50 @@
               "_source0": "network_table:///SmartDashboard/Climber/Tilt Time Limit",
               "_title": "/SmartDashboard/Climber/Tilt Time Limit"
             }
+          },
+          "11,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Enter Climb Mode",
+              "_title": "SmartDashboard/Enter Climb Mode"
+            }
+          },
+          "11,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Prep Climb Mode",
+              "_title": "SmartDashboard/Prep Climb Mode"
+            }
+          },
+          "11,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Climb Middle Rung",
+              "_title": "SmartDashboard/Climb Middle Rung"
+            }
+          },
+          "11,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Advance to high rung",
+              "_title": "SmartDashboard/Advance to high rung"
+            }
           }
         }
       }
@@ -1033,6 +1077,163 @@
               "_type": "Text View",
               "_source0": "network_table:///Shooter/Feeder Speed",
               "_title": "/Shooter/Feeder Speed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 6",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Full Tilt In",
+              "_title": "SmartDashboard/Climber/Full Tilt In"
+            }
+          },
+          "6,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Enter Inner Climb Mode",
+              "_title": "SmartDashboard/Climber/Enter Inner Climb Mode"
+            }
+          },
+          "6,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Advance High",
+              "_title": "SmartDashboard/Climber/Inner Advance High"
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Mid Climb",
+              "_title": "SmartDashboard/Climber/Inner Mid Climb"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Inner Prep Mid Climb",
+              "_title": "SmartDashboard/Climber/Inner Prep Mid Climb"
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Outer Reach Mid",
+              "_title": "SmartDashboard/Climber/Outer Reach Mid"
+            }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Outer Enter Climb",
+              "_title": "SmartDashboard/Climber/Outer Enter Climb"
+            }
+          },
+          "8,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Outer Advance High",
+              "_title": "SmartDashboard/Climber/Outer Advance High"
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber/Full Tilt Out",
+              "_title": "SmartDashboard/Climber/Full Tilt Out"
+            }
+          },
+          "10,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Prep Climb Mode",
+              "_title": "SmartDashboard/Prep Climb Mode"
+            }
+          },
+          "10,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Enter Climb Mode",
+              "_title": "SmartDashboard/Enter Climb Mode"
+            }
+          },
+          "10,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Advance to high rung",
+              "_title": "SmartDashboard/Advance to high rung"
+            }
+          },
+          "10,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Climb Middle Rung",
+              "_title": "SmartDashboard/Climb Middle Rung"
             }
           }
         }

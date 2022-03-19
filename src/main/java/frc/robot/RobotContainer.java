@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Climber;
@@ -100,21 +101,22 @@ public class RobotContainer {
   private final JoystickButton stick11 = new JoystickButton(stick, 11);
   private final JoystickButton stick12 = new JoystickButton(stick, 12);
 
-  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.3);
-  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.3);
+  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.7);
+  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.7);
 
 
   private final Trigger dpadUp = new Trigger(() -> xboxController.getPOV() == 0);
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
-  private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90);
-  private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270);
+  private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90 || xboxController.getPOV() == 45 || xboxController.getPOV() == 135);
+  private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270 || xboxController.getPOV() == 315 || xboxController.getPOV() == 225);
   private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
   private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
 
   
 
-  private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
-  private final Trigger rightStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) > 0.3);
+  // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
+  // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
+  private final Trigger rightStickEngaged = new Trigger(() -> Math.abs(xboxController.getRawAxis(XboxController.Axis.kRightY.value)) > 0.3);
 
   
 
@@ -264,13 +266,16 @@ public class RobotContainer {
     // Outer Climber
     // rightStickDown.whileActiveContinuous(commandRetractOuterArms);
     // rightStickUp.whileActiveContinuous(commandExtendOuterArms);
-    rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    // rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    // rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    
     //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
 
     // Tilt
-    dpadRight.whenActive(commandFullTilt);
+    dpadUp.whenActive(commandFullTilt);
     dpadLeft.whileActiveContinuous(commandRetractTilt);
+    dpadRight.whileActiveContinuous(commandStartTilt);
 
     // Suto climb Commands
     ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
@@ -282,7 +287,35 @@ public class RobotContainer {
         new CommandInnerArmToPosition(climber, 0),
         new CommandOuterArmToPosition(climber, 0),
         new CommandFullTiltRetract(climber));
+
+    ParallelCommandGroup enterClimbModeCommandGroup = new ParallelCommandGroup(
+        new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ENTER_CLIMB),
+        new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ENTER_CLIMB),
+        new CommandFullTilt(climber) 
+    );
+    SmartDashboard.putData("Enter Climb Mode", enterClimbModeCommandGroup);
+
+    ParallelCommandGroup prepClimbMidRungCommandGroup = new ParallelCommandGroup(
+      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_PREP_MID),
+      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
+      new CommandFullTilt(climber)
+    );
+    SmartDashboard.putData("Prep Climb Mode", prepClimbMidRungCommandGroup);
       
+    ParallelCommandGroup climbMidRungCommandGroup = new ParallelCommandGroup(
+      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_MID),
+      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
+      new CommandFullTilt(climber)
+    );
+    SmartDashboard.putData("Climb Middle Rung", climbMidRungCommandGroup);
+
+    ParallelCommandGroup advanceHighRungCommandGroup = new ParallelCommandGroup(
+      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ADVANCE_HIGH),
+      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ADVANCE_HIGH),
+      new CommandFullTiltRetract(climber).beforeStarting(new WaitCommand(1))
+    );
+    SmartDashboard.putData("Advance to high rung", advanceHighRungCommandGroup);
+
     dpadUp.whenActive(climbReadyCommandGroup);
     dpadDown.whenActive(climbZeroCommandGroup);
     
