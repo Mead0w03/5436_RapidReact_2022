@@ -34,8 +34,8 @@ public class Intake extends SubsystemBase {
     private SparkMaxPIDController intakeRetractLeftPID;
     private SparkMaxPIDController intakeRetractRightPID;
     private double intakeCargoSpeed = 0.5;
-    private double intakeRetractSpeed = 0.1;
-    private double kP = 0.2;
+    private double intakeRetractSpeed = 0.3;
+    private double kP = 0.1;
     private double kI = 0.0;
     public int flip = 0;
     public String retractMode = "Manual";
@@ -78,13 +78,13 @@ public class Intake extends SubsystemBase {
         intakeRetractLeftPID.setP(kP);
         intakeRetractLeftPID.setI(kI);
         intakeRetractLeftPID.setD(0.0);
-        intakeRetractLeftPID.setFF(0.05);
+        intakeRetractLeftPID.setFF(0.1);
         intakeRetractRightPID = intakeRetractRight.getPIDController();
         intakeRetractRightPID.setOutputRange(-0.4, 0.4);
         intakeRetractRightPID.setP(kP);
         intakeRetractRightPID.setI(kI);
         intakeRetractRightPID.setD(0.0);
-        intakeRetractRightPID.setFF(0.05);
+        intakeRetractRightPID.setFF(0.1);
 
         intakeTable.addEntryListener("P coeficient", (table, key, entry, value, flags) -> {
             kP = value.getDouble();
