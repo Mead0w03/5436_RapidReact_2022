@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
@@ -35,7 +37,8 @@ public class Intake extends SubsystemBase {
     private double intakeRetractSpeed = 0.35;
     private double kP = 0.0;
     private double kI = 0.0;
-    private Encoder encoder;
+    public int flip = 0;
+    public String retractMode = "Manual";
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
@@ -47,6 +50,7 @@ public class Intake extends SubsystemBase {
     NetworkTableEntry entrySpeedInput = intakeTable.getEntry("Enter Input Speed");
     NetworkTableEntry entryRetractLeftEncoder = intakeTable.getEntry("Left Retract Encoder Speed");
     NetworkTableEntry entryRetractRightEncoder = intakeTable.getEntry("Right Retract Encoder Speed");
+    NetworkTableEntry entryRetractMode = intakeTable.getEntry("Intake Retract Mode");
 
     public Intake(){
         //declaring motor controllers
@@ -160,7 +164,7 @@ public class Intake extends SubsystemBase {
     public void intakeMove(String direction, String type){
         int d = 0;
 
-        if(type == "PWM"){
+        if(type == "PID"){
             if(direction.equalsIgnoreCase("Up")){
                 intakeRetractRightPID.setReference(0, CANSparkMax.ControlType.kPosition);
                 intakeRetractLeftPID.setReference(0, CANSparkMax.ControlType.kPosition);
@@ -181,6 +185,29 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public void changeIntakeMode(){
+        int i;
+        flip++; //increasing flip variable
+        i = flip % 2;
+        if(i > 0){
+            retractMode = "PID";
+        } else {
+            retractMode = "Manual";
+        }
+    }
+
+    public BooleanSupplier isRetractModePID(){
+        boolean b;
+        BooleanSupplier returnValue;
+        if(retractMode.equals("PID")){
+            b = true;
+        } else {
+            b = false;
+        }
+        returnValue = ()-> b == true;
+        return returnValue;
+    }
+
 
     @Override
     public void periodic() {
@@ -194,6 +221,7 @@ public class Intake extends SubsystemBase {
         entryRetractRightPower.setDouble(intakeRetractRight.get());
         entryRetractLeftEncoder.setDouble(intakeRetractLeftEncoder.getPosition());
         entryRetractRightEncoder.setDouble(intakeRetractRightEncoder.getPosition());
+        entryRetractMode.setString(retractMode);
 
         // double inputSpeedValue = entrySpeedInput.getDouble(0);
         //intakeSpeed = inputSpeedValue;
