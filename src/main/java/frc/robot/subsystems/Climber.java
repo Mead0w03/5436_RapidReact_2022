@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanBusConfig;
 import frc.robot.Constants.ClimberConfig;
-import frc.robot.util.PIDCoef;
+import frc.robot.utils.PIDCoef;
 
 public class Climber extends SubsystemBase {
 // **********************************************

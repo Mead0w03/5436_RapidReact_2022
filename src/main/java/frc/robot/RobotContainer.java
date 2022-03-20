@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -23,6 +25,8 @@ import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.Constants.ClimberConfig;
+import frc.robot.utils.DoubleButton;
+import frc.robot.utils.SingleButton;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.AutonCommands.AutonCargoCommand;
 import frc.robot.commands.AutonCommands.AutonDriveCommand;
@@ -52,13 +56,6 @@ import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoid;
 import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
 import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
-//Intake Commands
-import frc.robot.commands.IntakeCommands.CommandCargoIn;
-import frc.robot.commands.IntakeCommands.CommandCargoOut;
-import frc.robot.commands.IntakeCommands.CommandCargoStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeDown;
-import frc.robot.commands.IntakeCommands.CommandIntakeStop;
-import frc.robot.commands.IntakeCommands.CommandIntakeUp;
 //Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
@@ -89,6 +86,10 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
   private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
   private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
+  private final SingleButton bButtonAlone = new SingleButton(bButton, leftBumper);
+  private final SingleButton xButtonAlone = new SingleButton(xButton, leftBumper);
+  private final DoubleButton bAndLeftBumper = new DoubleButton(bButton, leftBumper);
+  private final DoubleButton xAndLeftBumper = new DoubleButton(xButton, leftBumper);
 
   private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
   private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
@@ -139,12 +140,18 @@ public class RobotContainer {
 
 
   // Instantiate Intake commands
-  private final CommandCargoIn commandCargoIn = new CommandCargoIn(intake);
-  private final CommandCargoOut commandCargoOut = new CommandCargoOut(intake);
-  private final CommandCargoStop commandCargoStop = new CommandCargoStop(intake);
-  private final CommandIntakeUp commandIntakeUp = new CommandIntakeUp(intake);
-  private final CommandIntakeDown commandIntakeDown = new CommandIntakeDown(intake);
-  private final CommandIntakeStop commandIntakeStop = new CommandIntakeStop(intake);
+  private final RunCommand commandCargoIn = new RunCommand(intake::cargoIn,intake);
+  private final RunCommand commandCargoOut = new RunCommand(intake::cargoOut, intake);
+  private final InstantCommand commandCargoStop = new InstantCommand(intake::cargoStop, intake);
+  private final RunCommand commandIntakeUpManual = new RunCommand(()-> intake.intakeMove("Up", "Manual"), intake);
+  private final RunCommand commandIntakeDownManual = new RunCommand(()-> intake.intakeMove("Down", "Manual"), intake);
+  private final RunCommand commandIntakeUpPID = new RunCommand(()-> intake.intakeMove("Up", "PID"), intake);
+  private final RunCommand commandIntakeDownPID = new RunCommand(()-> intake.intakeMove("Down", "PID"), intake);
+  private final InstantCommand commandChangeIntakeMode = new InstantCommand(intake::changeIntakeMode, intake);
+  private final InstantCommand commandIntakeStop = new InstantCommand(intake::intakeStop, intake);
+  private final InstantCommand commandResetIntakeEncoders = new InstantCommand(intake::resetRetractEncoders, intake);
+  private final ConditionalCommand commandIntakeUp = new ConditionalCommand(commandIntakeUpPID, commandIntakeUpManual, intake.isRetractModePID());
+  private final ConditionalCommand commandIntakeDown = new ConditionalCommand(commandIntakeDownPID, commandIntakeDownManual, intake.isRetractModePID());
   
   // Instantiate Climber Commands
   private final CommandClimb commandClimb = new CommandClimb(climber, this);
@@ -248,10 +255,13 @@ public class RobotContainer {
     yButton.whenActive(commandCargoOut)
       .whenInactive(commandCargoStop);
 
-    bButton.whenPressed(commandIntakeUp)
-          .whenReleased(commandIntakeStop);
-    xButton.whenPressed(commandIntakeDown)
-        .whenReleased(commandIntakeStop);
+    xAndLeftBumper.whenPressed(commandResetIntakeEncoders);
+    bAndLeftBumper.whenPressed(commandChangeIntakeMode);
+
+    bButtonAlone.whenPressed(commandIntakeUp)
+      .whenReleased(commandIntakeStop);
+    xButtonAlone.whenPressed(commandIntakeDown)
+      .whenReleased(commandIntakeStop);
 
     // Climber commands - Secondary Commands
     leftStickDown.whenActive(commandClimb)
