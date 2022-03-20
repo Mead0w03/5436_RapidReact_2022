@@ -2,7 +2,6 @@ package frc.robot.commands.ClimberCommands;
 import frc.robot.Constants.ClimberConfig;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 
@@ -53,7 +52,7 @@ public class CommandContinueDescend extends CommandBase{
 
     @Override
     public void execute() {
-        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
+        //System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
         climber.innerArmUp();
     }
@@ -67,7 +66,7 @@ public class CommandContinueDescend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.FULLY_DESCENDED;
+        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.INNER_FULLY_DESCENDED;
         if(isFullyDescended) robotContainer.setIsFullyDescended(true);
         return isFullyDescended;
     }

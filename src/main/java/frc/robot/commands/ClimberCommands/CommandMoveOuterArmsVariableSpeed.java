@@ -1,22 +1,25 @@
 package frc.robot.commands.ClimberCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class CommandRetractTilt extends CommandBase {
+public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
     private Climber climber;
-    
+    private DoubleSupplier sitckInput;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandRetractTilt(Climber climber){
-            System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        
-            //this.addRequirements(climber);
-            this.climber = climber;
+    public CommandMoveOuterArmsVariableSpeed(Climber climber, DoubleSupplier stickInput){
+        System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
+    
+        //this.addRequirements(climber);
+        this.climber = climber;
+        this.sitckInput = stickInput;
         }
     
     // **********************************************
@@ -36,14 +39,20 @@ public class CommandRetractTilt extends CommandBase {
     
     @Override
     public void end(boolean interrupted) {
+        climber.stopOuterArms();
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        climber.stopTilt();
+        
     }
 
     @Override
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        climber.startTilt("retract");
+        // condition the signal
+        double input = -sitckInput.getAsDouble();  //reverse sign because up is negative
+        double speed = Math.signum(input) * (input*input);  //square the input and preserve the sign
+        // run the motor
+        climber.runOuterArmsToSpeed(speed);
+        System.out.printf("Running the outer climber to %.2f", speed);
     }
 
     @Override
@@ -55,7 +64,11 @@ public class CommandRetractTilt extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        
+       boolean isFullyRetracted = climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
+       boolean encoderActive = !climber.getIgnoreEncoder();
+        return isFullyRetracted && encoderActive;
+
     }
     
 }

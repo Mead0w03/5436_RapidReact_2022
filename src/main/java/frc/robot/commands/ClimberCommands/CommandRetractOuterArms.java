@@ -14,7 +14,7 @@ public class CommandRetractOuterArms extends CommandBase {
         public CommandRetractOuterArms(Climber climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-            this.addRequirements(climber);
+            //this.addRequirements(climber);
             this.climber = climber;
         }
     
