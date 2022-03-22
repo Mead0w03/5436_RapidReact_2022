@@ -9,7 +9,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {}
       }
     },
@@ -22,7 +21,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "3,0": {
             "size": [
@@ -557,7 +555,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "0,0": {
             "size": [
@@ -891,7 +888,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "3,0": {
             "size": [
@@ -1044,7 +1040,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "4,2": {
             "size": [
@@ -1091,9 +1086,8 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
-          "4,1": {
+          "2,1": {
             "size": [
               1,
               1
@@ -1104,7 +1098,7 @@
               "_title": "SmartDashboard/Climber/Full Tilt In"
             }
           },
-          "6,1": {
+          "4,1": {
             "size": [
               1,
               1
@@ -1115,7 +1109,7 @@
               "_title": "SmartDashboard/Climber/Enter Inner Climb Mode"
             }
           },
-          "6,4": {
+          "4,4": {
             "size": [
               1,
               1
@@ -1126,7 +1120,7 @@
               "_title": "SmartDashboard/Climber/Inner Advance High"
             }
           },
-          "6,3": {
+          "4,3": {
             "size": [
               1,
               1
@@ -1137,7 +1131,7 @@
               "_title": "SmartDashboard/Climber/Inner Mid Climb"
             }
           },
-          "6,2": {
+          "4,2": {
             "size": [
               1,
               1
@@ -1148,7 +1142,7 @@
               "_title": "SmartDashboard/Climber/Inner Prep Mid Climb"
             }
           },
-          "8,3": {
+          "6,3": {
             "size": [
               1,
               1
@@ -1159,7 +1153,7 @@
               "_title": "SmartDashboard/Climber/Outer Reach Mid"
             }
           },
-          "8,1": {
+          "6,1": {
             "size": [
               1,
               1
@@ -1170,7 +1164,7 @@
               "_title": "SmartDashboard/Climber/Outer Enter Climb"
             }
           },
-          "8,4": {
+          "6,4": {
             "size": [
               1,
               1
@@ -1181,7 +1175,7 @@
               "_title": "SmartDashboard/Climber/Outer Advance High"
             }
           },
-          "4,2": {
+          "2,2": {
             "size": [
               1,
               1
@@ -1192,7 +1186,7 @@
               "_title": "SmartDashboard/Climber/Full Tilt Out"
             }
           },
-          "10,2": {
+          "8,2": {
             "size": [
               2,
               1
@@ -1203,7 +1197,7 @@
               "_title": "SmartDashboard/Prep Climb Mode"
             }
           },
-          "10,1": {
+          "8,1": {
             "size": [
               2,
               1
@@ -1214,7 +1208,7 @@
               "_title": "SmartDashboard/Enter Climb Mode"
             }
           },
-          "10,4": {
+          "8,4": {
             "size": [
               2,
               1
@@ -1225,7 +1219,7 @@
               "_title": "SmartDashboard/Advance to high rung"
             }
           },
-          "10,3": {
+          "8,3": {
             "size": [
               2,
               1
@@ -1238,12 +1232,80 @@
           }
         }
       }
+    },
+    {
+      "title": "Tab 7",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Cargo Intake Speed",
+              "_title": "Intake/Cargo Intake Speed"
+            }
+          },
+          "4,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Retract Intake Speed",
+              "_title": "/Intake/Retract Intake Speed"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Left Retract Encoder Speed",
+              "_title": "Intake/Left Retract Encoder Speed"
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Right Retract Encoder Speed",
+              "_title": "Intake/Right Retract Encoder Speed"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Intake/Intake Retract Mode",
+              "_title": "Intake/Intake Retract Mode"
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
-    "x": -8.0,
-    "y": -8.0,
-    "width": 1936.0,
-    "height": 1056.0
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 878.4000244140625
   }
 }

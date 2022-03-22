@@ -73,7 +73,7 @@ public final class Constants {
         
         //outer arm
         public static final double OUTER_CLIMB_READY = 10240;
-        public static final double OUTER_FULLY_EXTENDED = 350000; //355000
+        public static final double OUTER_FULLY_EXTENDED = 270000; //355000
         public static final double OUTER_FULLY_RETRACTED = 7500;
         public static final double OUTER_LEGAL_LIMIT = 275000;
         public static double OUTER_ENTER_CLIMB = 0.0;
@@ -82,7 +82,7 @@ public final class Constants {
 
 
         //tilt
-        public static double FULLY_TILTED_OUT = 10.0;
+        public static double FULLY_TILTED_OUT = 40.0;
         public static  double FULLY_TILTED_IN = 0.0;
         
         

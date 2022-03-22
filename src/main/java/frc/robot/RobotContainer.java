@@ -281,7 +281,7 @@ public class RobotContainer {
     //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
 
     // Tilt
-    dpadUp.whenActive(commandFullTilt);
+    // dpadUp.whenActive(commandFullTilt);
     dpadLeft.whileActiveContinuous(commandRetractTilt);
     dpadRight.whileActiveContinuous(commandStartTilt);
 
