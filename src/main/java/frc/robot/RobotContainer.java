@@ -286,15 +286,15 @@ public class RobotContainer {
     dpadRight.whileActiveContinuous(commandStartTilt);
 
     // Suto climb Commands
-    ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
-        new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_READY),
-        new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_CLIMB_READY),
-        new CommandFullTilt(climber)); 
+    // ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
+    //     new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_READY),
+    //     new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_CLIMB_READY),
+    //     new CommandFullTilt(climber)); 
         
-    ParallelCommandGroup climbZeroCommandGroup = new ParallelCommandGroup(
-        new CommandInnerArmToPosition(climber, 0),
-        new CommandOuterArmToPosition(climber, 0),
-        new CommandFullTiltRetract(climber));
+    // ParallelCommandGroup climbZeroCommandGroup = new ParallelCommandGroup(
+    //     new CommandInnerArmToPosition(climber, 0),
+    //     new CommandOuterArmToPosition(climber, 0),
+    //     new CommandFullTiltRetract(climber));
 
     ParallelCommandGroup enterClimbModeCommandGroup = new ParallelCommandGroup(
         new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ENTER_CLIMB),
@@ -324,9 +324,6 @@ public class RobotContainer {
     );
     SmartDashboard.putData("Advance to high rung", advanceHighRungCommandGroup);
 
-    dpadUp.whenActive(climbReadyCommandGroup);
-    dpadDown.whenActive(climbZeroCommandGroup);
-    
     //dpadRight.whileActiveContinuous(commandStartTilt);
     //dpadLeft.whileActiveContinuous(commandRetractTilt);
    // leftStickUp.whenActive(commandFullTilt);

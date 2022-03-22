@@ -337,14 +337,14 @@ public Climber(){
         // Setup PID controller for tilt Motor
         tiltPIDController = tiltMotor.getPIDController();
         tiltPIDController.setP(0.2);
-        tiltPIDController.setOutputRange(-1, 1);
+        tiltPIDController.setOutputRange(-0.3, 0.3);
 
         // Setup PID controller for Inner Arm
         /* Config the sensor used for Primary PID and sensor direction */
         int timeOut = 30;
         int pidIndex = 0;
         int allowableError = 0;
-        double maxPower = 1;
+        double maxPower = 0.3;
         innerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
         innerArmMotor.configNominalOutputForward(0, timeOut);
 		innerArmMotor.configNominalOutputReverse(0, timeOut);
