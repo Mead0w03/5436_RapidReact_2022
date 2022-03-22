@@ -194,11 +194,19 @@ public class RobotContainer {
 
   //Instantiate Auton commands
   
-  private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter);
-  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), new AutonStartShooterCommand(shooter), new CommandStartFeeder(shooter), new AutonShooterCommand(shooter, intake, 1.5));
-  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.0, 0.2),  
-  new AutonIntakeDownCommand(intake), new AutonCargoCommand(intake), commandStartFeeder, new AutonStartShooterCommand(shooter), 
-  new AutonDriveCommand(driveBase, 1.0, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
+  private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter, 2.0);
+  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), 
+  new AutonStartShooterCommand(shooter, 2.0), 
+  new AutonShooterCommand(shooter, intake, 1.5));
+  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
+  new AutonCargoCommand(intake),
+  new AutonDriveCommand(driveBase, 1.0, 0.2),   
+  new AutonStartShooterCommand(shooter, 2.0), 
+  new AutonDriveCommand(driveBase, 0.6, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
+  private final SequentialCommandGroup autonWallRoutine = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
+  new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 0.6, 0.2), new AutonStartShooterCommand(shooter, 2.0),
+  new AutonDriveCommand(driveBase, 0.6, -0.2), new AutonShooterCommand(shooter, intake, 3.0), new InstantCommand(()->intake.intakeMove("Up","PID")),
+  new AutonDriveCommand(driveBase, 1.0, 0.2));
 
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -213,6 +221,7 @@ public class RobotContainer {
     //autonChooser.addOption("Full-Routine", autonFullRoutineCG);
     autonChooser.setDefaultOption("Full-Routine", autonFullRoutineCG);
     autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
+    autonChooser.addOption("Wall Routine", autonWallRoutine);
     SmartDashboard.putData(autonChooser);
     SmartDashboard.putData(new CommandFullTilt(climber));
 

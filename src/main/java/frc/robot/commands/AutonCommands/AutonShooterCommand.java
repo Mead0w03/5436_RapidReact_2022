@@ -35,8 +35,10 @@ public void initialize() {
  public void execute() {
      autonShooter.farHighGoal();
      System.out.println("Execute,AutonShooterCommand");
-     if (autonShooter.getSensorVelocity() < 19000.0){
+     if (autonShooter.getSensorVelocity() < 18000.0){
         autonShooter.stopFeeder();
+     } else {
+         autonShooter.startFeederMotor();
      }
      //SmartDashboard.putString("Execute", "AutonShooterCommand");
  }
@@ -46,7 +48,7 @@ public void initialize() {
  public void end(boolean interrupted) {
     // SmartDashboard.putString("End" ,"AutonShooterCommand");
     autonShooter.stopShooter();
-    autonShooter.stopFeeder();
+    //autonShooter.stopFeeder();
     intake.cargoStop();
     
      System.out.println("End,AutonShooterCommand");
@@ -55,10 +57,6 @@ public void initialize() {
  // Returns true when the command should end.
  @Override
  public boolean isFinished() {
-    boolean shouldExit = false;
-    if(timer.get() > timeLimit){
-        shouldExit = true;
-    }
-    return shouldExit;
+    return timer.get() > timeLimit ? true :false;
 }
 }
