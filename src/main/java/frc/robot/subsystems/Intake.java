@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     private double kP = 0.1;
     private double kI = 0.0;
     public int flip = 0;
-    public String retractMode = "Manual";
+    public String retractMode = "PID";
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());
@@ -192,7 +192,7 @@ public class Intake extends SubsystemBase {
             }
         }
     }
-
+/*
     public void changeIntakeMode(){
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         int i;
@@ -204,10 +204,12 @@ public class Intake extends SubsystemBase {
             retractMode = "Manual";
         }
     }
-
+*/
+/*
     public BooleanSupplier isRetractModePID(){
          return ()-> retractMode.equals("PID");
     }
+    */
 
 
     @Override
