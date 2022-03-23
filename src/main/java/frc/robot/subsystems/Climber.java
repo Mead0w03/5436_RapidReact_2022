@@ -344,7 +344,7 @@ public Climber(){
         int timeOut = 30;
         int pidIndex = 0;
         int allowableError = 0;
-        double maxPower = 0.3;
+        double maxPower = 0.8;
         innerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
         innerArmMotor.configNominalOutputForward(0, timeOut);
 		innerArmMotor.configNominalOutputReverse(0, timeOut);

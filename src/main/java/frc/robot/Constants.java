@@ -76,8 +76,8 @@ public final class Constants {
         public static final double OUTER_FULLY_EXTENDED = 270000; //355000
         public static final double OUTER_FULLY_RETRACTED = 7500;
         public static final double OUTER_LEGAL_LIMIT = 275000;
-        public static double OUTER_ENTER_CLIMB = 0.0;
-        public static double OUTER_REACH_MID = 325000;
+        public static double OUTER_ENTER_CLIMB = 7500;
+        public static double OUTER_REACH_MID = 270000;
         public static double OUTER_ADVANCE_HIGH = 20000;
 
 
