@@ -9,9 +9,11 @@ public class AutonStartShooterCommand extends CommandBase {
 
 private Shooter autonShooter;
 private Timer timer;
+private double timeLimit = 0.0;
 
-public AutonStartShooterCommand(Shooter shooter){
+public AutonStartShooterCommand(Shooter shooter, double timeLimit){
     this.autonShooter = shooter;
+    this.timeLimit = timeLimit;
     timer = new Timer();
     this.addRequirements(autonShooter);
 }
@@ -37,10 +39,7 @@ public void initialize() {
  // Returns true when the command should end.
  @Override
  public boolean isFinished() {
-    boolean shouldExit = false;
-    if(timer.get() > 2.0){
-        shouldExit = true;
-    }
-    return shouldExit;
+   
+    return timer.get() > timeLimit ? true :false;
 }
 }
