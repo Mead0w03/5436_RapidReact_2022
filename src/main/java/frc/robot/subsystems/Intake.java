@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     private double kP = 0.1;
     private double kI = 0.0;
     public int flip = 0;
-    public String retractMode = "PID";
+    public String retractMode = "Manual";
     //private double intakeSpeed = 0;
 
     NetworkTable intakeTable = NetworkTableInstance.getDefault().getTable(this.getClass().getSimpleName());

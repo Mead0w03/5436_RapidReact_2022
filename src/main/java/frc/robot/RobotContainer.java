@@ -262,7 +262,7 @@ public class RobotContainer {
     bButtonAlone.whenPressed(commandIntakeUp)
       .whenReleased(commandIntakeStop);
 */
-    bButtonAlone.whenPressed(commandIntakeUpPID)
+    bButtonAlone.whenPressed(commandIntakeUpManual)
       .whenReleased(commandIntakeStop);
     xButtonAlone.whenPressed(commandIntakeDownManual)
       .whenReleased(commandIntakeStop); 
