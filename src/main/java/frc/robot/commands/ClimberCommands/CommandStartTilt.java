@@ -65,6 +65,9 @@ public class CommandStartTilt extends CommandBase{
 
     @Override
     public boolean isFinished() {
+        // boolean encoderActive = !climber.getIgnoreEncoder();
+        // boolean isFullyTilted = climber.getIsFullyTiltedOut();
+        // return (encoderActive && isFullyTilted);
         return false;
     }
     

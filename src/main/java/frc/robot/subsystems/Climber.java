@@ -50,7 +50,7 @@ private SparkMaxPIDController tiltPIDController;
 // arm speed variables
 private double innerArmSpeed = 0.6;
 private double outerArmSpeed = 0.8;
-private double tiltSpeed = 0.3;
+private double tiltSpeed = 0.25;
 
 private final double startSpeed = 0.5;
 
@@ -143,7 +143,11 @@ public Climber(){
     }
 
     public boolean getIsTiltFullyRetracted(){
-        return !tiltRetractLimit.get();
+        return tiltMotor.getEncoder().getPosition() <= ClimberConfig.FULLY_TILTED_IN;
+    }
+
+    public boolean getIsFullyTiltedOut(){
+        return tiltMotor.getEncoder().getPosition() >= ClimberConfig.FULLY_TILTED_OUT;
     }
 
     public double getTiltTimeLimit(){

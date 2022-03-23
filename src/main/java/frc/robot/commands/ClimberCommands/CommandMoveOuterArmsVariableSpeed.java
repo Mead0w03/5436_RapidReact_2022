@@ -65,8 +65,10 @@ public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
     @Override
     public boolean isFinished() {
         boolean encoderActive = !climber.getIgnoreEncoder();
-        boolean isFullyExtended = Math.signum(-stickInput.getAsDouble()) < 0 && climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
-        boolean isFullyRetracted = Math.signum(-stickInput.getAsDouble()) > 0 && climber.getOuterClimberPosition() > Constants.ClimberConfig.OUTER_FULLY_EXTENDED;
+        boolean isFullyRetracted = Math.signum(-stickInput.getAsDouble()) < 0 
+                && climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
+        boolean isFullyExtended = Math.signum(-stickInput.getAsDouble()) > 0 
+                && climber.getOuterClimberPosition() > Constants.ClimberConfig.OUTER_FULLY_EXTENDED;
         return (isFullyExtended || isFullyRetracted) && encoderActive;
     }
     
