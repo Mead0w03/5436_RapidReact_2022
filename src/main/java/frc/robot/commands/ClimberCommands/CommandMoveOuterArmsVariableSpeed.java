@@ -8,7 +8,7 @@ import frc.robot.subsystems.Climber;
 
 public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
     private Climber climber;
-    private DoubleSupplier sitckInput;
+    private DoubleSupplier stickInput;
     
     // **********************************************
     // Constructors
@@ -19,7 +19,7 @@ public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
     
         //this.addRequirements(climber);
         this.climber = climber;
-        this.sitckInput = stickInput;
+        this.stickInput = stickInput;
         }
     
     // **********************************************
@@ -48,7 +48,7 @@ public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         // condition the signal
-        double input = -sitckInput.getAsDouble();  //reverse sign because up is negative
+        double input = -stickInput.getAsDouble();  //reverse sign because up is negative
         double speed = Math.signum(input) * (input*input);  //square the input and preserve the sign
         // run the motor
         climber.runOuterArmsToSpeed(speed);
@@ -64,11 +64,10 @@ public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        
-       boolean isFullyRetracted = climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
-       boolean encoderActive = !climber.getIgnoreEncoder();
-        return isFullyRetracted && encoderActive;
-
+        boolean encoderActive = !climber.getIgnoreEncoder();
+        boolean isFullyExtended = Math.signum(-stickInput.getAsDouble()) < 0 && climber.getOuterClimberPosition() < Constants.ClimberConfig.OUTER_FULLY_RETRACTED;
+        boolean isFullyRetracted = Math.signum(-stickInput.getAsDouble()) > 0 && climber.getOuterClimberPosition() > Constants.ClimberConfig.OUTER_FULLY_EXTENDED;
+        return (isFullyExtended || isFullyRetracted) && encoderActive;
     }
     
 }
