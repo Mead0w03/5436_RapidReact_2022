@@ -200,9 +200,9 @@ public class RobotContainer {
   new AutonShooterCommand(shooter, intake, 1.5));
   private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
   new AutonCargoCommand(intake),
-  new AutonDriveCommand(driveBase, 1.0, 0.2),   
+  new AutonDriveCommand(driveBase, 2.0, 0.2),   
   new AutonStartShooterCommand(shooter, 2.0), 
-  new AutonDriveCommand(driveBase, 0.6, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
+  new AutonDriveCommand(driveBase, 1.0, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
   private final SequentialCommandGroup autonWallRoutine = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
   new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 0.6, 0.2), new AutonStartShooterCommand(shooter, 2.0),
   new AutonDriveCommand(driveBase, 0.6, -0.2), new AutonShooterCommand(shooter, intake, 3.0), new InstantCommand(()->intake.intakeMove("Up","PID")),

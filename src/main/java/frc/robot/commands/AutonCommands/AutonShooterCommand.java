@@ -48,7 +48,7 @@ public void initialize() {
  public void end(boolean interrupted) {
     // SmartDashboard.putString("End" ,"AutonShooterCommand");
     autonShooter.stopShooter();
-    //autonShooter.stopFeeder();
+    autonShooter.stopFeeder();
     intake.cargoStop();
     
      System.out.println("End,AutonShooterCommand");
