@@ -143,11 +143,11 @@ public class RobotContainer {
   private final RunCommand commandCargoIn = new RunCommand(intake::cargoIn,intake);
   private final RunCommand commandCargoOut = new RunCommand(intake::cargoOut, intake);
   private final InstantCommand commandCargoStop = new InstantCommand(intake::cargoStop, intake);
-  //private final RunCommand commandIntakeUpManual = new RunCommand(()-> intake.intakeMove("Up", "Manual"), intake);
+  private final RunCommand commandIntakeUpManual = new RunCommand(()-> intake.intakeMove("Up", "Manual"), intake);
   private final RunCommand commandIntakeDownManual = new RunCommand(()-> intake.intakeMove("Down", "Manual"), intake);
   private final RunCommand commandIntakeUpPID = new RunCommand(()-> intake.intakeMove("Up", "PID"), intake);
   //private final RunCommand commandIntakeDownPID = new RunCommand(()-> intake.intakeMove("Down", "PID"), intake);
-  private final InstantCommand commandChangeIntakeMode = new InstantCommand(intake::changeIntakeMode, intake);
+  //private final InstantCommand commandChangeIntakeMode = new InstantCommand(intake::changeIntakeMode, intake);
   private final InstantCommand commandIntakeStop = new InstantCommand(intake::intakeStop, intake);
   private final InstantCommand commandResetIntakeEncoders = new InstantCommand(intake::resetRetractEncoders, intake);
   //private final ConditionalCommand commandIntakeUp = new ConditionalCommand(commandIntakeUpPID, commandIntakeUpManual, intake.isRetractModePID());
@@ -271,7 +271,7 @@ public class RobotContainer {
     bButtonAlone.whenPressed(commandIntakeUp)
       .whenReleased(commandIntakeStop);
 */
-    bButtonAlone.whenPressed(commandIntakeUpPID)
+    bButtonAlone.whenPressed(commandIntakeUpManual)
       .whenReleased(commandIntakeStop);
     xButtonAlone.whenPressed(commandIntakeDownManual)
       .whenReleased(commandIntakeStop); 

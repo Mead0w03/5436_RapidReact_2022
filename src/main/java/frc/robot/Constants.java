@@ -89,7 +89,7 @@ public final class Constants {
     }
 
     public class IntakeConfig{
-        public static final double RETRACT_ARM_DOWN_POSITION = -5.4;
+        public static final double RETRACT_ARM_DOWN_POSITION = -20;
     }
 }
  
