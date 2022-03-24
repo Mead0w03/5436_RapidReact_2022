@@ -61,7 +61,7 @@ public final class Constants {
 
     public static class ClimberConfig{
         //inner arm
-        public static final double TARGET_MOVEMENT = 18500;
+        public static final double TARGET_MOVEMENT = 0; //18500;
         public static final double INNER_FULLY_DESCENDED = -193800;  //205000
         public static final double INNER_FULLY_ASCENDED = 78000;
         public static  double INNER_CLIMB_READY = 10240;

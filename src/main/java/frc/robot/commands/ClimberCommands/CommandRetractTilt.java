@@ -55,9 +55,10 @@ public class CommandRetractTilt extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        boolean encoderActive = !climber.getIgnoreEncoder();
-        boolean isFullyRetracted = climber.getIsTiltFullyRetracted();
-        return (encoderActive && isFullyRetracted);
+        // boolean encoderActive = !climber.getIgnoreEncoder();
+        // boolean isFullyRetracted = climber.getIsTiltFullyRetracted();
+        // return (encoderActive && isFullyRetracted);
+        return false;
     }
     
 }

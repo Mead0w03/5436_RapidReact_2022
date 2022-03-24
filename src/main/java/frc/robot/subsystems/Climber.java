@@ -49,7 +49,7 @@ private SparkMaxPIDController tiltPIDController;
 
 // arm speed variables
 private double innerArmSpeed = 0.6;
-private double outerArmSpeed = 0.8;
+private double outerArmSpeed = 1.0;
 private double tiltSpeed = 0.25;
 
 private final double startSpeed = 0.5;
