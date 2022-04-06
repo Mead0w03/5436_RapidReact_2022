@@ -49,7 +49,7 @@ public final class Constants {
         public static final int SOLENOID = 14;
 
         // Hardware
-        public static final int PDP = 50;
+        public static final int PDP = 0;
 
         // Sensors
 

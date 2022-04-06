@@ -7,7 +7,9 @@ package frc.robot;
 import javax.swing.JToggleButton;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,10 +56,6 @@ import frc.robot.commands.ClimberCommands.CommandRetractTilt;
 import frc.robot.commands.ClimberCommands.CommandStopOuterArms;
 import frc.robot.commands.ClimberCommands.CommandStopTilt;
 import frc.robot.commands.ClimberCommands.CommandStopClimb;
-import frc.robot.commands.ClimberCommands.CommandStopSolenoid;
-import frc.robot.commands.ClimberCommands.CommandSolenoid;
-import frc.robot.commands.ClimberCommands.CommandSolenoidAscend;
-import frc.robot.commands.ClimberCommands.CommandSolenoidDescend;
 //Shooter Commands
 import frc.robot.commands.ShooterCommands.CommandActivateShooter;
 import frc.robot.commands.ShooterCommands.CommandReverseShooter;
@@ -171,16 +169,10 @@ public class RobotContainer {
 
   private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climberTilt);
   private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climberOuter);
-  private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
-  private final CommandStopSolenoid commandStopSolenoid = new CommandStopSolenoid(climber);
 
   private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climberOuter);
 
-  private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
-  private final CommandSolenoidDescend commandSolenoidDescend = new CommandSolenoidDescend(climber, this);
-
   //private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
-  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandSolenoidDescend);
 
   // Instantiate Shooter commands
   private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
@@ -215,6 +207,17 @@ public class RobotContainer {
   //Auton routine chooser
   private final SendableChooser<Command> autonChooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+
+  // PDP
+
+  PowerDistribution DrivePDP = new PowerDistribution(0, ModuleType.kCTRE);
+  double driveVolt = DrivePDP.getVoltage();
+  double driveCurrent = DrivePDP.getTotalCurrent();
+  double driveFrontLeft = DrivePDP.getCurrent(12);
+  double driveBackLeft = DrivePDP.getCurrent(13);
+  double driveBackRight = DrivePDP.getCurrent(14);
+  double driveFrontRight = DrivePDP.getCurrent(15);
   public RobotContainer() {
     // Configure the button bindings
 
@@ -228,7 +231,12 @@ public class RobotContainer {
     autonChooser.addOption("Wall Routine", autonWallRoutine);
     SmartDashboard.putData(autonChooser);
     SmartDashboard.putData(new CommandFullTilt(climberTilt));
-
+    SmartDashboard.putNumber("Total Voltage", driveCurrent);
+    SmartDashboard.putNumber("Total Current", driveVolt);
+    SmartDashboard.putNumber("Front Left Current", driveFrontLeft);
+    SmartDashboard.putNumber("Back Left Current", driveBackLeft);
+    SmartDashboard.putNumber("Back Right Current", driveBackRight);
+    SmartDashboard.putNumber("Front Right Current", driveFrontRight);
   }
 
   public void setOkToDescend(boolean inputValue){
@@ -285,9 +293,6 @@ public class RobotContainer {
           .whenInactive(commandStopClimb);
     
     // Inner Climber Commands
-    triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
-    triggerContinueDescend.whenActive(commandContinueDescend)
-          .whenInactive(commandStopClimb);
     
     
     // Outer Climber

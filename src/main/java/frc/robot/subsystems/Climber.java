@@ -36,7 +36,6 @@ public class Climber extends SubsystemBase {
 // **********************************************
 // Actuators
 private TalonFX innerArmMotor;
-private VictorSPX solenoidMotor;
 
 
 // arm speed variables
@@ -44,7 +43,6 @@ private double innerArmSpeed = 0.6;
 
 private final double startSpeed = 0.5;
 
-private boolean solenoidEngaged = false;
 
 private boolean ignoreEncoder = true;
 private boolean resetInnerArmEncoder = false;
@@ -107,7 +105,6 @@ public Climber(){
 
     public void stopAndEngageRatchet(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
-        engageRatchet();
         // rightMotor.set(0);
     }
 
@@ -119,15 +116,15 @@ public Climber(){
         innerArmMotor.set(TalonFXControlMode.Position, targetPosition);
     } 
     
-    public void engageRatchet(){
-        solenoidMotor.set(ControlMode.PercentOutput, 0);
-        solenoidEngaged = true;
-    }
+    // public void engageRatchet(){
+    //     solenoidMotor.set(ControlMode.PercentOutput, 0);
+    //     solenoidEngaged = true;
+    // }
 
-    public void releaseRatchet(){
-        solenoidMotor.set(ControlMode.PercentOutput, 100);
-        solenoidEngaged = false;
-    }
+    // public void releaseRatchet(){
+    //     solenoidMotor.set(ControlMode.PercentOutput, 100);
+    //     solenoidEngaged = false;
+    // }
 
     @Override
     public void periodic() {
@@ -137,21 +134,21 @@ public Climber(){
     public void init() {
         // instantiate motors
         innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
-        solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
+        //solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
         
         // clear all faults
         innerArmMotor.clearStickyFaults();    
-        solenoidMotor.clearStickyFaults();
+        //solenoidMotor.clearStickyFaults();
         
     
         // set factory default for all motors
         innerArmMotor.configFactoryDefault();
-        solenoidMotor.configFactoryDefault();
+        //solenoidMotor.configFactoryDefault();
        
         
         // set braking mode for all
         innerArmMotor.setNeutralMode(NeutralMode.Brake);
-        solenoidMotor.setNeutralMode(NeutralMode.Brake);
+        //solenoidMotor.setNeutralMode(NeutralMode.Brake);
         
     
         // Invert motors
@@ -177,7 +174,6 @@ public Climber(){
 
 
         // engage the ratchet
-        engageRatchet();
 
         // zero the endoers
         innerArmMotor.setSelectedSensorPosition(0.0);
