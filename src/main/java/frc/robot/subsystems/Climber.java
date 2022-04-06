@@ -39,8 +39,6 @@ private TalonFX innerArmMotor;
 private VictorSPX solenoidMotor;
 
 
-
-
 // arm speed variables
 private double innerArmSpeed = 0.6;
 
@@ -51,56 +49,6 @@ private boolean solenoidEngaged = false;
 private boolean ignoreEncoder = true;
 private boolean resetInnerArmEncoder = false;
 
-
-
-
-private final String subsystemName = "Climber";
-
-private NetworkTable netTblClimber = NetworkTableInstance.getDefault().getTable(subsystemName);
-
-private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber Command");
-
-// Arm Speed Set Points
-private NetworkTableEntry entryInnerArmSpeed= netTblClimber.getEntry("Inner Arm Speed");
-
-
-// Actual Motor Speeds
-private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
-
-
-// Encoder Resets
-private NetworkTableEntry entryResetInnerArmEncoder = netTblClimber.getEntry("Reset Inner Arm Encoder");
-
-
-// Encoder override
-private NetworkTableEntry entryIgnoreEncoder = netTblClimber.getEntry("Ignore Encoder");
-
-// Encoder Setpoints
-
-
-// Solenoid State
-private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
-
-// Encoder Values
-
-private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("Inner Encoder");
-
-
-// Tilt PIDF Values
-// private NetworkTableEntry entryTiltKp = netTblClimber.getEntry("Tilt kP");
-// private NetworkTableEntry entryTiltKi = netTblClimber.getEntry("Tilt kI");
-// private NetworkTableEntry entryTiltKd = netTblClimber.getEntry("Tilt kD");
-// private NetworkTableEntry entryTiltKf = netTblClimber.getEntry("Tilt kF");
-
-// Inner P Value
-// private NetworkTableEntry entryInnerArmKp = netTblClimber.getEntry("Inner Arm kP");
-
-// Outer P Value
-// private NetworkTableEntry entryOuterArmKp = netTblClimber.getEntry("Outer Arm kP");
-
-// private NetworkTableEntry entryTiltPidKp = netTblClimber.getEntry("Tilt PID kP");
-
-
 // **********************************************
 // Constructors
 // **********************************************
@@ -108,15 +56,11 @@ private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("Inner Encod
 public Climber(){
     System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
-
     init();
-    setNetworkTableListeners();
 
     // PID Coefficients
-    
-    PIDCoef innerArmCoef = new PIDCoef(subsystemName, "Inner Arm", innerArmMotor, 0.15);
+    PIDCoef innerArmCoef = new PIDCoef(this.getClass().getSimpleName(), "Inner Arm", innerArmMotor, 0.15);
    
-    
     SmartDashboard.putData(this);   
 }
 
@@ -128,11 +72,6 @@ public Climber(){
     public boolean getIgnoreEncoder(){
         return this.ignoreEncoder;
     }
-
-   
-
-
-
 
 
     public double getClimberPosition(){
@@ -176,22 +115,10 @@ public Climber(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
-
-
-
-
-   
-
     public void innerArmToPosition(double targetPosition){
         innerArmMotor.set(TalonFXControlMode.Position, targetPosition);
     } 
     
-
-
-    
-
-
-
     public void engageRatchet(){
         solenoidMotor.set(ControlMode.PercentOutput, 0);
         solenoidEngaged = true;
@@ -202,37 +129,9 @@ public Climber(){
         solenoidEngaged = false;
     }
 
-    public void resetEncoder(){
-        innerArmMotor.setSelectedSensorPosition(0.0);
-    }
-
-
     @Override
     public void periodic() {
-        // System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        // update current command
-        entryCurrentCommand.setString((this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName());
-        
-        // Update actual motor speeds
-        entryInnerArmMotorSpeed.setDouble(innerArmMotor.getMotorOutputPercent());
-        
-        // Update tiltRetractLimit switch state
-        
-
-        // update state of the solenoid
-        entrySolenoidEngaged.setBoolean(solenoidEngaged);
-        
-        // update encoder  positions
-        
-        entryInnerArmPos.setDouble(innerArmMotor.getSelectedSensorPosition());
-        
-
-        entryInnerArmSpeed.setDouble(innerArmSpeed);
-        
-        
-        
-
     }
 
     public void init() {
@@ -240,37 +139,24 @@ public Climber(){
         innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
         solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
         
-
-        
-        //instantiate sensors
-        
-        
-    
         // clear all faults
-        innerArmMotor.clearStickyFaults();
-       
+        innerArmMotor.clearStickyFaults();    
         solenoidMotor.clearStickyFaults();
         
     
         // set factory default for all motors
         innerArmMotor.configFactoryDefault();
-        
         solenoidMotor.configFactoryDefault();
        
         
         // set braking mode for all
         innerArmMotor.setNeutralMode(NeutralMode.Brake);
-        
         solenoidMotor.setNeutralMode(NeutralMode.Brake);
         
     
         // Invert motors
         innerArmMotor.setInverted(true);
         
-    
-        // Setup PID controller for tilt Motor
- 
-
         // Setup PID controller for Inner Arm
         /* Config the sensor used for Primary PID and sensor direction */
         int timeOut = 30;
@@ -290,21 +176,12 @@ public Climber(){
 		innerArmMotor.config_kD(pidIndex, 0, timeOut);
 
 
-        // Setup PID controller for Outer Arm
-        
-
-		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
-		
-
-
         // engage the ratchet
         engageRatchet();
 
         // zero the endoers
         innerArmMotor.setSelectedSensorPosition(0.0);
         
-        
-
     }
 
     //bind to button if needed
@@ -328,13 +205,27 @@ public Climber(){
         super.simulationPeriodic();
     }
     
+    private void resetInnerArmEncoder(boolean resetFlag){
+        // Reset Tilt Encoder when the value on the SmartDashboard is changed to True
+        System.out.println("Resetting Inner Arm Encoder");
+        // stop the motor
+        innerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
+        // reset the encoders
+        innerArmMotor.setSelectedSensorPosition(0);
+        // set the flag back to false
+        resetInnerArmEncoder = false;
+    }
+
 
     @Override
     public void initSendable(SendableBuilder builder) {
         // TODO Auto-generated method stub
         System.out.println("Running initSendable in Climber");
-        builder.addDoubleProperty("Inner Arm Speed", () -> this.innerArmSpeed, (value) -> {this.innerArmSpeed = value; System.out.printf("innerArmSpeed=%.2f\n", innerArmSpeed);});
-        
+        builder.addDoubleProperty("Inner Arm Speed", () -> this.innerArmSpeed, value -> this.innerArmSpeed = value);
+        builder.addBooleanProperty("Ignore Inner Arm Encoder", () -> ignoreEncoder, (value) -> {ignoreEncoder = value; System.out.printf("Setting innerArm ignoreEncoder %s\n", ignoreEncoder);});
+        builder.addBooleanProperty("Reset Inner Arm Encoder", () -> resetInnerArmEncoder, this::resetInnerArmEncoder);
+        builder.addDoubleProperty("Inner Arm Encoder", () -> innerArmMotor.getSelectedSensorPosition(), value -> innerArmMotor.setSelectedSensorPosition(value));
+        builder.addStringProperty("Inner Arm Command", () -> (this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName(), null);
         
         builder.addDoubleProperty("Enter Inner Climb Mode", () -> ClimberConfig.INNER_ENTER_CLIMB, (value) -> ClimberConfig.INNER_ENTER_CLIMB = value);
         builder.addDoubleProperty("Inner Prep Mid Climb", () -> ClimberConfig.INNER_PREP_MID, (value) -> ClimberConfig.INNER_PREP_MID = value);
@@ -346,215 +237,6 @@ public Climber(){
         builder.addDoubleProperty("Full Tilt Out", () -> ClimberConfig.FULLY_TILTED_OUT, (value) -> ClimberConfig.FULLY_TILTED_OUT = value);
         builder.addDoubleProperty("Full Tilt In", () -> ClimberConfig.FULLY_TILTED_IN, (value) -> ClimberConfig.FULLY_TILTED_IN = value);
     }
-
-    public void setNetworkTableListeners(){
-        
-        // Create listeners for arm speeds and set initial values
-        // *****************************************************************************************
-        // // Inner Arm
-        // entryInnerArmSpeed.setDouble(innerArmSpeed);
-        // String innerArmEntryName = NetworkTable.basenameKey(entryInnerArmSpeed.getName());
-        // netTblClimber.addEntryListener(innerArmEntryName, (table, key, entry, value, flags)->{
-        //     System.out.println("The value for innerArmSpeed changed");
-        //     if (innerArmSpeed != value.getDouble()){
-        //         System.out.println("Updating inner arm speed from network table");
-        //         innerArmSpeed = value.getDouble();
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // // Outer Arm
-        // entryOuterArmSpeed.setDouble(outerArmSpeed);
-        // String outerArmEntryName = NetworkTable.basenameKey(entryOuterArmSpeed.getName());
-        // netTblClimber.addEntryListener(outerArmEntryName, (table, key, entry, value, flags)-> {
-        //     System.out.println("The value for outerArmSpeed changed");
-        //     if (outerArmSpeed != value.getDouble()){
-        //         System.out.println("Updating the instance att based on table data");
-        //         outerArmSpeed = value.getDouble();
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // // Tilt Motoer
-        // entryTiltSpeed.setDouble(tiltSpeed);
-        // String tiltEntryName = NetworkTable.basenameKey(entryTiltSpeed.getName());
-        // netTblClimber.addEntryListener(tiltEntryName, (table, key, entry, value, flags)-> {
-        //     System.out.println("The value for tiltSpeed changed");
-        //     if (tiltSpeed != value.getDouble()){
-        //         System.out.println("Updating the instance att based on table data");
-        //         tiltSpeed = value.getDouble();
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        // *****************************************************************************************
-
-
-
-        // Encoder Resets
-        // *****************************************************************************************
-        // Inner Arm
-        entryResetInnerArmEncoder.setBoolean(resetInnerArmEncoder);
-        String resetInnerEncoderEntryName = NetworkTable.basenameKey(entryResetInnerArmEncoder.getName());
-        netTblClimber.addEntryListener(resetInnerEncoderEntryName, (table, key, entry, value, flags)->{
-            System.out.println("Inner Arm Encoder being reset");
-            if (value.getBoolean()){
-                System.out.println("Resetting inner arm encoder");
-                innerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
-                innerArmMotor.setSelectedSensorPosition(0);
-                resetInnerArmEncoder = false;
-                entryResetInnerArmEncoder.setBoolean(resetInnerArmEncoder);
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        
-        // Outer Arm
-      
-        // *****************************************************************************************
-        
-        
-
-        // Encoder override
-        // *****************************************************************************************
-        // entryIgnoreEncoder.setBoolean(ignoreEncoder);
-        // String ignoreEncoderEntryName = NetworkTable.basenameKey(entryIgnoreEncoder.getName());
-        // netTblClimber.addEntryListener(ignoreEncoderEntryName, (table, key, entry, value, flags)->{
-        //     if (value.getBoolean()!=ignoreEncoder){
-        //         System.out.println("Changing Ignore Encoders");    
-        //         ignoreEncoder = value.getBoolean();
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        // *****************************************************************************************
-
-
-        // // Tilt Time Limit
-        // // *****************************************************************************************
-        // entryTiltTimeLimit.setDouble(tiltTimeLimit);
-        // String tiltTimeLimitEntryName = NetworkTable.basenameKey(entryTiltTimeLimit.getName());
-        // netTblClimber.addEntryListener(tiltTimeLimitEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue > 0;
-        //     boolean isWithinUpperBound = proposedValue < 5.0;
-        //     boolean isNewValue = proposedValue != tiltTimeLimit;
-        //     if (isNewValue && isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Tilt Time Limit");    
-        //         tiltTimeLimit = proposedValue;
-        //     } else {
-        //         // set the entry back
-        //         entryTiltTimeLimit.setDouble(tiltTimeLimit);
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        // *****************************************************************************************
-
-        // Tilt PID Limits
-        // *****************************************************************************************
-        // kP
-        // entryTiltKp.setDouble(tiltPIDController.getP());
-        // String tiltKpEntryName = NetworkTable.basenameKey(entryTiltKp.getName());
-        // netTblClimber.addEntryListener(tiltKpEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue >= 0;
-        //     boolean isWithinUpperBound = proposedValue < 1.0;
-        //     boolean isNewValue = proposedValue != tiltPIDController.getP();
-        //     if (isNewValue && isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Tilt kP");    
-        //         tiltPIDController.setP(proposedValue);
-        //     } else {
-        //         // set the entry back
-        //         entryTiltKp.setDouble(tiltPIDController.getP());
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-
-        // kI
-        // entryTiltKi.setDouble(tiltPIDController.getI());
-        // String tiltKiEntryName = NetworkTable.basenameKey(entryTiltKi.getName());
-        // netTblClimber.addEntryListener(tiltKiEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue >= 0;
-        //     boolean isWithinUpperBound = proposedValue < 1.0;
-        //     boolean isNewValue = proposedValue != tiltPIDController.getI();
-        //     if (isNewValue && isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Tilt kI");    
-        //         tiltPIDController.setI(proposedValue);
-        //     } else {
-        //         // set the entry back
-        //         entryTiltKi.setDouble(tiltPIDController.getI());
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // kD
-        // entryTiltKd.setDouble(tiltPIDController.getD());
-        // String tiltKdEntryName = NetworkTable.basenameKey(entryTiltKd.getName());
-        // netTblClimber.addEntryListener(tiltKdEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue >= 0;
-        //     boolean isWithinUpperBound = proposedValue < 1.0;
-        //     boolean isNewValue = proposedValue != tiltPIDController.getD();
-        //     if (isNewValue && isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Tilt kD");    
-        //         tiltPIDController.setD(proposedValue);
-        //     } else {
-        //         // set the entry back
-        //         entryTiltKd.setDouble(tiltPIDController.getD());
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-        // kF
-        // entryTiltKf.setDouble(tiltPIDController.getFF());
-        // String tiltKfEntryName = NetworkTable.basenameKey(entryTiltKf.getName());
-        // netTblClimber.addEntryListener(tiltKfEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue >= 0;
-        //     boolean isWithinUpperBound = proposedValue < 1.0;
-        //     boolean isNewValue = proposedValue != tiltPIDController.getFF();
-        //     if (isNewValue && isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Tilt kF");    
-        //         tiltPIDController.setFF(proposedValue);
-        //     } else {
-        //         // set the entry back
-        //         entryTiltKd.setDouble(tiltPIDController.getFF());
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        // *****************************************************************************************
-
-
-
-        // Inner Arm PID Coefficients
-        // *****************************************************************************************
-        // kP
-        // entryInnerArmKp.setDouble(0.15);
-        // String innerArmKpEntryName = NetworkTable.basenameKey(entryInnerArmKp.getName());
-        // netTblClimber.addEntryListener(innerArmKpEntryName, (table, key, entry, value, flags)->{
-        //     double proposedValue = value.getDouble();
-        //     boolean isPositive = proposedValue >= 0;
-        //     boolean isWithinUpperBound = proposedValue < 1.0;
-        //     if (isPositive && isWithinUpperBound){
-        //         System.out.println("Changing Inner Arm kP");    
-        //         innerArmMotor.config_kP(0, proposedValue);
-        //     } else {
-        //         // set the entry back
-        //         // entryInnerArmKp.setDouble(tiltPIDController.getP());
-        //     }
-        // },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-
-        // Outer Arm PID Coefficients
-        // *****************************************************************************************
-        // kP
-        // entryOuterArmKp.setDouble(0.15);
-        //  String outerArmKpEntryName = NetworkTable.basenameKey(entryOuterArmKp.getName());
-        //  netTblClimber.addEntryListener(outerArmKpEntryName, (table, key, entry, value, flags)->{
-        //      double proposedValue = value.getDouble();
-        //      boolean isPositive = proposedValue >= 0;
-        //      boolean isWithinUpperBound = proposedValue < 1.0;
-        //      if (isPositive && isWithinUpperBound){
-        //          System.out.println("Changing Outer Arm kP");    
-        //          outerArmMotor.config_kP(0, proposedValue);
-        //      } else {
-        //          // set the entry back
-        //          // entryInnerArmKp.setDouble(tiltPIDController.getP());
-        //      }
-        //  },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
-
-    }
-
-    
+  
     
 }

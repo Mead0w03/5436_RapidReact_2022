@@ -13,17 +13,17 @@ public class CommandStartTilt extends CommandBase{
     // **********************************************
     // Instance Variables
     // **********************************************
-        private ClimberTilt climber;
+        private ClimberTilt climberTilt;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandStartTilt(ClimberTilt climber){
+        public CommandStartTilt(ClimberTilt climberTilt){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             //this.addRequirements(climber);
-            this.climber = climber;
+            this.climberTilt = climberTilt;
         }
     
     // **********************************************
@@ -43,32 +43,28 @@ public class CommandStartTilt extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        // TODO Auto-generated method stub
-        super.end(interrupted);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        climber.stopTilt();
+        climberTilt.stopTilt();
     }
 
     @Override
     public void execute() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
-        climber.startTilt("forward");
+        climberTilt.startTilt("forward");
     }
 
     @Override
     public void initialize() {
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
-        // Reset the start speed of climp
-        // climber.resetSpeed();
     }
 
     @Override
     public boolean isFinished() {
-        // boolean encoderActive = !climber.getIgnoreEncoder();
-        // boolean isFullyTilted = climber.getIsFullyTiltedOut();
-        // return (encoderActive && isFullyTilted);
-        return false;
+        boolean encoderActive = !climberTilt.getIgnoreEncoder();
+        boolean isFullyTilted = climberTilt.getIsFullyTiltedOut();
+        return (encoderActive && isFullyTilted);
+        // return false;
     }
     
 }

@@ -23,37 +23,30 @@ import frc.robot.utils.PIDCoef;
 
 public class ClimberOuter extends SubsystemBase {
   /** Creates a new ClimberOuter. */
-  private ClimberTilt climberTilt = new ClimberTilt();
   private TalonFX outerArmMotor;
   private double outerArmSpeed = 1.0;
 
   private boolean ignoreEncoder = true;
   private boolean resetOuterArmEncoder = false;
 
-  private final String subsystemName = "Outer Arm Climber";
-
-  private NetworkTable netTblOuterClimber = NetworkTableInstance.getDefault().getTable(subsystemName);
-
-  private NetworkTableEntry entryOuterArmSpeed= netTblOuterClimber.getEntry("Outer Arm Speed");
-  private NetworkTableEntry entryOuterArmMotorSpeed= netTblOuterClimber.getEntry("OuterArmMotorSpeed");
-  private NetworkTableEntry entryResetOuterArmEncoder = netTblOuterClimber.getEntry("Reset Outer Arm Encoder");
-  private NetworkTableEntry entryOuterArmPos = netTblOuterClimber.getEntry("Outer Encoder");
-  private NetworkTableEntry entryIgnoreEncoder = netTblOuterClimber.getEntry("Ignore Encoder");
+ 
   public ClimberOuter() {
-    setNetworkTableListeners();
+    System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
+
     init();
 
-    PIDCoef outerArmCoef = new PIDCoef(subsystemName, "Outer Arm", outerArmMotor, 0.15);
+    PIDCoef outerArmCoef = new PIDCoef(this.getClass().getSimpleName(), "Outer Arm", outerArmMotor, 0.15);
 
     SmartDashboard.putData(this);
   }
+
   public boolean getIgnoreEncoder(){
     return this.ignoreEncoder;
   }
-  public boolean getAreOuterArmsTooLong(){
-    // returns true when the limit switch is engaged and the outer arms exceed the encoder position
-    return getOuterClimberPosition() >= ClimberConfig.OUTER_LEGAL_LIMIT && climberTilt.getIsTiltFullyRetracted();
-}
+//   public boolean getAreOuterArmsTooLong(){
+//     // returns true when the limit switch is engaged and the outer arms exceed the encoder position
+//     return getOuterClimberPosition() >= ClimberConfig.OUTER_LEGAL_LIMIT && climberTilt.getIsTiltFullyRetracted();
+// }
 
   public void outerArmToPosition(double targetPosition){
     outerArmMotor.set(TalonFXControlMode.Position, targetPosition);
@@ -65,7 +58,7 @@ public class ClimberOuter extends SubsystemBase {
   public void startOuterArms(String direction){
     // limits speed between 0.1 - 0.5
     //outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
-    double speed = 0.0;
+    double speed = 0.5;
 
     if(direction.equalsIgnoreCase("forward")){
         speed = outerArmSpeed;
@@ -74,13 +67,16 @@ public class ClimberOuter extends SubsystemBase {
     }
     outerArmMotor.set(ControlMode.PercentOutput, speed);
 }
+
 public void runOuterArmsToSpeed(double speed){
   outerArmMotor.set(ControlMode.PercentOutput, speed);
+  outerArmSpeed = speed;
 }
 
 public void stopOuterArms(){
 //outerArmSpeed = 0.0;
   outerArmMotor.set(ControlMode.PercentOutput, 0.0);
+  outerArmSpeed = 0;
 }
 
 public void init(){
@@ -94,43 +90,43 @@ public void init(){
   outerArmMotor.configFactoryDefault();
   outerArmMotor.setNeutralMode(NeutralMode.Brake);
 
-    outerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
-    outerArmMotor.configNominalOutputForward(0, timeOut);
-		outerArmMotor.configNominalOutputReverse(0, timeOut);
-		outerArmMotor.configPeakOutputForward(maxPower, timeOut);
-		outerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
-    outerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
+  outerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
+  outerArmMotor.configNominalOutputForward(0, timeOut);
+  outerArmMotor.configNominalOutputReverse(0, timeOut);
+  outerArmMotor.configPeakOutputForward(maxPower, timeOut);
+  outerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
+  outerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
 
-    outerArmMotor.config_kF(pidIndex, 0, timeOut);
-    outerArmMotor.config_kP(pidIndex, 0.15, timeOut);
-    outerArmMotor.config_kI(pidIndex, 0, timeOut);
-    outerArmMotor.config_kD(pidIndex, 0, timeOut);
-    outerArmMotor.setSelectedSensorPosition(0.0);
+  outerArmMotor.config_kF(pidIndex, 0, timeOut);
+  outerArmMotor.config_kP(pidIndex, 0.15, timeOut);
+  outerArmMotor.config_kI(pidIndex, 0, timeOut);
+  outerArmMotor.config_kD(pidIndex, 0, timeOut);
+  outerArmMotor.setSelectedSensorPosition(0.0);
 }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+@Override
+public void periodic() {
+  // This method will be called once per scheduler run
 
-    entryOuterArmMotorSpeed.setDouble(outerArmMotor.getMotorOutputPercent());
-    entryOuterArmPos.setDouble(outerArmMotor.getSelectedSensorPosition());
-    entryOuterArmSpeed.setDouble(outerArmSpeed);
-  }
+}
 
-  public void setNetworkTableListeners(){
-    entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
-    String resetOuterArmEncoderEntryName = NetworkTable.basenameKey(entryResetOuterArmEncoder.getName());
-    netTblOuterClimber.addEntryListener(resetOuterArmEncoderEntryName, (table, key, entry, value, flags)->{
-        if (value.getBoolean()){
-            System.out.println("Resetting Outer Arm Encoder");
-            outerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
-            outerArmMotor.setSelectedSensorPosition(0);
-            resetOuterArmEncoder = false;
-            entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
-        }
-    },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-  }
+private void resetOuterArmEncoder(boolean resetFlag){
+    // Reset Tilt Encoder when the value on the SmartDashboard is changed to True
+    System.out.println("Resetting Outer Arm Encoder");
+    // stop the motor
+    outerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
+    // reset the encoders
+    outerArmMotor.setSelectedSensorPosition(0);
+    // set the flag back to false
+    resetOuterArmEncoder = false;
+}
+
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Outer Arm Speed", () -> this.outerArmSpeed, (value) -> this.outerArmSpeed = value);
+    builder.addDoubleProperty("Outer Arm Speed", () -> this.outerArmSpeed, null);
+    builder.addDoubleProperty("Outer Arm Encoder", () -> outerArmMotor.getSelectedSensorPosition(), null);
+    builder.addBooleanProperty("Reset Outer Arm Encoder", () -> resetOuterArmEncoder, this::resetOuterArmEncoder);
+    builder.addBooleanProperty("Ignore Outer Arm Encoder", () -> ignoreEncoder, value -> {ignoreEncoder = value; System.out.printf("Setting outerArm ignoreEncoder %s\n", ignoreEncoder);});
+    builder.addStringProperty("Outer Arm Command", () -> (this.getCurrentCommand() == null) ? "None" : this.getCurrentCommand().getName(), null);
+
   }
 }

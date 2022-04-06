@@ -140,7 +140,7 @@ public class RobotContainer {
   public final ClimberOuter climberOuter = new ClimberOuter();
   private final DriveBase driveBase = new DriveBase();
 
-  private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climberOuter.getAreOuterArmsTooLong());
+  // private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climberOuter.getAreOuterArmsTooLong());
 
 
   // Instantiate Intake commands
