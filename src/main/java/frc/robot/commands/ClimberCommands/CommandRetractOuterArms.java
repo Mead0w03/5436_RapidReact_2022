@@ -2,16 +2,16 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberOuter;
 
 public class CommandRetractOuterArms extends CommandBase {
-    private Climber climber;
+    private ClimberOuter climber;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandRetractOuterArms(Climber climber){
+        public CommandRetractOuterArms(ClimberOuter climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             //this.addRequirements(climber);

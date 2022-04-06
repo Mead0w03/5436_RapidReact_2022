@@ -8,16 +8,16 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberTilt;
 import frc.robot.Constants.ClimberConfig;
 
 public class CommandFullTilt extends CommandBase {
   /** Creates a new CommandFullTilt. */
-  private Climber climber;
+  private ClimberTilt climber;
   private Timer timer = new Timer();
   private double timeLimit;
 
-  public CommandFullTilt(Climber climber) {
+  public CommandFullTilt(ClimberTilt climber) {
     
     //this.addRequirements(climber);
     this.climber = climber;

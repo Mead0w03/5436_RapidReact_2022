@@ -4,17 +4,17 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberOuter;
 
 public class CommandMoveOuterArmsVariableSpeed extends CommandBase {
-    private Climber climber;
+    private ClimberOuter climber;
     private DoubleSupplier stickInput;
     
     // **********************************************
     // Constructors
     // **********************************************
 
-    public CommandMoveOuterArmsVariableSpeed(Climber climber, DoubleSupplier stickInput){
+    public CommandMoveOuterArmsVariableSpeed(ClimberOuter climber, DoubleSupplier stickInput){
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     
         //this.addRequirements(climber);

@@ -3,10 +3,10 @@ package frc.robot.commands.ClimberCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberOuter;
 
 public class CommandRetractOuterArmsToLegalLimit extends CommandBase {
-    private Climber climber;
+    private ClimberOuter climber;
     private Timer timer;
     private double timeLimit = 1.5;
     
@@ -15,7 +15,7 @@ public class CommandRetractOuterArmsToLegalLimit extends CommandBase {
     // Constructors
     // **********************************************
 
-        public CommandRetractOuterArmsToLegalLimit(Climber climber){
+        public CommandRetractOuterArmsToLegalLimit(ClimberOuter climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             //this.addRequirements(climber);

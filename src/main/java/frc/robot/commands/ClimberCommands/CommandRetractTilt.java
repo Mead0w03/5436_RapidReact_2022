@@ -2,17 +2,17 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberTilt;
 
 public class CommandRetractTilt extends CommandBase {
-    private Climber climber;
+    private ClimberTilt climber;
     
     
     // **********************************************
     // Constructors
     // **********************************************
 
-        public CommandRetractTilt(Climber climber){
+        public CommandRetractTilt(ClimberTilt climber){
             System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
             //this.addRequirements(climber);

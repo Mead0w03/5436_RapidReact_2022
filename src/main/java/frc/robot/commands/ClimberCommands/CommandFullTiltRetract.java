@@ -5,15 +5,15 @@
 package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberTilt;
 import frc.robot.Constants.ClimberConfig;
 
 public class CommandFullTiltRetract extends CommandBase {
   /** Creates a new CommandFullTiltRetract. */
-  private Climber climber;
+  private ClimberTilt climber;
   private double timeLimit;
 
-  public CommandFullTiltRetract(Climber climber) {
+  public CommandFullTiltRetract(ClimberTilt climber) {
     //this.addRequirements(climber);
     this.climber = climber;
   }

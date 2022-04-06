@@ -7,14 +7,14 @@ package frc.robot.commands.ClimberCommands;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberOuter;
 import frc.robot.Constants.ClimberConfig;
 
 public class CommandOuterArmToPosition extends CommandBase {
   /** Creates a new CommandFullTilt. */
-  private Climber climber;
+  private ClimberOuter climber;
   double targetPosition;
-  public CommandOuterArmToPosition(Climber climber, double targetPosition) {
+  public CommandOuterArmToPosition(ClimberOuter climber, double targetPosition) {
     
     //this.addRequirements(climber);
     this.climber = climber;

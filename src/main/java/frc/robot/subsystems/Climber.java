@@ -36,21 +36,13 @@ public class Climber extends SubsystemBase {
 // **********************************************
 // Actuators
 private TalonFX innerArmMotor;
-private TalonFX outerArmMotor;
 private VictorSPX solenoidMotor;
-private CANSparkMax tiltMotor;
 
-// Sensors
-private DigitalInput tiltRetractLimit;
-private RelativeEncoder tiltEncoder;
 
-// Controllers
-private SparkMaxPIDController tiltPIDController;
+
 
 // arm speed variables
 private double innerArmSpeed = 0.6;
-private double outerArmSpeed = 1.0;
-private double tiltSpeed = 0.25;
 
 private final double startSpeed = 0.5;
 
@@ -58,10 +50,9 @@ private boolean solenoidEngaged = false;
 
 private boolean ignoreEncoder = true;
 private boolean resetInnerArmEncoder = false;
-private boolean resetOuterArmEncoder = false;
-private boolean resetTiltEncoder = false;
 
-private double tiltTimeLimit = 1.5;
+
+
 
 private final String subsystemName = "Climber";
 
@@ -71,33 +62,29 @@ private NetworkTableEntry entryCurrentCommand= netTblClimber.getEntry("Climber C
 
 // Arm Speed Set Points
 private NetworkTableEntry entryInnerArmSpeed= netTblClimber.getEntry("Inner Arm Speed");
-private NetworkTableEntry entryTiltSpeed= netTblClimber.getEntry("Tilt Speed");
-private NetworkTableEntry entryOuterArmSpeed= netTblClimber.getEntry("Outer Arm Speed");
+
 
 // Actual Motor Speeds
 private NetworkTableEntry entryInnerArmMotorSpeed= netTblClimber.getEntry("InnerArmMotorSpeed");
-private NetworkTableEntry entryOuterArmMotorSpeed= netTblClimber.getEntry("OuterArmMotorSpeed");
-private NetworkTableEntry entryTiltMotorSpeed= netTblClimber.getEntry("TiltMotorSpeed");
+
 
 // Encoder Resets
 private NetworkTableEntry entryResetInnerArmEncoder = netTblClimber.getEntry("Reset Inner Arm Encoder");
-private NetworkTableEntry entryResetOuterArmEncoder = netTblClimber.getEntry("Reset Outer Arm Encoder");
-private NetworkTableEntry entryResetTiltEncoder = netTblClimber.getEntry("Reset Tilt Encoder");
+
 
 // Encoder override
 private NetworkTableEntry entryIgnoreEncoder = netTblClimber.getEntry("Ignore Encoder");
 
 // Encoder Setpoints
-private NetworkTableEntry entryTiltTimeLimit = netTblClimber.getEntry("Tilt Time Limit");
-private NetworkTableEntry entryTiltRetractLimit = netTblClimber.getEntry("Tilt Retract Limit Switch");
+
 
 // Solenoid State
 private NetworkTableEntry entrySolenoidEngaged = netTblClimber.getEntry("SolenoidEngaged");
 
 // Encoder Values
-private NetworkTableEntry entryOuterArmPos = netTblClimber.getEntry("Outer Encoder");
+
 private NetworkTableEntry entryInnerArmPos = netTblClimber.getEntry("Inner Encoder");
-private NetworkTableEntry entryTiltMotorPos = netTblClimber.getEntry("Tilt Encoder");
+
 
 // Tilt PIDF Values
 // private NetworkTableEntry entryTiltKp = netTblClimber.getEntry("Tilt kP");
@@ -126,9 +113,9 @@ public Climber(){
     setNetworkTableListeners();
 
     // PID Coefficients
-    PIDCoef tiltCoef = new PIDCoef(subsystemName, "Tilt", tiltMotor, 0.2);
+    
     PIDCoef innerArmCoef = new PIDCoef(subsystemName, "Inner Arm", innerArmMotor, 0.15);
-    PIDCoef outerArmCoef = new PIDCoef(subsystemName, "Outer Arm", outerArmMotor, 0.15);
+   
     
     SmartDashboard.putData(this);   
 }
@@ -142,30 +129,17 @@ public Climber(){
         return this.ignoreEncoder;
     }
 
-    public boolean getIsTiltFullyRetracted(){
-        return tiltMotor.getEncoder().getPosition() <= ClimberConfig.FULLY_TILTED_IN;
-    }
+   
 
-    public boolean getIsFullyTiltedOut(){
-        return tiltMotor.getEncoder().getPosition() >= ClimberConfig.FULLY_TILTED_OUT;
-    }
 
-    public double getTiltTimeLimit(){
-        return tiltTimeLimit;
-    }
 
-    public boolean getAreOuterArmsTooLong(){
-        // returns true when the limit switch is engaged and the outer arms exceed the encoder position
-        return getOuterClimberPosition() >= ClimberConfig.OUTER_LEGAL_LIMIT && getIsTiltFullyRetracted();
-      }
+
 
     public double getClimberPosition(){
         return innerArmMotor.getSelectedSensorPosition();
     }
 
-    public double getOuterClimberPosition(){
-        return outerArmMotor.getSelectedSensorPosition();
-    }
+
 
 // **********************************************
 // Class Methods
@@ -176,13 +150,6 @@ public Climber(){
 // Instance Methods
 // **********************************************
 
-    public NetworkTableEntry getEntryTiltTimeLimit() {
-        return entryTiltTimeLimit;
-    }
-
-    public void setEntryTiltTimeLimit(NetworkTableEntry entryTiltTimeLimit) {
-        this.entryTiltTimeLimit = entryTiltTimeLimit;
-    }
 
     public void resetSpeed(){
         innerArmSpeed = startSpeed;
@@ -190,12 +157,12 @@ public Climber(){
 
     public void innerArmUp(){
         // todo:make speed variable
-        innerArmMotor.set(ControlMode.PercentOutput, -innerArmSpeed);
+        innerArmMotor.set(ControlMode.PercentOutput, innerArmSpeed);
         // rightMotor.set(climbSpeed);
     }
 
     public void innerArmDown(){
-        innerArmMotor.set(ControlMode.PercentOutput, innerArmSpeed);
+        innerArmMotor.set(ControlMode.PercentOutput, -innerArmSpeed);
         // rightMotor.set(-climbSpeed);
     }
 
@@ -209,55 +176,21 @@ public Climber(){
         innerArmMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
-    public void startTilt(String direction){
-        double speed = 0.0;
 
-        if(direction.equals("forward")) {
-            speed = tiltSpeed;            
-        } else if(direction.equals("retract")) {
-            speed = -tiltSpeed;
-        }
 
-        tiltMotor.set(speed);
-    }
 
-    public void stopTilt(){
-        tiltMotor.set(0.0);
-    }
 
-    public void tiltToPosition(double targetPosition){
-        tiltPIDController.setReference(targetPosition, ControlType.kPosition);
-    }
+   
 
     public void innerArmToPosition(double targetPosition){
         innerArmMotor.set(TalonFXControlMode.Position, targetPosition);
     } 
     
-    public void outerArmToPosition(double targetPosition){
-        outerArmMotor.set(TalonFXControlMode.Position, targetPosition);
-    }
 
-    public void startOuterArms(String direction){
-        // limits speed between 0.1 - 0.5
-        //outerArmSpeed = xboxController.getRawAxis(outerArmAxis.value) / 2.0;
-        double speed = 0.0;
 
-        if(direction.equalsIgnoreCase("forward")){
-            speed = outerArmSpeed;
-        } else if(direction.equalsIgnoreCase("retract")) {
-           speed = -outerArmSpeed;
-        }
-        outerArmMotor.set(ControlMode.PercentOutput, speed);
-    }
+    
 
-    public void runOuterArmsToSpeed(double speed){
-        outerArmMotor.set(ControlMode.PercentOutput, speed);
-    }
 
-    public void stopOuterArms(){
-//outerArmSpeed = 0.0;
-        outerArmMotor.set(ControlMode.PercentOutput, 0.0);
-    }
 
     public void engageRatchet(){
         solenoidMotor.set(ControlMode.PercentOutput, 0);
@@ -283,65 +216,60 @@ public Climber(){
         
         // Update actual motor speeds
         entryInnerArmMotorSpeed.setDouble(innerArmMotor.getMotorOutputPercent());
-        entryOuterArmMotorSpeed.setDouble(outerArmMotor.getMotorOutputPercent());
-        entryTiltMotorSpeed.setDouble(tiltMotor.get());
         
         // Update tiltRetractLimit switch state
-        entryTiltRetractLimit.setBoolean(tiltRetractLimit.get());
+        
 
         // update state of the solenoid
         entrySolenoidEngaged.setBoolean(solenoidEngaged);
         
         // update encoder  positions
-        entryOuterArmPos.setDouble(outerArmMotor.getSelectedSensorPosition());
+        
         entryInnerArmPos.setDouble(innerArmMotor.getSelectedSensorPosition());
-        entryTiltMotorPos.setDouble(tiltEncoder.getPosition());
+        
 
         entryInnerArmSpeed.setDouble(innerArmSpeed);
-        entryOuterArmSpeed.setDouble(outerArmSpeed);
-        entryTiltSpeed.setDouble(tiltSpeed);
-        entryTiltTimeLimit.setDouble(tiltTimeLimit);
+        
+        
+        
 
     }
 
     public void init() {
         // instantiate motors
         innerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
-        outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
         solenoidMotor = new VictorSPX(CanBusConfig.SOLENOID);
-        tiltMotor = new CANSparkMax(CanBusConfig.TILT, MotorType.kBrushless);
+        
 
         
         //instantiate sensors
-        tiltRetractLimit = new DigitalInput(9);
-        tiltEncoder = tiltMotor.getEncoder();
+        
+        
     
         // clear all faults
         innerArmMotor.clearStickyFaults();
-        outerArmMotor.clearStickyFaults();
+       
         solenoidMotor.clearStickyFaults();
-        tiltMotor.clearFaults();
+        
     
         // set factory default for all motors
         innerArmMotor.configFactoryDefault();
-        outerArmMotor.configFactoryDefault();
+        
         solenoidMotor.configFactoryDefault();
-        tiltMotor.restoreFactoryDefaults();
+       
         
         // set braking mode for all
         innerArmMotor.setNeutralMode(NeutralMode.Brake);
-        outerArmMotor.setNeutralMode(NeutralMode.Brake);
+        
         solenoidMotor.setNeutralMode(NeutralMode.Brake);
-        tiltMotor.setIdleMode(IdleMode.kBrake);
+        
     
         // Invert motors
         innerArmMotor.setInverted(true);
-        tiltMotor.setInverted(true);
+        
     
         // Setup PID controller for tilt Motor
-        tiltPIDController = tiltMotor.getPIDController();
-        tiltPIDController.setP(0.2);
-        tiltPIDController.setOutputRange(-0.3, 0.3);
+ 
 
         // Setup PID controller for Inner Arm
         /* Config the sensor used for Primary PID and sensor direction */
@@ -363,18 +291,10 @@ public Climber(){
 
 
         // Setup PID controller for Outer Arm
-        outerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
-        outerArmMotor.configNominalOutputForward(0, timeOut);
-		outerArmMotor.configNominalOutputReverse(0, timeOut);
-		outerArmMotor.configPeakOutputForward(maxPower, timeOut);
-		outerArmMotor.configPeakOutputReverse(-maxPower, timeOut);
-        outerArmMotor.configAllowableClosedloopError(pidIndex, allowableError, timeOut);
+        
 
 		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
-		outerArmMotor.config_kF(pidIndex, 0, timeOut);
-		outerArmMotor.config_kP(pidIndex, 0.15, timeOut);
-		outerArmMotor.config_kI(pidIndex, 0, timeOut);
-		outerArmMotor.config_kD(pidIndex, 0, timeOut);
+		
 
 
         // engage the ratchet
@@ -382,8 +302,8 @@ public Climber(){
 
         // zero the endoers
         innerArmMotor.setSelectedSensorPosition(0.0);
-        outerArmMotor.setSelectedSensorPosition(0.0);
-        tiltEncoder.setPosition(0.0);
+        
+        
 
     }
 
@@ -414,10 +334,8 @@ public Climber(){
         // TODO Auto-generated method stub
         System.out.println("Running initSendable in Climber");
         builder.addDoubleProperty("Inner Arm Speed", () -> this.innerArmSpeed, (value) -> {this.innerArmSpeed = value; System.out.printf("innerArmSpeed=%.2f\n", innerArmSpeed);});
-        builder.addDoubleProperty("Outer Arm Speed", () -> this.outerArmSpeed, (value) -> this.outerArmSpeed = value);
-        builder.addDoubleProperty("Tilt Speed", () -> this.tiltSpeed, (value) -> this.tiltSpeed = value);
-        builder.addDoubleProperty("Tilt Time Limit", () -> this.tiltTimeLimit, (value) -> this.tiltTimeLimit = value);
-        builder.addBooleanProperty("Ignore Encoders", () -> this.ignoreEncoder, (value) -> {this.ignoreEncoder = value; System.out.printf("Setting encoder %s\n", ignoreEncoder);});
+        
+        
         builder.addDoubleProperty("Enter Inner Climb Mode", () -> ClimberConfig.INNER_ENTER_CLIMB, (value) -> ClimberConfig.INNER_ENTER_CLIMB = value);
         builder.addDoubleProperty("Inner Prep Mid Climb", () -> ClimberConfig.INNER_PREP_MID, (value) -> ClimberConfig.INNER_PREP_MID = value);
         builder.addDoubleProperty("Inner Mid Climb", () -> ClimberConfig.INNER_CLIMB_MID, (value) -> ClimberConfig.INNER_CLIMB_MID = value);
@@ -486,30 +404,7 @@ public Climber(){
         },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         
         // Outer Arm
-        entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
-        String resetOuterArmEncoderEntryName = NetworkTable.basenameKey(entryResetOuterArmEncoder.getName());
-        netTblClimber.addEntryListener(resetOuterArmEncoderEntryName, (table, key, entry, value, flags)->{
-            if (value.getBoolean()){
-                System.out.println("Resetting Outer Arm Encoder");
-                outerArmMotor.set(TalonFXControlMode.PercentOutput, 0);
-                outerArmMotor.setSelectedSensorPosition(0);
-                resetOuterArmEncoder = false;
-                entryResetOuterArmEncoder.setBoolean(resetOuterArmEncoder);
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        
-        // Tilt Motor
-        entryResetTiltEncoder.setBoolean(resetTiltEncoder);
-        String resetTiltEncoderEntryName = NetworkTable.basenameKey(entryResetTiltEncoder.getName());
-        netTblClimber.addEntryListener(resetTiltEncoderEntryName, (table, key, entry, value, flags)->{
-            if (value.getBoolean()){
-                System.out.println("Resetting Tilt Encoder");
-                tiltMotor.set(0);
-                tiltEncoder.setPosition(0.0);
-                resetTiltEncoder = false;
-                entryResetTiltEncoder.setBoolean(resetTiltEncoder);
-            }
-        },  EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+      
         // *****************************************************************************************
         
         

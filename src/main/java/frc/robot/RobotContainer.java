@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberTilt;
+import frc.robot.subsystems.ClimberOuter;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.triggers.LeftTrigger;
@@ -134,9 +136,11 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   public final Climber climber = new Climber();
+  public final ClimberTilt climberTilt = new ClimberTilt();
+  public final ClimberOuter climberOuter = new ClimberOuter();
   private final DriveBase driveBase = new DriveBase();
 
-  private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climber.getAreOuterArmsTooLong());
+  private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climberOuter.getAreOuterArmsTooLong());
 
 
   // Instantiate Intake commands
@@ -159,18 +163,18 @@ public class RobotContainer {
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
   private final CommandDecreaseClimberSpeed commandDecreaseClimberSpeed = new CommandDecreaseClimberSpeed(climber);
-  private final CommandExtendOuterArms commandExtendOuterArms = new CommandExtendOuterArms(climber);
-  private final CommandStartTilt commandStartTilt = new CommandStartTilt(climber);
-  private final CommandStopTilt commandStopTilt = new CommandStopTilt(climber);
-  private final CommandFullTilt commandFullTilt = new CommandFullTilt(climber);
-  private final CommandFullTiltRetract commandFullTiltRetract = new CommandFullTiltRetract(climber);
+  private final CommandExtendOuterArms commandExtendOuterArms = new CommandExtendOuterArms(climberOuter);
+  private final CommandStartTilt commandStartTilt = new CommandStartTilt(climberTilt);
+  private final CommandStopTilt commandStopTilt = new CommandStopTilt(climberTilt);
+  private final CommandFullTilt commandFullTilt = new CommandFullTilt(climberTilt);
+  private final CommandFullTiltRetract commandFullTiltRetract = new CommandFullTiltRetract(climberTilt);
 
-  private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
-  private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climber);
+  private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climberTilt);
+  private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climberOuter);
   private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
   private final CommandStopSolenoid commandStopSolenoid = new CommandStopSolenoid(climber);
 
-  private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
+  private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climberOuter);
 
   private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
   private final CommandSolenoidDescend commandSolenoidDescend = new CommandSolenoidDescend(climber, this);
@@ -223,7 +227,7 @@ public class RobotContainer {
     autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
     autonChooser.addOption("Wall Routine", autonWallRoutine);
     SmartDashboard.putData(autonChooser);
-    SmartDashboard.putData(new CommandFullTilt(climber));
+    SmartDashboard.putData(new CommandFullTilt(climberTilt));
 
   }
 
@@ -291,7 +295,7 @@ public class RobotContainer {
     // rightStickUp.whileActiveContinuous(commandExtendOuterArms);
     // rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
     // rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climberOuter, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
     
     //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
 
@@ -313,29 +317,29 @@ public class RobotContainer {
 
     ParallelCommandGroup enterClimbModeCommandGroup = new ParallelCommandGroup(
         new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ENTER_CLIMB),
-        new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ENTER_CLIMB),
-        new CommandFullTilt(climber) 
+        new CommandOuterArmToPosition(climberOuter, ClimberConfig.OUTER_ENTER_CLIMB),
+        new CommandFullTilt(climberTilt) 
     );
     SmartDashboard.putData("Enter Climb Mode", enterClimbModeCommandGroup);
 
     ParallelCommandGroup prepClimbMidRungCommandGroup = new ParallelCommandGroup(
       new CommandInnerArmToPosition(climber, ClimberConfig.INNER_PREP_MID),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
-      new CommandFullTilt(climber)
+      new CommandOuterArmToPosition(climberOuter, ClimberConfig.OUTER_REACH_MID),
+      new CommandFullTilt(climberTilt)
     );
     SmartDashboard.putData("Prep Climb Mode", prepClimbMidRungCommandGroup);
       
     ParallelCommandGroup climbMidRungCommandGroup = new ParallelCommandGroup(
       new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_MID),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
-      new CommandFullTilt(climber)
+      new CommandOuterArmToPosition(climberOuter, ClimberConfig.OUTER_REACH_MID),
+      new CommandFullTilt(climberTilt)
     );
     SmartDashboard.putData("Climb Middle Rung", climbMidRungCommandGroup);
 
     ParallelCommandGroup advanceHighRungCommandGroup = new ParallelCommandGroup(
       new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ADVANCE_HIGH),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ADVANCE_HIGH),
-      new CommandFullTiltRetract(climber).beforeStarting(new WaitCommand(1))
+      new CommandOuterArmToPosition(climberOuter, ClimberConfig.OUTER_ADVANCE_HIGH),
+      new CommandFullTiltRetract(climberTilt).beforeStarting(new WaitCommand(1))
     );
     SmartDashboard.putData("Advance to high rung", advanceHighRungCommandGroup);
 

@@ -22,7 +22,11 @@
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/Ungrouped/DigitalInput[9]": "Digital Input",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Advance to high rung": "Command",
+      "/SmartDashboard/Climb Middle Rung": "Command",
       "/SmartDashboard/CommandFullTilt": "Command",
+      "/SmartDashboard/Enter Climb Mode": "Command",
+      "/SmartDashboard/Prep Climb Mode": "Command",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }
   },
