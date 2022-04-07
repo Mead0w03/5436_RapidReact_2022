@@ -6,8 +6,10 @@ package frc.robot;
 
 import java.util.Timer.*;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 //import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,8 +21,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private PowerDistribution DrivePDP;
 
   private RobotContainer m_robotContainer;
 
@@ -39,7 +44,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     display_timer.reset();
     timePassed = 0;
+    DrivePDP = new PowerDistribution(0, ModuleType.kCTRE);
     //SmartDashboard.putData(Scheduler.getInstance());
+
   }
 
   /**
@@ -64,8 +71,19 @@ public class Robot extends TimedRobot {
       timePassed =  90;
     }
     
-
-
+    
+    double driveVolt = DrivePDP.getVoltage();
+    double driveCurrent = DrivePDP.getTotalCurrent();
+    double driveFrontLeft = DrivePDP.getCurrent(12);
+    double driveBackLeft = DrivePDP.getCurrent(13);
+    double driveBackRight = DrivePDP.getCurrent(14);
+    double driveFrontRight = DrivePDP.getCurrent(15);
+    SmartDashboard.putNumber("Total Voltage", driveCurrent);
+    SmartDashboard.putNumber("Total Current", driveVolt);
+    SmartDashboard.putNumber("Front Left Current", driveFrontLeft);
+    SmartDashboard.putNumber("Back Left Current", driveBackLeft);
+    SmartDashboard.putNumber("Back Right Current", driveBackRight);
+    SmartDashboard.putNumber("Front Right Current", driveFrontRight);
     SmartDashboard.putNumber("Current Time: ", 90 - timePassed);
   }
 /*
