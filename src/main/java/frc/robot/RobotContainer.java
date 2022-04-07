@@ -45,6 +45,7 @@ import frc.robot.commands.ClimberCommands.CommandFullTiltRetract;
 import frc.robot.commands.ClimberCommands.CommandStartTilt;
 import frc.robot.commands.ClimberCommands.CommandDecreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandClimb;
+import frc.robot.commands.ClimberCommands.CommandClimbAscend;
 import frc.robot.commands.ClimberCommands.CommandContinueDescend;
 import frc.robot.commands.ClimberCommands.CommandIncreaseClimberSpeed;
 import frc.robot.commands.ClimberCommands.CommandInnerArmToPosition;
@@ -110,8 +111,8 @@ public class RobotContainer {
   private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
   private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90 || xboxController.getPOV() == 45 || xboxController.getPOV() == 135);
   private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270 || xboxController.getPOV() == 315 || xboxController.getPOV() == 225);
-  private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
-  private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
+  // private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
+  // private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
 
   
 
@@ -156,7 +157,8 @@ public class RobotContainer {
   //private final ConditionalCommand commandIntakeDown = new ConditionalCommand(commandIntakeDownPID, commandIntakeDownManual, intake.isRetractModePID());
   
   // Instantiate Climber Commands
-  private final CommandClimb commandClimb = new CommandClimb(climber, this);
+  private final CommandClimb commandClimbDescend = new CommandClimb(climber, this);
+  private final CommandClimbAscend commandClimbAscend = new CommandClimbAscend(climber);
   private final CommandContinueDescend commandContinueDescend = new CommandContinueDescend(climber, this);
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
@@ -289,7 +291,9 @@ public class RobotContainer {
       .whenReleased(commandIntakeStop); 
 
     // Climber commands - Secondary Commands
-    leftStickDown.whenActive(commandClimb)
+    leftStickDown.whenActive(commandClimbDescend)
+          .whenInactive(commandStopClimb);
+    leftStickUp.whenActive(commandClimbAscend)
           .whenInactive(commandStopClimb);
     
     // Inner Climber Commands
