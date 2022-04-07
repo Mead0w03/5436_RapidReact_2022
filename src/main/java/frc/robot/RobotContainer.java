@@ -211,13 +211,7 @@ public class RobotContainer {
 
   // PDP
 
-  PowerDistribution DrivePDP = new PowerDistribution(0, ModuleType.kCTRE);
-  double driveVolt = DrivePDP.getVoltage();
-  double driveCurrent = DrivePDP.getTotalCurrent();
-  double driveFrontLeft = DrivePDP.getCurrent(12);
-  double driveBackLeft = DrivePDP.getCurrent(13);
-  double driveBackRight = DrivePDP.getCurrent(14);
-  double driveFrontRight = DrivePDP.getCurrent(15);
+ 
   public RobotContainer() {
     // Configure the button bindings
 
@@ -231,12 +225,7 @@ public class RobotContainer {
     autonChooser.addOption("Wall Routine", autonWallRoutine);
     SmartDashboard.putData(autonChooser);
     SmartDashboard.putData(new CommandFullTilt(climberTilt));
-    SmartDashboard.putNumber("Total Voltage", driveCurrent);
-    SmartDashboard.putNumber("Total Current", driveVolt);
-    SmartDashboard.putNumber("Front Left Current", driveFrontLeft);
-    SmartDashboard.putNumber("Back Left Current", driveBackLeft);
-    SmartDashboard.putNumber("Back Right Current", driveBackRight);
-    SmartDashboard.putNumber("Front Right Current", driveFrontRight);
+
   }
 
   public void setOkToDescend(boolean inputValue){
