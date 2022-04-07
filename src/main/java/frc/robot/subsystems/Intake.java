@@ -160,9 +160,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void intakeStop(){
-        if(retractMode !="PID"){
-            intakeRetractRight.set(0);
-        }
+        intakeRetractRight.set(0);
         //left is declared as follower
     }
 

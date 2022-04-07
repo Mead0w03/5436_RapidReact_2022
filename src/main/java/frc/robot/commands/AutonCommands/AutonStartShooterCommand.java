@@ -10,7 +10,7 @@ public class AutonStartShooterCommand extends CommandBase {
 private Shooter autonShooter;
 private Timer timer;
 
-public AutonStartShooterCommand(Shooter shooter){
+public AutonStartShooterCommand(Shooter shooter, double d){
     this.autonShooter = shooter;
     timer = new Timer();
     this.addRequirements(autonShooter);
