@@ -85,10 +85,11 @@ public void init(){
   int allowableError = 0;
   int pidIndex = 0;
 
-  outerArmMotor = new TalonFX(CanBusConfig.INNER_ARM);
+  outerArmMotor = new TalonFX(CanBusConfig.OUTER_ARM);
   outerArmMotor.clearStickyFaults();
   outerArmMotor.configFactoryDefault();
   outerArmMotor.setNeutralMode(NeutralMode.Brake);
+  outerArmMotor.setInverted(true);
 
   outerArmMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, pidIndex, timeOut);
   outerArmMotor.configNominalOutputForward(0, timeOut);

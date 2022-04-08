@@ -152,7 +152,7 @@ public Climber(){
         
     
         // Invert motors
-        innerArmMotor.setInverted(true);
+        innerArmMotor.setInverted(false);
         
         // Setup PID controller for Inner Arm
         /* Config the sensor used for Primary PID and sensor direction */

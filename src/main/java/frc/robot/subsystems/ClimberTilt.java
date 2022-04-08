@@ -94,7 +94,7 @@ public void tiltToPosition(double targetPosition){
     tiltMotor.restoreFactoryDefaults();
     
     tiltMotor.setIdleMode(IdleMode.kBrake);
-    tiltMotor.setInverted(true);
+    tiltMotor.setInverted(false);
 
     
     tiltEncoder.setPosition(0.0);

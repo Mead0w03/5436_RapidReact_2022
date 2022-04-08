@@ -62,28 +62,28 @@ public final class Constants {
     public static class ClimberConfig{
         //inner arm
         public static final double TARGET_MOVEMENT = 0; //18500;
-        public static final double INNER_FULLY_DESCENDED = -193800;  //205000
-        public static final double INNER_FULLY_ASCENDED = 78000;
+        public static final double INNER_FULLY_DESCENDED = 340000;  //205000
+        public static final double INNER_FULLY_ASCENDED = -167000;
         public static  double INNER_CLIMB_READY = 10240;
-        public static  double INNER_ENTER_CLIMB = 40000;
-        public static double INNER_PREP_MID = -150000;
-        public static double INNER_CLIMB_MID = 70000;
-        public static double INNER_ADVANCE_HIGH = -100000;
+        public static  double INNER_ENTER_CLIMB = -100000;
+        public static double INNER_PREP_MID = 224000;
+        public static double INNER_CLIMB_MID = -100000;
+        public static double INNER_ADVANCE_HIGH = 200000;
         
         
         //outer arm
         public static final double OUTER_CLIMB_READY = 10240;
-        public static final double OUTER_FULLY_EXTENDED = 270000; //355000
-        public static final double OUTER_FULLY_RETRACTED = 7500;
+        public static final double OUTER_FULLY_EXTENDED = 250000; //355000
+        public static final double OUTER_FULLY_RETRACTED = 15000;
         public static final double OUTER_LEGAL_LIMIT = 275000;
-        public static double OUTER_ENTER_CLIMB = 7500;
+        public static double OUTER_ENTER_CLIMB = 10000;
         public static double OUTER_REACH_MID = 270000;
         public static double OUTER_ADVANCE_HIGH = 20000;
 
 
         //tilt
-        public static double FULLY_TILTED_OUT = 40.0;
-        public static  double FULLY_TILTED_IN = 0.0;
+        public static double FULLY_TILTED_OUT = 27;
+        public static  double FULLY_TILTED_IN = 5;
         
         
     }

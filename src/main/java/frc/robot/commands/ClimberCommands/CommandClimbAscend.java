@@ -39,7 +39,9 @@ public class CommandClimbAscend extends CommandBase {
   @Override
   public boolean isFinished() {
     boolean verdict = false;
-    if(!climber.getIgnoreEncoder() && climber.getClimberPosition() > Constants.ClimberConfig.INNER_FULLY_DESCENDED){
+    boolean encodersActive = !climber.getIgnoreEncoder();
+    boolean isFullyExtended = climber.getClimberPosition() > Constants.ClimberConfig.INNER_FULLY_DESCENDED;
+    if(encodersActive && isFullyExtended){
         verdict = true;
     }
     return verdict;

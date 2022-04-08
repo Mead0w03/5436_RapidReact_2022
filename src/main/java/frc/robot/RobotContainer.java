@@ -157,8 +157,8 @@ public class RobotContainer {
   //private final ConditionalCommand commandIntakeDown = new ConditionalCommand(commandIntakeDownPID, commandIntakeDownManual, intake.isRetractModePID());
   
   // Instantiate Climber Commands
-  private final CommandClimb commandClimbDescend = new CommandClimb(climber, this);
-  private final CommandClimbAscend commandClimbAscend = new CommandClimbAscend(climber);
+  private final CommandClimb commandRetractInner = new CommandClimb(climber, this);
+  private final CommandClimbAscend commandExtendInner = new CommandClimbAscend(climber);
   private final CommandContinueDescend commandContinueDescend = new CommandContinueDescend(climber, this);
   private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
   private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
@@ -280,9 +280,9 @@ public class RobotContainer {
       .whenReleased(commandIntakeStop); 
 
     // Climber commands - Secondary Commands
-    leftStickDown.whenActive(commandClimbDescend)
+    leftStickDown.whenActive(commandRetractInner)
           .whenInactive(commandStopClimb);
-    leftStickUp.whenActive(commandClimbAscend)
+    leftStickUp.whenActive(commandExtendInner)
           .whenInactive(commandStopClimb);
     
     // Inner Climber Commands

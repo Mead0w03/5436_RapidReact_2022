@@ -69,7 +69,9 @@ public class CommandClimb extends CommandBase{
     @Override
     public boolean isFinished() {
         boolean verdict = false;
-        if(!climber.getIgnoreEncoder() && climber.getClimberPosition() > Constants.ClimberConfig.INNER_FULLY_ASCENDED){
+        boolean encodersActive = !climber.getIgnoreEncoder();
+        boolean isFullyRetracted = climber.getClimberPosition() < Constants.ClimberConfig.INNER_FULLY_ASCENDED;
+        if(encodersActive && isFullyRetracted){
             verdict = true;
         }
         return verdict;
