@@ -45,7 +45,7 @@ public class CommandContinueDescend extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        robotContainer.setOkToDescend(false);
+        // robotContainer.setOkToDescend(false);
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         
     }
@@ -66,9 +66,10 @@ public class CommandContinueDescend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.INNER_FULLY_DESCENDED;
-        if(isFullyDescended) robotContainer.setIsFullyDescended(true);
-        return isFullyDescended;
+        // boolean isFullyDescended = climber.getClimberPosition() < ClimberConfig.INNER_FULLY_DESCENDED;
+        // if(isFullyDescended) robotContainer.setIsFullyDescended(true);
+        // return isFullyDescended;
+        return true;
     }
     
 }

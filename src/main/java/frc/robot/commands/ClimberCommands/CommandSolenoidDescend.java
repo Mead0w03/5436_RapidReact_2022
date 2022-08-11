@@ -51,13 +51,13 @@ public class CommandSolenoidDescend extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        if(robotContainer.getLStickUp()){
-            // climber.stop();
-            robotContainer.setOkToDescend(true);            
-        }else{
-            climber.stopAndEngageRatchet();
-            robotContainer.setOkToDescend(false);
-        }
+        // if(robotContainer.getLStickUp()){
+        //     // climber.stop();
+        //     robotContainer.setOkToDescend(true);            
+        // }else{
+        //     climber.stopAndEngageRatchet();
+        //     robotContainer.setOkToDescend(false);
+        // }
 
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
         

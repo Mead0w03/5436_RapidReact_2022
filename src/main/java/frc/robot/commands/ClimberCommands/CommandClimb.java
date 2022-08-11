@@ -47,7 +47,7 @@ public class CommandClimb extends CommandBase{
     
     @Override
     public void end(boolean interrupted) {
-        robotContainer.setIsFullyDescended(false);
+     //   robotContainer.setIsFullyDescended(false);
         climber.stop();
         System.out.println(String.format("Entering %s::%s", this.getClass().getSimpleName(), new Throwable().getStackTrace()[0].getMethodName()));
     }

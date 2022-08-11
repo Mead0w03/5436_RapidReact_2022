@@ -75,49 +75,6 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
   private XboxController xboxController = new XboxController(0); 
   private Joystick stick = new Joystick(1);
-  private boolean okToContinueDescend = false;
-  private boolean isFullyDescended = false;
-  //initialize buttons
-  private final LeftTrigger leftTrigger = new LeftTrigger();
-  private final Trigger rightTrigger = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightTrigger.value)>0.3);
-  private final JoystickButton aButton = new JoystickButton(xboxController, XboxController.Button.kA.value);
-  private final JoystickButton yButton = new JoystickButton(xboxController, XboxController.Button.kY.value);
-  private final JoystickButton rightBumper = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
-  private final JoystickButton leftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton xButton = new JoystickButton(xboxController, XboxController.Button.kX.value);
-  private final JoystickButton bButton = new JoystickButton(xboxController, XboxController.Button.kB.value);
-  private final SingleButton bButtonAlone = new SingleButton(bButton, leftBumper);
-  private final SingleButton xButtonAlone = new SingleButton(xButton, leftBumper);
-  private final DoubleButton bAndLeftBumper = new DoubleButton(bButton, leftBumper);
-  private final DoubleButton xAndLeftBumper = new DoubleButton(xButton, leftBumper);
-
-  private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
-  private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
-
-
-  private final JoystickButton stick7 = new JoystickButton(stick, 7);
-  private final JoystickButton stick8 = new JoystickButton(stick, 8);
-  private final JoystickButton stick9 = new JoystickButton(stick, 9);
-  private final JoystickButton stick10 = new JoystickButton(stick, 10);
-  private final JoystickButton stick11 = new JoystickButton(stick, 11);
-  private final JoystickButton stick12 = new JoystickButton(stick, 12);
-
-  private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.7);
-  private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.7);
-
-
-  private final Trigger dpadUp = new Trigger(() -> xboxController.getPOV() == 0);
-  private final Trigger dpadDown = new Trigger(() -> xboxController.getPOV() == 180);
-  private final Trigger dpadRight = new Trigger(() -> xboxController.getPOV() == 90 || xboxController.getPOV() == 45 || xboxController.getPOV() == 135);
-  private final Trigger dpadLeft = new Trigger(() -> xboxController.getPOV() == 270 || xboxController.getPOV() == 315 || xboxController.getPOV() == 225);
-  private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
-  private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
-
-  
-
-  // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
-  // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
-  private final Trigger rightStickEngaged = new Trigger(() -> Math.abs(xboxController.getRawAxis(XboxController.Axis.kRightY.value)) > 0.3);
 
   
 
@@ -131,248 +88,25 @@ public class RobotContainer {
   // TODO: Update the axis when instantiating Climber
   //TODO list: add stop commands #, assign commands to button, update spreadsheet, ask meadow about encoders
   // Instantiate subsystems
-  private final Intake intake = new Intake();
-  private final Shooter shooter = new Shooter();
-  public final Climber climber = new Climber();
   private final DriveBase driveBase = new DriveBase();
-
-  private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climber.getAreOuterArmsTooLong());
-
-
-  // Instantiate Intake commands
-  private final RunCommand commandCargoIn = new RunCommand(intake::cargoIn,intake);
-  private final RunCommand commandCargoOut = new RunCommand(intake::cargoOut, intake);
-  private final InstantCommand commandCargoStop = new InstantCommand(intake::cargoStop, intake);
-  private final RunCommand commandIntakeUpManual = new RunCommand(()-> intake.intakeMove("Up", "Manual"), intake);
-  private final RunCommand commandIntakeDownManual = new RunCommand(()-> intake.intakeMove("Down", "Manual"), intake);
-  private final RunCommand commandIntakeUpPID = new RunCommand(()-> intake.intakeMove("Up", "PID"), intake);
-  //private final RunCommand commandIntakeDownPID = new RunCommand(()-> intake.intakeMove("Down", "PID"), intake);
-  //private final InstantCommand commandChangeIntakeMode = new InstantCommand(intake::changeIntakeMode, intake);
-  private final InstantCommand commandIntakeStop = new InstantCommand(intake::intakeStop, intake);
-  private final InstantCommand commandResetIntakeEncoders = new InstantCommand(intake::resetRetractEncoders, intake);
-  //private final ConditionalCommand commandIntakeUp = new ConditionalCommand(commandIntakeUpPID, commandIntakeUpManual, intake.isRetractModePID());
-  //private final ConditionalCommand commandIntakeDown = new ConditionalCommand(commandIntakeDownPID, commandIntakeDownManual, intake.isRetractModePID());
-  
-  // Instantiate Climber Commands
-  private final CommandClimb commandClimb = new CommandClimb(climber, this);
-  private final CommandContinueDescend commandContinueDescend = new CommandContinueDescend(climber, this);
-  private final CommandStopClimb commandStopClimb = new CommandStopClimb(climber);
-  private final CommandIncreaseClimberSpeed commandIncreaseClimberSpeed = new CommandIncreaseClimberSpeed(climber);
-  private final CommandDecreaseClimberSpeed commandDecreaseClimberSpeed = new CommandDecreaseClimberSpeed(climber);
-  private final CommandExtendOuterArms commandExtendOuterArms = new CommandExtendOuterArms(climber);
-  private final CommandStartTilt commandStartTilt = new CommandStartTilt(climber);
-  private final CommandStopTilt commandStopTilt = new CommandStopTilt(climber);
-  private final CommandFullTilt commandFullTilt = new CommandFullTilt(climber);
-  private final CommandFullTiltRetract commandFullTiltRetract = new CommandFullTiltRetract(climber);
-
-  private final CommandRetractTilt commandRetractTilt = new CommandRetractTilt(climber);
-  private final CommandStopOuterArms commandStopOuterArms = new CommandStopOuterArms(climber);
-  private final CommandSolenoid commandSolenoid = new CommandSolenoid(climber);
-  private final CommandStopSolenoid commandStopSolenoid = new CommandStopSolenoid(climber);
-
-  private final CommandRetractOuterArms commandRetractOuterArms = new CommandRetractOuterArms(climber);
-
-  private final CommandSolenoidAscend commandSolenoidAscend = new CommandSolenoidAscend(climber);
-  private final CommandSolenoidDescend commandSolenoidDescend = new CommandSolenoidDescend(climber, this);
-
-  //private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandDescend);
-  private final SequentialCommandGroup commandGroupSolenoidDescend = new SequentialCommandGroup(commandStopSolenoid, commandSolenoidAscend, commandSolenoidDescend);
-
-  // Instantiate Shooter commands
-  private final CommandActivateShooter commandActivateShooter = new CommandActivateShooter(shooter);
-  private final CommandStopShooter commandStopShooter = new CommandStopShooter(shooter);
-  private final CommandReverseShooter commandReverseShooter = new CommandReverseShooter(shooter);
-  private final CommandFarHigh commandFarHigh = new CommandFarHigh(shooter);
-  private final CommandCloseLow commandCloseLow = new CommandCloseLow(shooter);
-  private final CommandStartFeeder commandStartFeeder = new CommandStartFeeder(shooter);
-  private final CommandStopFeeder commandStopFeeder = new CommandStopFeeder(shooter);
 
   private final DriveCommands commandDrive = new DriveCommands(driveBase, stick);
 
   //close high has not been created but drivers say it is a position
   //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
 
-  //Instantiate Auton commands
-  
-  private final AutonStartShooterCommand autonStartShooterCommand = new AutonStartShooterCommand(shooter, 2.0);
-  private final SequentialCommandGroup autonDriveShootCG = new SequentialCommandGroup(new AutonDriveCommand(driveBase, 1.5, 0.2), 
-  new AutonStartShooterCommand(shooter, 2.0), 
-  new AutonShooterCommand(shooter, intake, 1.5));
-  private final SequentialCommandGroup autonFullRoutineCG = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
-  new AutonCargoCommand(intake),
-  new AutonDriveCommand(driveBase, 2.0, 0.2),   
-  new AutonStartShooterCommand(shooter, 2.0), 
-  new AutonDriveCommand(driveBase, 1.0, -0.2), new AutonShooterCommand(shooter, intake, 3.0));
-  private final SequentialCommandGroup autonWallRoutine = new SequentialCommandGroup(new AutonIntakeDownCommand(intake),
-  new AutonCargoCommand(intake), new AutonDriveCommand(driveBase, 0.6, 0.2), new AutonStartShooterCommand(shooter, 2.0),
-  new AutonDriveCommand(driveBase, 0.6, -0.2), new AutonShooterCommand(shooter, intake, 3.0), new InstantCommand(()->intake.intakeMove("Up","PID")),
-  new AutonDriveCommand(driveBase, 1.0, 0.2));
-
-  //Auton routine chooser
-  private final SendableChooser<Command> autonChooser = new SendableChooser<>();
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
 
     configureButtonBindings();
     driveBase.setDefaultCommand(commandDrive);
-    //autonChooser.addOption("Drive Forward", autonDriveCommand);
-    //autonChooser.setDefaultOption("Drive-Shoot", autonDriveShootCG);
-    //autonChooser.addOption("Full-Routine", autonFullRoutineCG);
-    autonChooser.setDefaultOption("Full-Routine", autonFullRoutineCG);
-    autonChooser.addOption("Drive-Shoot", autonDriveShootCG);
-    autonChooser.addOption("Wall Routine", autonWallRoutine);
-    SmartDashboard.putData(autonChooser);
-    SmartDashboard.putData(new CommandFullTilt(climber));
-
+    
   }
 
-  public void setOkToDescend(boolean inputValue){
-    this.okToContinueDescend = inputValue;
-  }
-  public boolean getLStickUp(){
-    return leftStickUp.get();
-  }
-  public void setIsFullyDescended(boolean input){
-    this.isFullyDescended = input;
-  }
 
   private void configureButtonBindings() {
 
-    // Shooter:
-    aButton.whileHeld(commandReverseShooter)
-                .whenReleased(commandStopShooter);
-    rightTrigger.whenActive(commandActivateShooter)
-                .whenInactive(commandStopShooter);
-
-    leftTrigger.whenActive(new CommandStartFeeder(shooter))
-            .whenInactive(new CommandStopFeeder(shooter));
-    //leftStickUp.whenActive(commandStartFeeder);
-    //leftStickUp.whenInactive(commandStopFeeder);
-    //
-    
-    // Speed for shooter
-    back.whenPressed(commandFarHigh);
-    start.whenPressed(commandCloseLow);  
-  
-
-    // Intake Commands
-    rightBumper.whenActive(commandCargoIn)
-      .whenInactive(commandCargoStop);
-    yButton.whenActive(commandCargoOut)
-      .whenInactive(commandCargoStop);
-
-    xAndLeftBumper.whenPressed(commandResetIntakeEncoders);
-/*
-    bAndLeftBumper.whenPressed(commandChangeIntakeMode);
-*/
-
-/*
-    bButtonAlone.whenPressed(commandIntakeUp)
-      .whenReleased(commandIntakeStop);
-*/
-    bButtonAlone.whenPressed(commandIntakeUpManual)
-      .whenReleased(commandIntakeStop);
-    xButtonAlone.whenPressed(commandIntakeDownManual)
-      .whenReleased(commandIntakeStop); 
-
-    // Climber commands - Secondary Commands
-    leftStickDown.whenActive(commandClimb)
-          .whenInactive(commandStopClimb);
-    
-    // Inner Climber Commands
-    triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
-    triggerContinueDescend.whenActive(commandContinueDescend)
-          .whenInactive(commandStopClimb);
-    
-    
-    // Outer Climber
-    // rightStickDown.whileActiveContinuous(commandRetractOuterArms);
-    // rightStickUp.whileActiveContinuous(commandExtendOuterArms);
-    // rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    // rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    
-    //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
-
-    // Tilt
-    // dpadUp.whenActive(commandFullTilt);
-    dpadLeft.whileActiveContinuous(commandRetractTilt);
-    dpadRight.whileActiveContinuous(commandStartTilt);
-
-    // Suto climb Commands
-    // ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(
-    //     new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_READY),
-    //     new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_CLIMB_READY),
-    //     new CommandFullTilt(climber)); 
-        
-    // ParallelCommandGroup climbZeroCommandGroup = new ParallelCommandGroup(
-    //     new CommandInnerArmToPosition(climber, 0),
-    //     new CommandOuterArmToPosition(climber, 0),
-    //     new CommandFullTiltRetract(climber));
-
-    ParallelCommandGroup enterClimbModeCommandGroup = new ParallelCommandGroup(
-        new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ENTER_CLIMB),
-        new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ENTER_CLIMB),
-        new CommandFullTilt(climber) 
-    );
-    SmartDashboard.putData("Enter Climb Mode", enterClimbModeCommandGroup);
-
-    ParallelCommandGroup prepClimbMidRungCommandGroup = new ParallelCommandGroup(
-      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_PREP_MID),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
-      new CommandFullTilt(climber)
-    );
-    SmartDashboard.putData("Prep Climb Mode", prepClimbMidRungCommandGroup);
-      
-    ParallelCommandGroup climbMidRungCommandGroup = new ParallelCommandGroup(
-      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_CLIMB_MID),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_REACH_MID),
-      new CommandFullTilt(climber)
-    );
-    SmartDashboard.putData("Climb Middle Rung", climbMidRungCommandGroup);
-
-    ParallelCommandGroup advanceHighRungCommandGroup = new ParallelCommandGroup(
-      new CommandInnerArmToPosition(climber, ClimberConfig.INNER_ADVANCE_HIGH),
-      new CommandOuterArmToPosition(climber, ClimberConfig.OUTER_ADVANCE_HIGH),
-      new CommandFullTiltRetract(climber).beforeStarting(new WaitCommand(1))
-    );
-    SmartDashboard.putData("Advance to high rung", advanceHighRungCommandGroup);
-
-    //dpadRight.whileActiveContinuous(commandStartTilt);
-    //dpadLeft.whileActiveContinuous(commandRetractTilt);
-   // leftStickUp.whenActive(commandFullTilt);
-   // leftStickDown.whenActive(commandFullTiltRetract);
-
-    // rightStickDown.whenActive(commandRetractOuterArms)
-    //       .whenInactive(commandStopOuterArms);
-    // rightStickUp.whenActive(commandExtendOuterArms)
-    //       .whenInactive(commandStopOuterArms);
-
-    // triggerOuterArmsTooHigh.whenActive(new CommandRetractOuterArmsToLegalLimit(climber));
-
-    // Climber commands - Primary Commands
-    /*
-    stick7.whenPressed(commandClimb)
-        .whenReleased(commandStopClimb);
-
-    stick8.whenPressed(commandGroupSolenoidDescend)
-        .whenReleased(commandStopClimb);
-    
-    stick11.whenPressed(commandExtendOuterArms)
-        .whenReleased(commandStopOuterArms);
-
-    stick12.whenPressed(commandRetractOuterArms)
-        .whenReleased(commandStopOuterArms);
-    */
-
-    
-    //TODO: reassign to new Joystick
-    // articulateTrigger.whileActiveContinuous(commandArticulate)
-    //       .whenInactive(commandStopArticulate);
-    // advanceTrigger.whileActiveContinuous(commandAdvance)
-    //       .whenInactive(commandStopAdvance);
-    
     
   }
    
@@ -384,6 +118,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     //return autonShootCommandGroup;
-    return autonChooser.getSelected();
+    return null;
   }
 }
