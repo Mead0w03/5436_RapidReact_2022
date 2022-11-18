@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 
-import com.ctre.phoenix.sensors.PigeonIMU;
+//import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,7 +22,7 @@ public class DriveBase extends SubsystemBase {
     private CANSparkMax motorBR;
 
     //Gyro
-    private PigeonIMU gyro = new PigeonIMU(CanBusConfig.GYRO);
+    //private PigeonIMU gyro = new PigeonIMU(CanBusConfig.GYRO);
 
     //deadband instance variables
     private double xAxisDeadband;

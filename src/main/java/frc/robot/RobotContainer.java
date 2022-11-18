@@ -7,6 +7,7 @@ package frc.robot;
 import javax.swing.JToggleButton;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -74,7 +75,8 @@ import frc.robot.subsystems.Shooter;
  */
 public class RobotContainer {
   private XboxController xboxController = new XboxController(0); 
-  private Joystick stick = new Joystick(1);
+  private PS4Controller ps4Controller = new PS4Controller(1);
+  //private Joystick stick = new Joystick(1);
   private boolean okToContinueDescend = false;
   private boolean isFullyDescended = false;
   //initialize buttons
@@ -95,12 +97,12 @@ public class RobotContainer {
   private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
 
 
-  private final JoystickButton stick7 = new JoystickButton(stick, 7);
+  /*private final JoystickButton stick7 = new JoystickButton(stick, 7);
   private final JoystickButton stick8 = new JoystickButton(stick, 8);
   private final JoystickButton stick9 = new JoystickButton(stick, 9);
   private final JoystickButton stick10 = new JoystickButton(stick, 10);
   private final JoystickButton stick11 = new JoystickButton(stick, 11);
-  private final JoystickButton stick12 = new JoystickButton(stick, 12);
+  private final JoystickButton stick12 = new JoystickButton(stick, 12);*/
 
   private final Trigger leftStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) < -0.7);
   private final Trigger leftStickDown = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kLeftY.value) > 0.7);
@@ -187,7 +189,7 @@ public class RobotContainer {
   private final CommandStartFeeder commandStartFeeder = new CommandStartFeeder(shooter);
   private final CommandStopFeeder commandStopFeeder = new CommandStopFeeder(shooter);
 
-  private final DriveCommands commandDrive = new DriveCommands(driveBase, stick);
+  private final DriveCommands commandDrive = new DriveCommands(driveBase, ps4Controller);
 
   //close high has not been created but drivers say it is a position
   //private final CommandCloseLow commandCloseHigh = new CommandCloseLow(shooter);
