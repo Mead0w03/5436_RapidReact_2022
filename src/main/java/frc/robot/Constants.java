@@ -47,6 +47,7 @@ public final class Constants {
         public static final int OUTER_ARM = 11;
         public static final int TILT = 12;
         public static final int SOLENOID = 14;
+        public static final int REINDEER = 20;
 
         // Hardware
         public static final int PDP = 50;

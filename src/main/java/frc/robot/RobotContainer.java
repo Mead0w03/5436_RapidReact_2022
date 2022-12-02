@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Reindeer;
 import frc.robot.triggers.LeftTrigger;
 import frc.robot.Constants.ClimberConfig;
 import frc.robot.utils.DoubleButton;
@@ -115,7 +116,8 @@ public class RobotContainer {
   private final Trigger triggerClearSolenoid = new Trigger(() -> leftStickUp.get() && !okToContinueDescend && !isFullyDescended);
   private final Trigger triggerContinueDescend = new Trigger(() -> leftStickUp.get() && okToContinueDescend);
 
-  
+  private final Trigger ps4Circle = new Trigger(() -> ps4Controller.getCircleButtonPressed());
+  private final Trigger ps4Cross = new Trigger(() -> ps4Controller.getCrossButtonPressed());
 
   // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
   // private final Trigger rightStickUp = new Trigger(() -> xboxController.getRawAxis(XboxController.Axis.kRightY.value) < -0.3);
@@ -137,6 +139,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   public final Climber climber = new Climber();
   private final DriveBase driveBase = new DriveBase();
+  private final Reindeer reindeer = new Reindeer();
 
   private final Trigger triggerOuterArmsTooHigh = new Trigger(() -> climber.getAreOuterArmsTooLong());
 
@@ -283,9 +286,9 @@ public class RobotContainer {
           .whenInactive(commandStopClimb);
     
     // Inner Climber Commands
-    triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
-    triggerContinueDescend.whenActive(commandContinueDescend)
-          .whenInactive(commandStopClimb);
+    // triggerClearSolenoid.whenActive(commandGroupSolenoidDescend, false);
+    // triggerContinueDescend.whenActive(commandContinueDescend)
+    //       .whenInactive(commandStopClimb);
     
     
     // Outer Climber
@@ -293,14 +296,14 @@ public class RobotContainer {
     // rightStickUp.whileActiveContinuous(commandExtendOuterArms);
     // rightStickUp.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
     // rightStickDown.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
-    rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
+    //rightStickEngaged.whileActiveContinuous(new CommandMoveOuterArmsVariableSpeed(climber, () -> xboxController.getRawAxis(XboxController.Axis.kRightY.value)));
     
     //xboxController.getRawAxis(XboxController.Axis.kLeftY.value)
 
-    // Tilt
-    // dpadUp.whenActive(commandFullTilt);
-    dpadLeft.whileActiveContinuous(commandRetractTilt);
-    dpadRight.whileActiveContinuous(commandStartTilt);
+    //reindeer
+    ps4Circle.whenActive(new InstantCommand(() -> reindeer.startReindeer()));
+    ps4Cross.whenActive(new InstantCommand(() -> reindeer.stopReindeer()));
+    
 
     // Suto climb Commands
     // ParallelCommandGroup climbReadyCommandGroup = new ParallelCommandGroup(

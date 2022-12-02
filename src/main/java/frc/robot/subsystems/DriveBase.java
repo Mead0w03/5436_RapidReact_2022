@@ -48,10 +48,10 @@ public class DriveBase extends SubsystemBase {
       motorBR = new CANSparkMax(CanBusConfig.BACK_RIGHT, MotorType.kBrushless);
       motorBL = new CANSparkMax(CanBusConfig.BACK_LEFT, MotorType.kBrushless);
 
-      motorFR.setIdleMode(IdleMode.kBrake);
-      motorFL.setIdleMode(IdleMode.kBrake);
-      motorBR.setIdleMode(IdleMode.kBrake);
-      motorBL.setIdleMode(IdleMode.kBrake);
+      motorFR.setIdleMode(IdleMode.kCoast);
+      motorFL.setIdleMode(IdleMode.kCoast);
+      motorBR.setIdleMode(IdleMode.kCoast);
+      motorBL.setIdleMode(IdleMode.kCoast);
 
       motorFR.setInverted(true);
       motorBR.setInverted(true);
